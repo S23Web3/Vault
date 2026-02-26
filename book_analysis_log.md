@@ -1,0 +1,11 @@
+# Book Analysis Log
+
+- **Hilpisch "Python for Algo Trading"**: 3/10 for our project. Useful: Kelly Criterion, max drawdown calc, feature engineering patterns. Rest is platform-specific (Oanda/FXCM) or basic Python.
+- **Sweeney "Maximum Adverse Excursion"**: 9/10. Framework in `.claude/skills/vince-ml/references/mfe-mae-framework.md`
+- **Hilpisch "Listed Volatility & Variance Derivatives"**: 1/10. About pricing variance swaps/VSTOXX — zero relevance to directional trading.
+- **Hilpisch "RL for Finance"**: 4/10. DQL agent for long/short prediction. Useful: Trading env architecture (Ch 6), data augmentation (Ch 4), min_performance gate = FTMO drawdown. Weak: no TCs, binary actions only, simulated data only, no real backtesting.
+- **Hilpisch "Derivatives Analytics with Python"**: 1/10. Options pricing (Fourier/FFT, Monte Carlo, delta hedging, model calibration). Institutional quant desk stuff — zero relevance to directional trading.
+- **Hilpisch "AI in Finance"**: 5/10. Best Hilpisch book. Ch 11 has ATR x leverage SL/TSL/TP backtesting with entry/min/max tracking (MFE/MAE lite). Ch 8 RNN direction classification 65% OOS on EUR/USD. Ch 4 debunks normal returns. Still basic vs our backtester.
+- **De Prado "Advances in Financial ML"**: 9/10. Triple Barrier Method (dynamic SL/TP/time exit = our ATR exits), Meta-Labeling (XGBoost decides size/skip on Four Pillars signals), Purged K-Fold CV (no leakage), Feature Importance > Backtesting, Bet Sizing from probability. Ch 15: Sharpe = f(precision, frequency) — mathematical basis for rebate farming.
+- **Jansen "ML for Algorithmic Trading"**: 8/10. Most comprehensive ML-for-trading book. SHAP values (per-sample feature explanation > basic feature_importances_), XGBoost/LightGBM/CatBoost comparison, purging+embargoing CV, intraday boosting strategy on minute bars, Kalman filter denoising, Alpha Factor Library (100+ TA-Lib features). Platform-bound (Zipline/Quantopian) but concepts excellent.
+- **Van Tharp "Trade Your Way to Financial Freedom"**: 7/10. Origin of R-multiples and SQN (System Quality Number). Expectunity = expectancy x opportunity = mathematical basis for rebate farming. "Entries are the least important part" -- validates exit-optimization focus. Position sizing = 90%+ of performance variance. No code/ML but foundational concepts.

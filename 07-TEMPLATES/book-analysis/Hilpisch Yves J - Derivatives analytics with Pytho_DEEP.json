@@ -1,0 +1,772 @@
+{
+  "file_path": "C:\\Users\\User\\Downloads\\Hilpisch, Yves J - Derivatives analytics with Python _ data analysis, models, simulation, calibration and hedging.epub",
+  "file_name": "Hilpisch, Yves J - Derivatives analytics with Python _ data analysis, models, simulation, calibration and hedging.epub",
+  "file_size_mb": 8.576154708862305,
+  "total_chapters": 20,
+  "rating": 9,
+  "aggregate_stats": {
+    "total_trading_concepts": 34,
+    "total_ml_concepts": 21,
+    "chapters_with_code": 16,
+    "chapters_with_formulas": 11
+  },
+  "top_concepts": {
+    "trading": [
+      {
+        "topic": "psychology",
+        "mentions": 37
+      },
+      {
+        "topic": "entries",
+        "mentions": 11
+      },
+      {
+        "topic": "risk",
+        "mentions": 8
+      },
+      {
+        "topic": "backtesting",
+        "mentions": 7
+      }
+    ],
+    "ml": [
+      {
+        "topic": "metrics",
+        "mentions": 24
+      },
+      {
+        "topic": "supervised",
+        "mentions": 15
+      },
+      {
+        "topic": "models",
+        "mentions": 1
+      }
+    ]
+  },
+  "chapter_analyses": [
+    {
+      "title": "fcopyright.xhtml",
+      "file": "fcopyright.xhtml",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "representations or warranties with respect to the accuracy or completeness of the contents of this book and "
+            ]
+          }
+        },
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 2907
+      }
+    },
+    {
+      "title": "Chapter 1: A Quick Tour",
+      "file": "ftoc.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "psychology": {
+            "count": 1,
+            "examples": [
+              "a.1 python fundamentals"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              "proximation of cosine function (line) by constant regression (crosses), linear regression (dots) and quadratic",
+              " regression (triangles)"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "figure 6.2 valuation accuracy of lewis’ integral approach in comparison to bsm ",
+              "figure 6.3 valuation accuracy of cm99 fft approach in comparison to bsm analyti"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 13457
+      }
+    },
+    {
+      "title": "fpreface.xhtml",
+      "file": "fpreface.xhtml",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 2234
+      }
+    },
+    {
+      "title": "CHAPTER 1 A Quick Tour",
+      "file": "c01.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "risk": {
+            "count": 2,
+            "examples": [
+              ", be it valuation, trading, investing, hedging or risk management. a bit more specifically, one might be interested",
+              " of lines of python code in production, mainly in risk management; python is also really popular in the hedge fund "
+            ]
+          },
+          "psychology": {
+            "count": 1,
+            "examples": [
+              ": cf. bittmann (2009) to learn about options fundamentals, the main microstructure elements of their marke"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "In the domain of derivatives analytics this is an important task which every major investment bank and buy-side decision maker in the financial market is concerned with on a daily basis"
+        ],
+        "length": 12922
+      }
+    },
+    {
+      "title": "CHAPTER 2 What is Market-Based Valuation?",
+      "file": "c02.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              "ng trying to model the mechanics of panic and the patterns of human behavior."
+            ]
+          },
+          "risk": {
+            "count": 2,
+            "examples": [
+              "gests new frontiers for financial engineering and risk management, including trying to model the mechanics of panic",
+              " model risk refers to the risk that valuation and risk management finally rely on the specific model used. even if "
+            ]
+          },
+          "psychology": {
+            "count": 1,
+            "examples": [
+              " the institution must consider the following fundamental aspects:"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "1 The present value of the option is always above the (undiscounted) inner value",
+          "3\nNevertheless, financial institutions writing exotic equity options (so-called sell side) or clients buying these options (i",
+          "the buy side) must have a mechanism to derive fair values regularly and transparently",
+          "In addition, option writers must be able to hedge their exposure",
+          "In relation to exotic equity derivatives, sellers and buyers must often resort to numerical methods, like Monte Carlo simulation, to come up with fair values and appropriate hedging strategies"
+        ],
+        "length": 20077
+      }
+    },
+    {
+      "title": "CHAPTER 3 Market Stylized Facts",
+      "file": "c03.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "psychology": {
+            "count": 4,
+            "examples": [
+              " this formula is often called the corrected (or unbiased) sample standard deviation in contrast to the c",
+              "ase of the uncorrected (or biased) sample standard deviation where the multiplier",
+              " the risk-neutral valuation approach and the fundamental theorem of asset pricing."
+            ]
+          }
+        },
+        "ml_concepts": {
+          "metrics": {
+            "count": 3,
+            "examples": [
+              " directly or indirectly. with regard to valuation accuracy it is important that there is in general not a si",
+              " general expect to reach a market-based valuation accuracy of say “1 cent or better” or “1% or better”. the ",
+              "recall that the implied volatility of a european call op"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "Nevertheless, volatility obviously is mean reverting",
+          "With regard to valuation accuracy it is important that there is in general not a single quote for an option but at least two: a bid quote at which market makers would buy the option and an ask quote at which they would sell the option",
+          "At this stage, it is only important to know, that the vega, i",
+          "6 Short Rates\nShort rates and associated discount factors are not only important for the valuation of options",
+          "As intensively discussed in Chapter 4, short rates and their corresponding discount factors are a basic building block for the risk-neutral valuation approach and the Fundamental Theorem of Asset Pricing"
+        ],
+        "length": 40857
+      }
+    },
+    {
+      "title": "CHAPTER 4 Risk-Neutral Valuation",
+      "file": "c04.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              " their future prices are uncertain. in our simple setup, a natural way to model securities with uncertain",
+              "ental theorem of asset pricing for the continuous setup."
+            ]
+          },
+          "risk": {
+            "count": 1,
+            "examples": [
+              " be accomplished (e.g. pricing, trading, hedging, risk management). however, there is a minimum set of requirements"
+            ]
+          },
+          "psychology": {
+            "count": 3,
+            "examples": [
+              "-based valuation of options is a mainly numerical discipline and therefore works generally in discrete time an",
+              "entral result in mathematical finance is the fundamental theorem of asset pricing which relates, for a giv",
+              "thematical machinery needed to establish the fundamental theorem for such types of models is well beyond t"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "th respect to this definition, it is important to recall that we have defined random variables as taking o",
+              "1, is denoted  and is adapted to the filtration . recall that adapted means that the random variables  are"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "The most important are the absence of arbitrage opportunities (NA) and no free lunches with vanishing risk (NFLVR)",
+          "A central result in mathematical finance is the Fundamental Theorem of Asset Pricing which relates, for a given market model, the conditions of NA or NFLVR to the existence of an equivalent martingale measure (EMM) making all discounted stochastic processes of the market model martingales",
+          "An important corollary of this result is that the (discounted) price processes of attainable, i",
+          "However, in the valuation process analytical results from continuous time, continuous state space models are used whenever appropriate",
+          "Unfortunately, the mathematical machinery needed to establish the Fundamental Theorem for such types of models is well beyond the scope of this book"
+        ],
+        "length": 43013
+      }
+    },
+    {
+      "title": "CHAPTER 5 Complete Market Models",
+      "file": "c05.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              "the sense that the crr model converges to the bsm setup when the time interval between two consecutive da"
+            ]
+          },
+          "risk": {
+            "count": 1,
+            "examples": [
+              "in particular for hedging and risk management purposes, it is of importance to know how option "
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              " equations (pde), the crr analysis relies on fundamental probabilistic concepts only. their representation",
+              "5.2.2 the fundamental pde"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "r of time intervals obviously increases valuation accuracy. the figure suggests that the crr option value re"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "It is essentially the key argument of the general arbitrage pricing theory presented in Chapter 4",
+          "Whereas the BSM model necessitates advanced mathematics and the handling of partial differential equations (PDE), the CRR analysis relies on fundamental probabilistic concepts only",
+          "2 The Fundamental PDE\nWe are now interested in the value V of a contingent claim, say a European call option on the index",
+          "To avoid arbitrage, a risk-less portfolio must yield the risk-less short rate according to equation (5",
+          "We must therefore have dΠ = rΠdt as well"
+        ],
+        "length": 31751
+      }
+    },
+    {
+      "title": "CHAPTER 6 Fourier-Based Option Pricing",
+      "file": "c06.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              "ism for bsm, the benefit is only marginal in this setup. this is different when considering more complex ",
+              "aving a closed-form pricing formula as in the bsm setup. the two fourier approaches presented in this cha"
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "tion pricing. cěrný (2004) discusses several fundamental aspects and shows how to apply this approach to t",
+              "lp in solving it. section 6.3 introduces the fundamental concepts of fourier transforms of functions and o"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "accuracy: the semi-analytic formulas can be evaluated nume",
+              "rically in such a way that a high degree of accuracy is reached at little computational cost (e.g. com"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "This approach allows the use of semi-analytic valuation formulas for European options whenever the characteristic function of the stochastic process representing the underlying is known",
+          "Cěrný (2004) discusses several fundamental aspects and shows how to apply this approach to the binomial model",
+          "3 introduces the fundamental concepts of Fourier transforms of functions and of characteristic functions",
+          "The fundamental insight of Fourier-based option pricing is to replace both the pdf by the CF and the call option payoff CT by its Fourier transform",
+          "Therefore we will first define these fundamental terms and will then present two different versions of the Fourier-based pricing approach"
+        ],
+        "length": 34911
+      }
+    },
+    {
+      "title": "CHAPTER 7 Valuation of American Options by Simulation",
+      "file": "c07.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "psychology": {
+            "count": 3,
+            "examples": [
+              "rcise policy and therewith to a consistently high biased estimator. on the other hand, estimating the co",
+              " value. however, small i may lead to an in-sample bias of the regressions in the sense that the resultin",
+              "by the fundamental theorem of asset pricing, the time t value of an "
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              "s in backwards steps by an ordinary least-squares regression. equipped with such approximations, the option is",
+              "ntinuation values ct, i by ordinary least-squares regression—hence the name least-squares monte carlo for thei"
+            ]
+          },
+          "metrics": {
+            "count": 3,
+            "examples": [
+              "en, in the absence of alternative benchmarks, the accuracy of the lsm estimator cannot be judged.",
+              "e of antithetic paths also does not contribute to accuracy. however, increasing the number of time steps m h",
+              "2. recall that a contingent claim is attainable if it can b"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "Applying another important result in this context (cf",
+          "Note that when updating option values Vt, i, the real continuation value Yt, i is to be taken and not the estimated one",
+          "Note that when updating the Vt, i, the regression-based estimate for the continuation value is taken (in contrast to the LSM algorithm)",
+          "Also note that for t = T the  are zero by definition as well as formally due to the α*d, T being zero",
+          "However, for small I > 1 the problem may nevertheless arise"
+        ],
+        "length": 26574
+      }
+    },
+    {
+      "title": "CHAPTER 8 A First Example of Market-Based Valuation",
+      "file": "c08.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              "h is due to lewis (cf. lewis (2001)), for the m76 setup and evaluating it via numerical integration.",
+              "a market model adding a jump component to the bsm setup"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "    g = 2  # factor to increase accuracy"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "This is a first hint at the fact that a realistic financial market model must be richer than M76",
+          "Note that the error function definition in the calibration scripts includes a penalty routine which penalizes negative values for those parameters that are (economically) not allowed to become negative"
+        ],
+        "length": 26028
+      }
+    },
+    {
+      "title": "CHAPTER 9 General Model Framework",
+      "file": "c09.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              "ing the stochastic short rate, the model uses the setup of cox, ingersoll and ross (1985, cir85, cox et a",
+              "h the market model and the monte carlo simulation setup."
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "statistical properties: a fundamental requirement is that the model be able to replicat",
+              " equity derivatives in an integrated manner. fundamentally, it can be calibrated to observed market prices"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "recall the results of chapter 3. there it is shown that "
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "3 Features of the Framework\nA market model must, in order to be of any practical use, fulfill a minimum set of requirements",
+          "In a similar vein, it can also reproduce the most important characteristics of interest rates, like time-varying short rate or horizon-dependent yield (so-called yield curve)",
+          "Fundamentally, it can be calibrated to observed market prices due to its sufficient degrees of freedom, it is capable of valuing derivative assets reasonably accurately and it provides hedging strategies that perform quite well",
+          "1 PDE Approach\nOmitting time indices, the value of a European call option on the stock index must satisfy—according to Itô’s lemma (see section 9",
+          "A European call option C(S, v, r, t) must satisfy in the general market model the PDE\n\n(9"
+        ],
+        "length": 26647
+      }
+    },
+    {
+      "title": "CHAPTER 10 Monte Carlo Simulation",
+      "file": "c10.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              "urately and fast, by monte carlo simulation.3 the setup for this section is the h93 stochastic volatility"
+            ]
+          },
+          "risk": {
+            "count": 1,
+            "examples": [
+              "luation of non-vanilla equity derivatives and for risk management purposes. however, even valuing simple products c"
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "lation algorithms. these will typically exhibit a bias for finite values of [m], but convenience and spe",
+              "ever, the euler scheme shows a systematically low bias in this particular case. the errors for the exact"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              "d reference. kohler (2009) is a survey article of regression-based valuation approaches for american options.",
+              "00,000 and you have to estimate 100 least-squares regressions over 100,000 pairs of numbers as well as discoun"
+            ]
+          },
+          "metrics": {
+            "count": 3,
+            "examples": [
+              "burden which may, however, be justified by higher accuracy due to faster convergence. in other words, althou",
+              "5 model, we have a natural benchmark to check the accuracy of the monte carlo simulation implementation. cha",
+              "np.set_printoptions(precision=3)"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "1 Introduction\nMonte Carlo simulation is among the most important numerical algorithms of the 20th century (cf",
+          "For practical purposes, it is important to have available efficient, i",
+          "…, it seems [nevertheless] reasonable to also investigate the application of simpler simulation algorithms",
+          "This obviously is an important issue since “dozens of minutes” per single option price are of course unacceptable for practical applications",
+          "Nevertheless, it is only about + 4%"
+        ],
+        "length": 67608
+      }
+    },
+    {
+      "title": "CHAPTER 11 Model Calibration",
+      "file": "c11.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "backtesting": {
+            "count": 2,
+            "examples": [
+              "such that it is not assured that—depending on the optimization algorithm—the global minimum is identified. some ",
+              "11.2.5 what optimization algorithm?"
+            ]
+          },
+          "psychology": {
+            "count": 3,
+            "examples": [
+              "and tankov (2004b) and detlefsen (2005), to avoid biases due to the error function specification.5 addit",
+              " price/value of a derivative instrument. the fundamental assumption behind this reasoning is that you can ",
+              "section 11.2 concerns itself with some fundamental questions in the context of model calibration (li"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 1,
+            "examples": [
+              " interpolating function—e.g. from a cubic splines regression (cf. brandimarte (2006), pp. 183–188)—one can der"
+            ]
+          },
+          "metrics": {
+            "count": 3,
+            "examples": [
+              "ble differences in terms of optimization speed or accuracy.",
+              " which only several standard results are needed.9 recall the cir85 stochastic differential equation (9.3)",
+              "et implied volatilities. here, it is important to recall that the error function (11.4) gives less weight "
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "The fundamental assumption behind this reasoning is that you can observe, in principle, anything in the markets that finally determines the price/value of a security—markets should be, after all, informationally efficient",
+          "However, if “the market is always right”, what does a model price/value mean which deviates from an observable market value",
+          "2 concerns itself with some fundamental questions in the context of model calibration (like which market data to use)",
+          "However, when calibrating a financial market model, fundamental questions arise that have to be carefully addressed",
+          "This sub-section briefly discusses the most important ones against the background of the book’s main objectives"
+        ],
+        "length": 58663
+      }
+    },
+    {
+      "title": "CHAPTER 12 Simulation and Valuation in the General Model Framework",
+      "file": "c12.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "psychology": {
+            "count": 2,
+            "examples": [
+              " and 50,000 paths—leads to a systematic valuation bias with mcs estimators much too high in general.",
+              "me steps obviously lead to a systematic valuation bias. increasing the number of paths does not really h"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "mber of paths does not really help with valuation accuracy in this case.",
+              "ing the number of time steps leads to significant accuracy improvements with valuation errors being much sma"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [],
+        "length": 18539
+      }
+    },
+    {
+      "title": "CHAPTER 13 Dynamic Hedging",
+      "file": "c13.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "psychology": {
+            "count": 1,
+            "examples": [
+              "is is to make sure that there is not an in-sample bias of the replicating strategy which would make the "
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              " τ being the exercise time, are estimated via the regression function available at each time step using the sa",
+              "here,  is the lsm regression estimate of the american put option value at date"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "In particular, it is important to adjust ΔSt such that it reflects the initial index level S0 and the later index levels St",
+          "Note that simple evaluation of the regression function could generate negative values for the option price such that the formula truncates the estimates below zero"
+        ],
+        "length": 32547
+      }
+    },
+    {
+      "title": "CHAPTER 14 Executive Summary",
+      "file": "c14.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "psychology": {
+            "count": 1,
+            "examples": [
+              "uropean and american stock index options. it is a discipline of particular interest in derivatives analytics. "
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 2318
+      }
+    },
+    {
+      "title": "b01.xhtml",
+      "file": "b01.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "backtesting": {
+            "count": 2,
+            "examples": [
+              "a.3.2 optimization",
+              "ession and interpolation are two special forms of optimization (some kind of minimization). however, optimizatio"
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "ience, for example, the appendix illustrates fundamental aspects of python that are useful for derivatives",
+              "a.1 python fundamentals"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              "ithms. two important approximation techniques are regression and interpolation.8",
+              "the type of regression we consider is called ordinary least-squares regr"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "However, for someone coming with C++ experience, for example, the appendix illustrates fundamental aspects of Python that are useful for derivatives analytics and financial engineering in general",
+          "1 Python Fundamentals\nThis first section is about some important, fundamental topics when it comes to Python usage",
+          "com) or to at least install a complete Python distribution which comes in general with the most important libraries in those versions that are compatible with each other",
+          "1\n\n\n\nObviously, types are important with Python",
+          "Make sure when saving Python modules to always include the suffix"
+        ],
+        "length": 39267
+      }
+    },
+    {
+      "title": "b02.xhtml",
+      "file": "b02.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "backtesting": {
+            "count": 1,
+            "examples": [
+              "liberti, leo (2008) introduction to global optimization, working paper, école polytechnique, palaiseau, w"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "fries, christian (2008) foresight bias and suboptimality correction in monte carlo prici",
+              "koekkoek and dick van dijk (2006) a comparison of biased simulation schemes for stochastic volatility mo",
+              "chachermayer (1994) a general version of the fundamental theorem of asset pricing, mathematische annalen, "
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              "lip protter (2002) an analysis of a least squares regression algorithm for american option pricing, finance an",
+              "kohler, michael (2009) a review on regression-based monte carlo methods for pricing american op"
+            ]
+          },
+          "models": {
+            "count": 1,
+            "examples": [
+              "plex american-style options, ieee transactions on neural networks, 12, 694–730."
+            ]
+          }
+        },
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [
+          "Cooley, James and John Tukey (1965) An Algorithm for the Machine Calculation of Complex Fourier Series, Mathematics of Computation, 19(90), 297–301",
+          "Delbaen, Freddy and Walter Schachermayer (1994) A General Version of the Fundamental Theorem of Asset Pricing, Mathematische Annalen, 300, 463–520",
+          "Delbaen, Freddy and Walter Schachermayer (1998) The Fundamental Theorem of Asset Pricing for Unbounded Stochastic Processes, Mathematische Annalen, 312, 215–250"
+        ],
+        "length": 14436
+      }
+    },
+    {
+      "title": "b03.xhtml",
+      "file": "b03.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "risk": {
+            "count": 1,
+            "examples": [
+              "risk management\r"
+            ]
+          },
+          "backtesting": {
+            "count": 2,
+            "examples": [
+              "optimization algorithms",
+              "global optimization"
+            ]
+          },
+          "psychology": {
+            "count": 3,
+            "examples": [
+              "uncorrected (biased) sample standard deviation, definition",
+              "python fundamentals",
+              "python fundamentals"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              "see also interpolations; regression…",
+              "ols see ordinary least-squares regression"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 16907
+      }
+    }
+  ],
+  "analyzed_date": "2026-02-09T15:14:53.778298"
+}

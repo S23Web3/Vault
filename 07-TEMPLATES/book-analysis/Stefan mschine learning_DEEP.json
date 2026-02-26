@@ -1,0 +1,2306 @@
+{
+  "file_path": "C:\\Users\\User\\Downloads\\Stefan mschine learning.epub",
+  "file_name": "Stefan mschine learning.epub",
+  "file_size_mb": 27.138280868530273,
+  "total_chapters": 29,
+  "rating": 10,
+  "aggregate_stats": {
+    "total_trading_concepts": 114,
+    "total_ml_concepts": 112,
+    "chapters_with_code": 28,
+    "chapters_with_formulas": 7
+  },
+  "top_concepts": {
+    "trading": [
+      {
+        "topic": "backtesting",
+        "mentions": 115
+      },
+      {
+        "topic": "psychology",
+        "mentions": 100
+      },
+      {
+        "topic": "entries",
+        "mentions": 75
+      },
+      {
+        "topic": "risk",
+        "mentions": 38
+      },
+      {
+        "topic": "metrics",
+        "mentions": 34
+      }
+    ],
+    "ml": [
+      {
+        "topic": "supervised",
+        "mentions": 123
+      },
+      {
+        "topic": "models",
+        "mentions": 109
+      },
+      {
+        "topic": "validation",
+        "mentions": 62
+      },
+      {
+        "topic": "metrics",
+        "mentions": 50
+      },
+      {
+        "topic": "features",
+        "mentions": 45
+      }
+    ]
+  },
+  "chapter_analyses": [
+    {
+      "title": "Text/Front_Matter.xhtml",
+      "file": "Text/Front_Matter.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              "executing them. having a keen eye for subtle data patterns, ramanathan also has a good understanding of the"
+            ]
+          },
+          "backtesting": {
+            "count": 1,
+            "examples": [
+              "d building trading systems, quant warehouses, and backtesting engines for capital markets."
+            ]
+          }
+        },
+        "ml_concepts": {
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "ade in the preparation of this book to ensure the accuracy of the information presented. however, the inform",
+              "s. however, packt publishing cannot guarantee the accuracy of this information."
+            ]
+          }
+        },
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [
+          "No part of this book may be reproduced, stored in a retrieval system, or transmitted in any form or by any means, without the prior written permission of the publisher, except in the case of brief quotations embedded in critical articles or reviews",
+          "Most important, however, has been the unrelenting patience and support of Mariana",
+          "He leads some of the most important activities of the community, like organizing conferences, monthly meetups, and conducting Python sessions at colleges"
+        ],
+        "length": 6394
+      }
+    },
+    {
+      "title": "Text/Preface.xhtml",
+      "file": "Text/Preface.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              "edict. it demonstrates how rnns capture nonlinear patterns over longer periods using word embeddings introd"
+            ]
+          },
+          "backtesting": {
+            "count": 4,
+            "examples": [
+              " simulating strategies on historical data using a backtesting engine and evaluating their performance.",
+              " workflow, reflected in a new chapter on strategy backtesting (chapter 8, the ml4t workflow – from model to ",
+              "chapter 5, portfolio optimization and performance evaluation, introduces how to man"
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "chapter 10, bayesian ml – dynamic sharpe ratios and pairs trading, presents probabilistic "
+            ]
+          },
+          "psychology": {
+            "count": 3,
+            "examples": [
+              "om? potential readers can then see and use your unbiased opinion to make purchase decisions, we at packt",
+              " be relevant above and beyond the market and fundamental data that used to be at the center of most analyt",
+              "ground to enable you to work with market and fundamental data, extract informative features, and manage th"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 5,
+            "examples": [
+              "text data into a numerical format and applies the classification algorithms from part 2 for sentiment analysis to ",
+              "explore text data or use topics as features for a classification model. it demonstrates how to apply this techniqu",
+              "n forecasts, shows how to use linear and logistic regression for inference and prediction and how to use regul"
+            ]
+          },
+          "features": {
+            "count": 1,
+            "examples": [
+              "chapter 4, financial feature engineering – how to research alpha factors, presents the pro"
+            ]
+          },
+          "models": {
+            "count": 7,
+            "examples": [
+              "chapter 11, random forests – a long-short strategy for japanese stocks, sho",
+              " it introduces tree-based ensembles and shows how random forests use bootstrap aggregation to overcome some of th",
+              "oosting and demonstrates how to use the libraries xgboost, lightbgm, and catboost for high-performance trai"
+            ]
+          },
+          "validation": {
+            "count": 2,
+            "examples": [
+              "addresses domain-specific concerns, such as using cross-validation with financial time series to select among altern",
+              "d how to use regularization to manage the risk of overfitting. it demonstrates how to predict us equity returns"
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              ": although we have taken every care to ensure the accuracy of our content, mistakes do happen. if you have f"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "This implies that a very large range of new alternative data sources may be relevant above and beyond the market and fundamental data that used to be at the center of most analytical efforts in the past",
+          "In other words, it is essential to ask the right questions, identify and understand the data that may provide the answers, deploy a broad range of tools to obtain results, and interpret them in a way that leads to the right decisions",
+          "To this end, we cover ML as a key element in a process rather than a standalone exercise",
+          "Most importantly, we introduce an end-to-end ML for trading (ML4T) workflow that we apply to numerous use cases with relevant data and code examples",
+          "Finally, it includes financial background to enable you to work with market and fundamental data, extract informative features, and manage the performance of a trading strategy"
+        ],
+        "length": 24567
+      }
+    },
+    {
+      "title": "Text/Chapter_1.xhtml",
+      "file": "Text/Chapter_1.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 4,
+            "examples": [
+              "d low volatility following the 2008 crisis, which triggered large-scale asset purchases by leading central ",
+              "ons during the early days of the financial crisis triggered the quant quake of august 2007, which cascaded ",
+              "ning (ml) involves algorithms that learn rules or patterns from data to achieve a goal such as minimizing a"
+            ]
+          },
+          "risk": {
+            "count": 4,
+            "examples": [
+              "io risk. portfolio management involves optimizing position sizes to achieve a balance of return and risk of the p",
+              "eration to asset allocation, trade execution, and risk management.",
+              "fected how investors approach diversification and risk management. one outcome is the rise in low-cost passive inve"
+            ]
+          },
+          "backtesting": {
+            "count": 4,
+            "examples": [
+              "ter 8, the ml4t workflow – from model to strategy backtesting, in part 2, covers strategy backtesting. we wi",
+              "strategy backtesting",
+              "e a goal. they can take many forms and facilitate optimization throughout the investment process, from idea gene"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "efully manage and curate data to avoid look-ahead bias by adjusting it to the desired frequency on a poi",
+              "g and the failure to correct for multiple testing bias, these pitfalls include the use of data contamina",
+              "ss of the benchmark used for evaluation. the fundamental law of active management postulates that the key "
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              "supervised learning to generate risk factors or alphas and create tra",
+              "the potential values of individual features for a supervised learning algorithm to predict asset returns. chapter 18 in"
+            ]
+          },
+          "features": {
+            "count": 2,
+            "examples": [
+              " how ml is used for trading. chapter 4, financial feature engineering – how to research alpha factors, and chapter 5, p",
+              "strategy, which, after suitable preprocessing and feature engineering, permit an ml model to predict asset returns or o"
+            ]
+          },
+          "models": {
+            "count": 3,
+            "examples": [
+              "g the financial crisis. franklin templeton bought random forest capital, a debt-focused, data-led investment comp",
+              "pley additive explanations (shap). we apply it to gradient boosting machines with a large number of input variable",
+              "es and sentiment analysis, we introduce recurrent neural networks that achieve superior performance with nonlinear"
+            ]
+          },
+          "validation": {
+            "count": 1,
+            "examples": [
+              "select successful algorithmic trading strategies. cross-validation using synthetic data is a key ml technique to gen"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "The examples in this book will illustrate how ML algorithms can extract information from data to support or automate key investment activities",
+          "The fundamental law of active management postulates that the key to generating alpha is having accurate return forecasts combined with the ability to act on these forecasts (Grinold 1989; Grinold and Kahn 2000)",
+          "This section reviews key trends that have shaped the overall investment environment and the context for algorithmic trading and the use of ML more specifically",
+          "See Harris (2003) and Strumeyer (2017) for comprehensive coverage of relevant changes in financial markets; we will return to this topic when we cover how to work with market and fundamental data in the next chapter",
+          "It yields valuable trading signals and is the key to superior active-management results"
+        ],
+        "length": 48598
+      }
+    },
+    {
+      "title": "Text/Chapter_2.xhtml",
+      "file": "Text/Chapter_2.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              " state a price threshold or other conditions that trigger execution. orders are typically valid for the sam",
+              "e trades and place orders according to historical patterns. time bars would treat the same order differentl"
+            ]
+          },
+          "backtesting": {
+            "count": 2,
+            "examples": [
+              "your strategy and the implementation of realistic backtesting simulations. ",
+              "act the simulation of a trading strategy during a backtest before we start working with actual tick data cre"
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "market and fundamental data – sources and techniques",
+              "stly relied on publicly available market and fundamental data. efforts to create or acquire private datase"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 1,
+            "examples": [
+              "ditional fields, for example, standard industrial classification (sic)."
+            ]
+          },
+          "features": {
+            "count": 2,
+            "examples": [
+              "tform in much more detail in chapter 4, financial feature engineering – how to research alpha factors, and rely on its ",
+              "egated by industry (refer to chapter 4, financial feature engineering – how to research alpha factors)"
+            ]
+          },
+          "models": {
+            "count": 1,
+            "examples": [
+              "lgorithms ranging from linear models to recurrent neural networks (rnns) to market and fundamental data and genera"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "2\nMarket and Fundamental Data – Sources and Techniques\nData has always been an essential driver of trading, and traders have long made efforts to gain an advantage from access to superior information",
+          "Traditionally, investors mostly relied on publicly available market and fundamental data",
+          "Conventional strategies focus on equity fundamentals and build financial models on reported financials, possibly combined with industry or macro data to project earnings per share and stock prices",
+          "Machine learning (ML) algorithms promise to exploit market and fundamental data more efficiently than human-defined rules and heuristics, particularly when combined with alternative data, which is the topic of the next chapter",
+          "We will illustrate how to apply ML algorithms ranging from linear models to recurrent neural networks (RNNs) to market and fundamental data and generate tradeable signals"
+        ],
+        "length": 71350
+      }
+    },
+    {
+      "title": "Text/Chapter_3.xhtml",
+      "file": "Text/Chapter_3.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              "tellites or security cameras, or through movement patterns such as cell phone towers",
+              "    date_pattern = re.compile(r'(\\d{2})-(\\d{2})-(\\d{2})')\r"
+            ]
+          },
+          "backtesting": {
+            "count": 2,
+            "examples": [
+              "alternative data using historical data, so-called backtests, to estimate the amount of alpha contained in a ",
+              "le; otherwise, they are more likely the result of overfitting to historical data than persisting and generating"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "tive strategy. independent usage is viable if the sharpe ratio generated by a strategy based on a single d",
+              "nlikely that many datasets will retain meaningful sharpe ratio signals. effective strategies to extend the"
+            ]
+          },
+          "psychology": {
+            "count": 3,
+            "examples": [
+              "e view, but rather is subject to severe selection biases. we'll look at yelp reviews in chapter 14, text",
+              "ious chapter covered working with market and fundamental data, which have been the traditional drivers of ",
+              "ustry is rapidly expanding beyond market and fundamental data to alternative sources to reap alpha through"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "features": {
+            "count": 2,
+            "examples": [
+              "arious types of providers in chapter 4, financial feature engineering – how to research alpha factors.",
+              "at is rare in practice. (see chapter 4, financial feature engineering – how to research alpha factors, for details on s"
+            ]
+          },
+          "validation": {
+            "count": 1,
+            "examples": [
+              "le; otherwise, they are more likely the result of overfitting to historical data than persisting and generating"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "ngth of its available history, the reliability or accuracy of the information it contains, the extent to whi",
+              "-fi, bluetooth, and cellular signal) for enhanced accuracy. the use cases include estimates of customer traf"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "3\nAlternative Data for Finance – Categories and Use Cases\nThe previous chapter covered working with market and fundamental data, which have been the traditional drivers of trading strategies",
+          "The exponential growth in the availability of and ability to manage more diverse digital data, in turn, has been a critical force behind the dramatic performance improvements of machine learning (ML) that are driving innovation across industries, including the investment industry",
+          "Following global trends, the investment industry is rapidly expanding beyond market and fundamental data to alternative sources to reap alpha through an informational edge",
+          "As highlighted in Chapter 1, Machine Learning for Trading – From Idea to Execution, investment factors should be based on a fundamental and economic rationale; otherwise, they are more likely the result of overfitting to historical data than persisting and generating alpha on new data",
+          "Quality of the signal content\nThe signal content can be evaluated with respect to the target asset class, the investment style, the relation to conventional risk premiums, and most importantly, its alpha content"
+        ],
+        "length": 47316
+      }
+    },
+    {
+      "title": "Text/Chapter_4.xhtml",
+      "file": "Text/Chapter_4.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 6,
+            "examples": [
+              "my for years, and persistent supply shortages can trigger and support upward price momentum (novy-marx, 201",
+              "then, we run the filter method to trigger the forward algorithm, which iteratively estimate",
+              "reflect this correlation and are designed to send buy signals for undervalued assets that are relatively cheap"
+            ]
+          },
+          "backtesting": {
+            "count": 3,
+            "examples": [
+              " and factor turnover. an in-depth introduction to backtesting trading strategies that use machine learning f",
+              "nstrate how to evaluate factors using the zipline backtesting library. we will also highlight some factors b",
+              "eturn perspective. in the next chapter, portfolio optimization and strategy evaluation, we will turn to various "
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              " over time (see chapter 10, bayesian ml – dynamic sharpe ratios and pairs trading, for more details on bay",
+              "k-free rate, the ir corresponds to the well-known sharpe ratio, and we will highlight crucial statistical "
+            ]
+          },
+          "psychology": {
+            "count": 6,
+            "examples": [
+              "been written by andrew ang (2014), who heads this discipline at blackrock, which manages close to $7 trillion.",
+              "al markets, or investor behavior, including known biases of this behavior.",
+              "ere factor risk premiums result from the possibly biased, or not entirely rational, behavior of agents t"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 4,
+            "examples": [
+              "rice trend (adjusted for volatility) using linear regression on daily prices for a longer and a shorter period",
+              "ure of assets to common risk factors using linear regression in chapter 7, linear models – from risk factors t",
+              "erive synthetic, data-driven risk factors using unsupervised learning—in particular, principal and independent componen"
+            ]
+          },
+          "features": {
+            "count": 2,
+            "examples": [
+              "financial feature engineering – how to research alpha factors",
+              "u are already familiar with ml, you may know that feature engineering is a key ingredient for successful predictions. t"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "If you are already familiar with ML, you may know that feature engineering is a key ingredient for successful predictions",
+          "This chapter also presents key tools that facilitate computing and testing alpha factors",
+          "We will discuss key alpha factor metrics like the information coefficient and factor turnover",
+          "The design, evaluation, and combination of alpha factors are critical steps during the research phase of the algorithmic trading strategy workflow, which is displayed in Figure 4",
+          "Alpha factors are transformations of market, fundamental, and alternative data that contain predictive signals"
+        ],
+        "length": 86027
+      }
+    },
+    {
+      "title": "Text/Chapter_5.xhtml",
+      "file": "Text/Chapter_5.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 3,
+            "examples": [
+              "    \"\"\"setup: register pipeline, schedule rebalancing,\r",
+              "we'll use the same setup with 50 long and short positions derived from the",
+              "information. they do this to capture more complex patterns than the simpler alpha factors that were most pr"
+            ]
+          },
+          "risk": {
+            "count": 6,
+            "examples": [
+              "risk management has evolved to become more sophisticated as addit",
+              "n the form of specialized index funds. similarly, risk management now aims to control the exposure of numerous sour",
+              "max drawdown: highest percentage loss from the previous peak"
+            ]
+          },
+          "backtesting": {
+            "count": 7,
+            "examples": [
+              "y their performance. strategy evaluation includes backtesting against historical data to optimize the strate",
+              "he previous chapter (see the implementation in 01_backtest_with_trades.ipynb).",
+              "walk-forward testing – out-of-sample returns"
+            ]
+          },
+          "metrics": {
+            "count": 4,
+            "examples": [
+              " unit of risk are very popular. we'll discuss the sharpe ratio and the information ratio in turn.",
+              "the sharpe ratio",
+              "sortino ratio: excess return relative to downside standar"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "al alpha. economic rationales, such as behavioral biases of under- or overreaction by investors to new i",
+              "nsactions, financing, and agency. many behavioral biases have the same effect, and some frictions are mo",
+              "the fundamental law of active management"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 4,
+            "examples": [
+              "ting, and tuning linear models for regression and classification using cross-validation to achieve robust out-of-s",
+              "tors to return forecasts, on shrinkage for linear regression). the code example lives in 02_backtest_with_pf_o",
+              "y training, testing, and tuning linear models for regression and classification using cross-validation to achi"
+            ]
+          },
+          "validation": {
+            "count": 2,
+            "examples": [
+              "ar models for regression and classification using cross-validation to achieve robust out-of-sample performance. we w",
+              "value of complex models that generate the risk of overfitting. the simplest strategy—an equally-weighted portfo"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "the computation involves the dot product of the precision matrix, which is the inverse of the covariance ma",
+              "precision_matrix = pd.dataframe(inv(cov_matrix), index=stoc"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "This is important because the time-series properties of investment strategies (for example, mean reversion, momentum, and other forms of serial correlation) can have a non-trivial impact on the SR estimator itself, especially when annualizing the SR from higher-frequency data (Lo, 2002)",
+          "The fundamental law of active management\n\"Diversification is protection against ignorance",
+          "The Fundamental Law of Active Management explains how such a result can be achieved: it approximates the IR as the product of the information coefficient (IC) and the breadth of the strategy",
+          "The Fundamental Law states that the IR, also known as the appraisal risk (Treynor and Black), is the product of both values",
+          "The Fundamental Law is important because it highlights the key drivers of outperformance: both accurate predictions and the ability to make independent forecasts and act on these forecasts matter"
+        ],
+        "length": 51013
+      }
+    },
+    {
+      "title": "Text/Chapter_6.xhtml",
+      "file": "Text/Chapter_6.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              "olve around the automated detection of meaningful patterns in data. two prominent examples include:",
+              "ey challenge of automated learning is to identify patterns in the training data that are meaningful when ge"
+            ]
+          },
+          "risk": {
+            "count": 1,
+            "examples": [
+              "use cases – from risk management to text processing"
+            ]
+          },
+          "backtesting": {
+            "count": 5,
+            "examples": [
+              "pendency, the timeseriessplit object implements a walk-forward test with an expanding training set, where subseq",
+              "can use the max_train_size parameter to implement walk-forward cross-validation, where the size of the training ",
+              "ize the attainable combinations and allow for the optimization of the threshold, given the costs and benefits of"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "rate how prediction errors are due to the model's bias or variance, or because of a high noise-to-signal",
+              "how the bias-variance trade-off impacts predictive performance",
+              "we will apply these models to the market, fundamental, and alternative data sources introduced in the f"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 6,
+            "examples": [
+              "linear models for the regression and classification of cross-section, time series, and panel data",
+              "trading. we'll contrast supervised regression and classification problems and the use of supervised learning for s",
+              "linear models for the regression and classification of cross-section, time series,"
+            ]
+          },
+          "features": {
+            "count": 2,
+            "examples": [
+              "e information coefficient in chapter 4, financial feature engineering – how to research alpha factors. there are also i",
+              "ly accessible to the algorithm in their raw form. feature engineering benefits from domain expertise, the application o"
+            ]
+          },
+          "models": {
+            "count": 4,
+            "examples": [
+              "ensemble models, including random forest and gradient-boosting machines",
+              "s to increase the transparency of complex models. random forests, for example, have recently gained a framework f",
+              "neural network models, including recurrent and convolutional arc"
+            ]
+          },
+          "validation": {
+            "count": 6,
+            "examples": [
+              "using cross-validation to optimize hyperparameters with a focus on time-",
+              "how to select a model using cross-validation",
+              "resent methods to diagnose sources of errors like overfitting and improve your model's performance."
+            ]
+          },
+          "metrics": {
+            "count": 7,
+            "examples": [
+              "he metrics listed in the following table, such as accuracy, evaluate a model for a given threshold:",
+              "precision-recall curves – zooming in on one class",
+              "or one of the classes are of particular interest, precision and recall curves visualize the trade-off between"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "Most importantly, we'll present methods to diagnose sources of errors like overfitting and improve your model's performance",
+          "The challenge – matching the algorithm to the task\nThe key challenge of automated learning is to identify patterns in the training data that are meaningful when generalizing the model's learning to new data",
+          "Hence, the key challenge becomes how to choose a model with a hypothesis space large enough to contain a solution to the learning problem, yet small enough to ensure reliable learning and generalization given the size of the training data",
+          "The main categories are supervised, unsupervised, and reinforcement learning, and we will review their key differences next",
+          "The task of learning an input-outcome relationship from data that permits accurate predictions of outcomes for new inputs faces important trade-offs"
+        ],
+        "length": 55689
+      }
+    },
+    {
+      "title": "Text/Chapter_7.xhtml",
+      "file": "Text/Chapter_7.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 3,
+            "examples": [
+              "on code only differs with respect to the pipeline setup. the lasso object lets you set the tolerance and ",
+              "s helps to detect whether they reflect systematic patterns, as opposed to random noise that suggests the mo",
+              " a visual inspection of the residuals. systematic patterns in the (supposedly random) residuals suggest sta"
+            ]
+          },
+          "risk": {
+            "count": 1,
+            "examples": [
+              "process, from construction and asset selection to risk management and performance evaluation. the importance of fac"
+            ]
+          },
+          "backtesting": {
+            "count": 6,
+            "examples": [
+              "trategy and demonstrate the end-to-end process of backtesting a strategy driven by a machine learning model.",
+              "cks also has the benefit of reducing training and backtesting time; excluding stocks with low dollar volumes",
+              "gradient descent is a general-purpose optimization algorithm that will find stationary points of smo"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "linear models. they use a complexity penalty that biases the coefficients learned by the model, with the",
+              "ols method delivers estimates that are not only unbiased but also efficient, which means that ols estima",
+              "tor model also permits the assessment of the incremental signal content of new alpha factors."
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 6,
+            "examples": [
+              "for categorical response variables that appear in classification problems.",
+              "tice, linear models are applied to regression and classification problems with the goals of inference and predicti",
+              "linear regression has been known for over 200 years, since legendre"
+            ]
+          },
+          "features": {
+            "count": 2,
+            "examples": [
+              "ng the lines we discussed in chapter 4, financial feature engineering – how to research alpha factors, as well as forwa",
+              "sing ta-lib, as described in chapter 4, financial feature engineering – how to research alpha factors."
+            ]
+          },
+          "models": {
+            "count": 6,
+            "examples": [
+              "dditive models, which includes decision trees and random forests, as well as gradient boosting machines and neura",
+              "des decision trees and random forests, as well as gradient boosting machines and neural networks.",
+              "dient descent are widely used in training complex neural networks, but also to compute solutions for mle problems."
+            ]
+          },
+          "validation": {
+            "count": 4,
+            "examples": [
+              "le metrics; we will use out-of-sample testing and cross-validation when we focus on predictive models in the next se",
+              "ion when the goal is an in-sample fit; otherwise, cross-validation and selection based on estimates of generalizatio",
+              "rtcomings of r2, therefore, is that it encourages overfitting."
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "prediction accuracy: the low bias but high variance of least-squares ",
+              " holding period that produces the best predictive accuracy, as measured by the information coefficient (ic)."
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "First, we will introduce the baseline techniques for cross-section and panel data for linear models, as well as important enhancements that produce accurate estimates when key assumptions are violated",
+          "We'll do this after introducing the most important methods to learn the parameters",
+          "Maximum likelihood estimation\nMLE is an important general method used to estimate the parameters of a statistical model",
+          "The size of these steps is determined by the learning rate, which is a critical parameter that may require tuning",
+          "The key ingredient for statistical inference is a test statistic with a known distribution, typically computed from a quantity of interest like a regression coefficient"
+        ],
+        "length": 92280
+      }
+    },
+    {
+      "title": "Text/Chapter_8.xhtml",
+      "file": "Text/Chapter_8.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 6,
+            "examples": [
+              "simulate the resulting trades triggered using historical market data",
+              "of an algorithmic strategy are trading rules that trigger actions based on data. look-ahead bias emerges wh",
+              "o omit some detail and streamline the backtesting setup. i highly recommend browsing the documentation to"
+            ]
+          },
+          "risk": {
+            "count": 4,
+            "examples": [
+              "iplies a signal vector that represents the target position size with a vector of returns for the investment horiz",
+              "nt other than what we compute after the fact, and risk management rules like stop-loss are difficult to simulate.",
+              "robust algorithms that outperform, subject to its risk management criteria. to this end, they use competitions to s"
+            ]
+          },
+          "backtesting": {
+            "count": 6,
+            "examples": [
+              "the ml4t workflow – from model to strategy backtesting",
+              "is end, we will demonstrate in more detail how to backtest an ml-driven strategy in a historical market cont",
+              "e tearsheets we presented in chapter 5, portfolio optimization and performance evaluation:"
+            ]
+          },
+          "metrics": {
+            "count": 3,
+            "examples": [
+              "rning (2018). we will also introduce the deflated sharpe ratio (sr), which illustrates how to adjust metri",
+              "rectory for the python implementation of deflated_sharpe_ratio.py and references for the derivation of the",
+              "k metrics, such as the value at risk (var) or the sortino ratio."
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "dological aspects that require attention to avoid biased results and false discoveries that will lead to",
+              "nging markets, several implementation aspects can bias the results and increase the risk of mistaking in",
+              "source and prepare market, fundamental, and alternative data"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              "ly return predictions that we created using ridge regression in the previous chapter. using a few simple techn",
+              "using the daily return predictions from the ridge regression from chapter 7, linear models – from risk factors"
+            ]
+          },
+          "features": {
+            "count": 2,
+            "examples": [
+              " numpy, ta-lib) presented in chapter 4, financial feature engineering – how to research alpha factors, are an alternati",
+              "yrical that we introduced in chapter 4, financial feature engineering – how to research alpha factors and chapter 5, po"
+            ]
+          },
+          "validation": {
+            "count": 2,
+            "examples": [
+              "furthermore, the risk of backtest overfitting does not only arise from running numerous tests b",
+              "acktests run by others on the same data, backtest-overfitting is very hard to avoid in practice."
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "The solution involves using sample periods that include important market phenomena or generating synthetic data that reflects the relevant market characteristics",
+          ")\nOptimal stopping for backtests\nIn addition to limiting backtests to strategies that can be justified on theoretical grounds as opposed to mere data-mining exercises, an important question is when to stop running additional tests",
+          "In this context, the optimal rule is to always reject the first n/e candidates and then select the first candidate that surpasses all the previous options",
+          "Key implementation aspects\nThe requirements for a realistic simulation may be met by a single platform that supports all steps of the process in an end-to-end fashion, or by multiple tools that each specialize in different aspects",
+          "The following sections highlight key items and implementation details that need to be addressed to put this process into action"
+        ],
+        "length": 68478
+      }
+    },
+    {
+      "title": "Text/Chapter_9.xhtml",
+      "file": "Text/Chapter_9.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 7,
+            "examples": [
+              "ns away from its moving average as long and short entry signals, and crossings of the moving average in reverse ",
+              "short positions for pairs whose spreads triggered entry signals",
+              "trading phase: trigger entry and exit trading rules as price movements c"
+            ]
+          },
+          "risk": {
+            "count": 2,
+            "examples": [
+              "y, we could have handled this using the stop-loss risk management that we included in the strategy (see the next se",
+              "arameters, including the trading rules. moreover, risk management should account for concentrated positions that ar"
+            ]
+          },
+          "backtesting": {
+            "count": 6,
+            "examples": [
+              ", and how to utilize these tools to implement and backtest a long-short pairs trading strategy.",
+              "preparing the strategy backtest",
+              "intervals. see, for example, chapter 5, portfolio optimization and performance evaluation, in marcos lopez de pr"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "tive beta of -0.14 (right panel), with an average sharpe ratio of 0.75 and a sortino ratio of 1.05 (centra",
+              "anel), with an average sharpe ratio of 0.75 and a sortino ratio of 1.05 (central panel):"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "s) learning algorithm, and saw that it produces unbiased coefficients for a correctly specified model wi",
+              "he smallest mean squared prediction error among unbiased estimators.",
+              "een data points separated by a given lag are fundamental to analyzing and exploiting patterns in time seri"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 4,
+            "examples": [
+              " dimensions, when we learned how the fama-macbeth regressions estimate the value of risk factors over time and",
+              "rmore, we covered the regularized ridge and lasso regression models, which produce biased coefficient estimate",
+              "pproaches: besides pair identification based on unsupervised learning like principal component analysis (see chapter 13"
+            ]
+          },
+          "features": {
+            "count": 2,
+            "examples": [
+              "lity to engineer features in chapter 4, financial feature engineering – how to research alpha factors, and chapter 7, l",
+              "me noise, as demonstrated in chapter 4, financial feature engineering – how to research alpha factors:"
+            ]
+          },
+          "models": {
+            "count": 4,
+            "examples": [
+              "hapters, we will see two examples of this, namely random forests and gradient boosting models, and we will encoun",
+              "e two examples of this, namely random forests and gradient boosting models, and we will encounter several more in ",
+              " nonlinear models like recurrent or convolutional neural networks in part 4."
+            ]
+          },
+          "validation": {
+            "count": 3,
+            "examples": [
+              "ration. it achieves an area-under-the-curve (auc) cross-validation score of 0.815; excluding the correlation metrics",
+              "umber of parameters, in turn reducing the risk of overfitting.",
+              "a terms by 1 if your model contains both to avoid overfitting, especially if the more complex model requires mo"
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "to evaluate the predictive accuracy of the heuristics, we first run a logistic regres"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "A key characteristic of time-series data is their sequential order: rather than random samples of individual observations, as in the case of cross-sectional data, our data is a single realization of a stochastic process that we cannot repeat",
+          "Key applications include the prediction of asset returns and volatility, as well as the identification of the co-movements of asset price series",
+          "Just as relationships between different variables at a given point in time is key for cross-sectional models, relationships between data points separated by a given lag are fundamental to analyzing and exploiting patterns in time series",
+          "We will introduce the most important tools for this purpose, including the decomposition into key systematic elements, the analysis of autocorrelation, and rolling window statistics such as moving averages",
+          "For most of the examples in this chapter, we will work with data provided by the Federal Reserve that you can access using pandas-datareader, which we introduced in Chapter 2, Market and Fundamental Data – Sources and Techniques"
+        ],
+        "length": 82753
+      }
+    },
+    {
+      "title": "Text/Chapter_10.xhtml",
+      "file": "Text/Chapter_10.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "risk": {
+            "count": 1,
+            "examples": [
+              "ctions. the applications range from more granular risk management to dynamic updates of predictive models that inco"
+            ]
+          },
+          "backtesting": {
+            "count": 3,
+            "examples": [
+              ". we could use the returns on any of our strategy backtests instead of the amzn returns.",
+              "ach to asset allocation (see chapter 5, portfolio optimization and performance evaluation) can be interpreted as",
+              "d that approximates probability densities through optimization. in the bayesian context, it approximates the pos"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "bayesian ml – dynamic sharpe ratios and pairs trading",
+              "bayesian ml applications to compute dynamic sharpe ratios, dynamic pairs trading hedge ratios, and e"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "e mle. for example, a strong prior that a coin is biased can be incorporated in the mle context by addin",
+              "ce. hence, averages over samples can be used as unbiased estimators of the expected values of parameters",
+              "bayes came up with, over 250 years ago, uses fundamental probability theory to prescribe how probabilities"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 3,
+            "examples": [
+              "let's illustrate this process using a binary classification example for stock price movements.",
+              " illustrate this workflow using a simple logistic regression to model the prediction of a recession (see the n",
+              "model definition – bayesian logistic regression"
+            ]
+          },
+          "models": {
+            "count": 4,
+            "examples": [
+              "iple models into an ensemble of trees to create a random forest.",
+              "like a covariance matrix or the weights of a deep neural network.",
+              "we will illustrate this workflow using a simple logistic regression to model the prediction of a recession"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "t step, you should try to evaluate the predictive accuracy. we covered how to make predictions in the previo",
+              "as already indicated, the precision of the estimate depends on the serial correlation"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "The Bayesian view is very useful for many real-world events that are rare or unique, at least in important respects",
+          "However, such exact, analytical methods are not always available",
+          "\"\n–John Maynard Keynes\n\nThe theorem that Reverend Thomas Bayes came up with, over 250 years ago, uses fundamental probability theory to prescribe how probabilities or beliefs should change as relevant new information arrives",
+          "The preceding Keynes quotation captures that spirit",
+          "A key difference to frequentist statistics is that Bayesian assumptions are expressed as probability distributions rather than parameter values"
+        ],
+        "length": 59452
+      }
+    },
+    {
+      "title": "Text/Chapter_11.xhtml",
+      "file": "Text/Chapter_11.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 3,
+            "examples": [
+              "et up a pipeline, and define rebalancing rules to trigger trades accordingly.",
+              "best cross-validation score (now using the proper setup, which avoids lookahead bias).",
+              "s the worst performance for 5 days, with no clear patterns. longer training appears to improve the 1-day mo"
+            ]
+          },
+          "risk": {
+            "count": 2,
+            "examples": [
+              "of 0.08 (relative to the nikkei 225). the maximum drawdown was 11.0 percent in-sample and 8.7 percent out-of",
+              "max drawdown"
+            ]
+          },
+          "backtesting": {
+            "count": 4,
+            "examples": [
+              "the hyperparameters of a random forest model, and backtest trading rules based on the model's signals. the r",
+              "ter 8, the ml4t workflow – from model to strategy backtesting.",
+              " optimize the bias-variance trade-off and prevent overfitting."
+            ]
+          },
+          "metrics": {
+            "count": 3,
+            "examples": [
+              "the right panel shows the 3-month rolling sharpe ratio, which reaches 0.96 in-sample and 0.61 out-",
+              "sharpe ratio",
+              "sortino ratio"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              " tune the model's hyperparameters to optimize the bias-variance trade-off and prevent overfitting.",
+              "t_split, which does not protect against lookahead bias, as the custom multipletimeseriescv iterator we i",
+              "sparency and interpretability. they are also fundamental building blocks for more powerful ensemble models"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 6,
+            "examples": [
+              "ree and use it for prediction with regression and classification problems, visualize and interpret the rules learn",
+              "use decision trees for regression and classification",
+              "in a decision tree and use it for prediction with regression and classification problems, visualize and interp"
+            ]
+          },
+          "features": {
+            "count": 5,
+            "examples": [
+              "06-2017 and follow a process similar to our first feature engineering example in chapter 4, financial feature engineeri",
+              "nd apply dummy encoding (see chapter 4, financial feature engineering – how to research alpha factors and chapter 6, th",
+              "ture importance thus computed is also popular for feature selection as an alternative to the mutual information measu"
+            ]
+          },
+          "models": {
+            "count": 6,
+            "examples": [
+              "random forests – a long-short strategy for japanese stocks",
+              "e learning models for trading: decision trees and random forests. we will see how decision trees learn rules from",
+              "bm package, which has been primarily designed for gradient boosting. one of several advantages is lightgbm's abili"
+            ]
+          },
+          "validation": {
+            "count": 4,
+            "examples": [
+              "or a random prediction (but keep in mind that the cross-validation method here does not respect the time-series natu",
+              "sequence of trees that can then be compared using cross-validation to select the ideal size.",
+              " optimize the bias-variance trade-off and prevent overfitting."
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "to evaluate the predictive accuracy of our first classification tree, we will use our",
+              "earch suggested 12 levels for the best predictive accuracy. however, the plot shows similar auc scores for l"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "Decision trees are not only important standalone models but are also frequently used as components in other models",
+          "Also, note that training the decision tree takes 58 milliseconds compared to 66 microseconds for the linear regression",
+          "5: Classification loss functions\nNote that cross-entropy takes almost 20 times as long to compute as the Gini measure (see the notebook for details)",
+          "Cost-complexity-pruning, for instance, starts with a large tree and recursively reduces its size by replacing nodes with leaves, essentially running the tree construction in reverse",
+          "How to regularize a decision tree\nThe following table lists the key parameters available for this purpose in the scikit-learn decision tree implementation"
+        ],
+        "length": 80230
+      }
+    },
+    {
+      "title": "Text/Chapter_12.xhtml",
+      "file": "Text/Chapter_12.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 3,
+            "examples": [
+              "vary the experiment setup using, for example, longer or shorter holding and",
+              "ain insights into how prevalent certain influence patterns are across the dataset. the following plot shows",
+              "ints on the feature shap values to identify these patterns, and displays the result interactively for explo"
+            ]
+          },
+          "risk": {
+            "count": 3,
+            "examples": [
+              "lookback periods. it would also use sophisticated risk management, from simple stop-loss to value-at-risk analysis.",
+              "max drawdown",
+              " values of 0.24 and 0.22, respectively. the worst drawdown leads to losses of 17.59 percent in the second ha"
+            ]
+          },
+          "backtesting": {
+            "count": 6,
+            "examples": [
+              "ns, and apply boosting to high-frequency data and backtest an intraday trading strategy.",
+              "backtesting a strategy based on a boosting ensemble",
+              "additional features and optimizations"
+            ]
+          },
+          "metrics": {
+            "count": 3,
+            "examples": [
+              "sharpe ratio",
+              "the sharpe ratio is 1.24 in-sample and 0.61 out-of-sample; t",
+              "sortino ratio"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "forest trees are usually grown deep to ensure low bias while relying on the randomized training process ",
+              "ch builds ensembles of very large trees to reduce bias, adaboost grows shallow trees as weak learners, o",
+              "iction for each leaf node that minimizes the incremental loss due to adding this new learner to the ensemb"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 4,
+            "examples": [
+              "an ensemble. boosting was initially developed for classification problems, but can also be used for regression, an",
+              "nd around 1990. in 1997, a practical solution for classification problems emerged in the form of the adaptive boos",
+              "classification problems, but can also be used for regression, and has been called one of the most potent learn"
+            ]
+          },
+          "features": {
+            "count": 3,
+            "examples": [
+              "h the features we created in chapter 4, financial feature engineering – how to research alpha factors.",
+              "n producing different outcomes, measured by their feature importance for a decision tree that has grown to its maximum",
+              "boosting or random forest models, is to attribute feature importance values to each input variable. these feature impo"
+            ]
+          },
+          "models": {
+            "count": 10,
+            "examples": [
+              "in the previous chapter, we saw how random forests improve on the predictions of a decision tree by",
+              " with some observations repeating. in addition, a random forest randomly selects a subset of the features so that",
+              "tasets using the state-of-the-art implementations xgboost, lightgbm, and catboost."
+            ]
+          },
+          "validation": {
+            "count": 4,
+            "examples": [
+              "figure 12.1: adaboost cross-validation performance",
+              "ing the risk of overfitting for a large ensemble. cross-validation is the best approach to find the optimal ensemble",
+              " this so that the ensemble is less susceptible to overfitting, has a lower variance, and thus generalizes bette"
+            ]
+          },
+          "metrics": {
+            "count": 4,
+            "examples": [
+              " trees as weak learners, often producing superior accuracy with stumps—that is, trees formed by a single spl",
+              "the validation results show a weighted accuracy of 0.5068, an auc score of 0.5348, and precision ",
+              "d accuracy of 0.5068, an auc score of 0.5348, and precision and recall values of 0.547 and 0.576, respectivel"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "The key to reducing the high variance of an individual tree is the use of bagging, short for bootstrap aggregation, which introduces randomness into the process of growing individual trees",
+          "The key difference is that boosting modifies the training data for each new tree based on the cumulative errors made by the model so far",
+          "The code examples for this section are in the notebook boosting_baseline, which compares the performance of various algorithms with a dummy classifier that always predicts the most frequent class",
+          "The complexity of base_estimator is a key tuning parameter because it depends on the nature of the data",
+          "1 shows the distribution of the various metrics for the 12 train and test folds as a boxplot (note that the random forest perfectly fits the training set):\n\nFigure 12"
+        ],
+        "length": 87789
+      }
+    },
+    {
+      "title": "Chapter 6, The Machine Learning Process, introduced how unsupervised learning adds value by uncovering structures in data without the need for an outcome variable to guide the search process. This contrasts with supervised learning, which was the focus of the last several chapters: instead of predicting future outcomes, unsupervised learning aims to learn an informative representation of the data that helps explore new data, discover useful insights, or solve some other task more effectively.",
+      "file": "Text/Chapter_13.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              "an der maaten and geoff hinton in 2008, to detect patterns in high-dimensional data. it takes a probabilist",
+              "the cumulative plot shows a typical \"elbow\" pattern that can help to identify a suitable target dimen"
+            ]
+          },
+          "risk": {
+            "count": 2,
+            "examples": [
+              " that leverages hierarchical clustering to assign position sizes to assets based on the risk characteristics of s",
+              "ation of markowitz's modern portfolio theory, the kelly criterion, and risk parity. in this section, we c"
+            ]
+          },
+          "backtesting": {
+            "count": 4,
+            "examples": [
+              "backtesting hrp using an ml trading strategy",
+              "ing models developed in the last chapter. we will backtest a strategy for 2015-2017 with a universe of the 1",
+              "by previously computed components. the sequential optimization ensures that new components are not correlated wi"
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "133 percent for ew, and 75.1 percent for hrp. the sharpe ratios are 1.16, 1.01, and 0.83, respectively. al"
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "orizon, exposure to risk factors, or similar fundamentals. in this chapter, we will learn how to use clust",
+              " beyond which additional components add less incremental value."
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 6,
+            "examples": [
+              "r example, rather than using third-party industry classifications, clustering allows us to identify synthetic grou",
+              "l2 norm, which we applied to the vector of linear regression coefficients to train a regularized ridge regress",
+              "en estimates risk model coefficients using linear regression."
+            ]
+          },
+          "models": {
+            "count": 4,
+            "examples": [
+              "clude the tree-based models we saw in chapter 11, random forests – a long-short strategy for japanese stocks, and",
+              "rnatives using a long-only strategy driven by the gradient boosting models we developed in the last chapter.",
+              "to this end, we'll build on the gradient boosting models developed in the last chapter. we will "
+            ]
+          },
+          "validation": {
+            "count": 1,
+            "examples": [
+              " 10 models that performed best during the 2015-16 cross-validation period (refer to chapter 12, boosting your tradin"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "For example, rather than using third-party industry classifications, clustering allows us to identify synthetic groupings based on the attributes of assets useful for our purposes, such as returns over a certain time horizon, exposure to risk factors, or similar fundamentals",
+          "The critical question that we take on in the following section then becomes: what are the best ways to find a lower-dimensional representation of the data",
+          "4 illustrates several aspects of PCA for a two-dimensional random dataset (refer to the notebook pca_key_ideas):\n\nThe left panel shows how the first and second principal components align with the directions of maximum variance while being orthogonal",
+          "4: PCA in 2D from various perspectives\nKey assumptions made by PCA\nPCA makes several assumptions that are important to keep in mind",
+          "Other key configuration parameters of the PCA object are:\n\nn_components: Compute all principal components by passing None (the default), or limit the number to int"
+        ],
+        "length": 63659
+      }
+    },
+    {
+      "title": "Text/Chapter_14.xhtml",
+      "file": "Text/Chapter_14.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              "s on the  natural language toolkit (nltk) and the pattern web mining libraries. textblob facilitates pos ta",
+              "rsed documents using dictionaries provided by the pattern library. these dictionaries lexicon-map adjective"
+            ]
+          },
+          "backtesting": {
+            "count": 1,
+            "examples": [
+              "data frequencies) rather than expensive iterative optimization. it is also intuitive and somewhat interpretable,"
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "in this chapter, we will introduce fundamental feature extraction techniques that focus on indiv",
+              "what the fundamental nlp workflow looks like"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 6,
+            "examples": [
+              "trix and then proceed to use it as input for news classification and sentiment analysis. we will also introduce th",
+              "ment-term matrix that is frequently used for text classification, retrieval, or summarization.",
+              "logistic regression"
+            ]
+          },
+          "models": {
+            "count": 4,
+            "examples": [
+              "multiclass gradient boosting with lightgbm",
+              "for comparison, we also train a lightgbm gradient boosting tree ensemble with default settings and a mult",
+              "logistic regression"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "we evaluate the multiclass predictions using accuracy to find the default classifier achieved an accura",
+              "accuracy_score(y_test, y_pred_class)\r"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "A key challenge consists of converting text into a numerical format without losing its meaning",
+          "In this chapter, we will introduce fundamental feature extraction techniques that focus on individual semantic units, that is, words or short groups of words called tokens",
+          "Key challenges of working with text data\nThe conversion of unstructured text into a machine-readable format requires careful preprocessing to preserve the valuable semantic aspects of the data",
+          "\"\nKnowledge of the world: \"Mary and Sue are sisters\" versus \"Mary and Sue are mothers\"\n\nThe NLP workflow\nA key goal for using ML from text data for algorithmic trading is to extract signals from documents",
+          "1 lays out the key steps to convert documents into a dataset that can be used to train a supervised ML algorithm capable of making actionable predictions:\n\nFigure 14"
+        ],
+        "length": 47434
+      }
+    },
+    {
+      "title": "Text/Chapter_15.xhtml",
+      "file": "Text/Chapter_15.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              "to evaluate the semantic quality of the uncovered patterns."
+            ]
+          },
+          "backtesting": {
+            "count": 1,
+            "examples": [
+              "accurate distance measurements, and result in the overfitting of text classification models."
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 4,
+            "examples": [
+              "asurements, and result in the overfitting of text classification models.",
+              "the notebook includes regression results that quantify the relationships between p",
+              "a-driven risk factors and asset allocation with unsupervised learning. while effective, it is difficult to evaluate the"
+            ]
+          },
+          "models": {
+            "count": 1,
+            "examples": [
+              "in the next chapter, we will learn how to train neural networks that embed individual words in a high-dimensiona"
+            ]
+          },
+          "validation": {
+            "count": 1,
+            "examples": [
+              "accurate distance measurements, and result in the overfitting of text classification models."
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "ained model. the model makes four mistakes for an accuracy of 92 percent."
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "It aims to address a key challenge for a machine learning algorithm that learns from text data by transcending the lexical level of \"what actually has been written\" to the semantic level of \"what was intended",
+          "5: pLSA weights by topic for train and test data\nWe also note that the word lists that describe each topic begin to make more sense; for example, the \"Entertainment\" category is most directly associated with Topic 4, which includes the words \"film,\" \"star,\" and so forth, as you can see in Figure 15",
+          "8 summarizes these relationships and highlights the key model parameters:\n\nFigure 15",
+          "We will introduce the key concepts; each LDA application notebook contains examples",
+          "11: Most important words for earnings call topics\nUsing pyLDAvis' relevance metric with a 0"
+        ],
+        "length": 34182
+      }
+    },
+    {
+      "title": "Text/Chapter_16.xhtml",
+      "file": "Text/Chapter_16.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "psychology": {
+            "count": 1,
+            "examples": [
+              "gement commentary (see chapter 2, market and fundamental data – sources and techniques)."
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 6,
+            "examples": [
+              "e loss computed by an objective function based on classification errors. we will see in the next section how word2",
+              " and approximates the multiclass task by a binary classification problem. the nce derivative approaches the softma",
+              "tion that we encountered when discussing logistic regression in chapter 7, linear models – from risk factors t"
+            ]
+          },
+          "models": {
+            "count": 7,
+            "examples": [
+              "ial logistic regression. we use 500 trees for the random forest:",
+              "eed to train a randomforestclassifier, a lightgbm gradient boosting model, and a multinomial logistic regression. ",
+              "he accuracy for each model on the validation set, gradient boosting performs significantly better at 62.24 percent"
+            ]
+          },
+          "metrics": {
+            "count": 4,
+            "examples": [
+              "imilar vectors for similar usage) rather than the accuracy on a test set. it may, however, produce poorer re",
+              "vectors. for this purpose, the library has the wv.accuracy function, which we use to pass the path to the an",
+              "ly better at 62.24 percent. figure 16.8 shows the confusion matrix and accuracy for each model:"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "This chapter uses neural networks and deep learning; if unfamiliar, you may want to first read Chapter 17, Deep Learning for Trading, which introduces key concepts and libraries",
+          "Note that, assuming normed vectors, the dot product is maximized (in absolute terms) when vectors are equal, and minimized when they are orthogonal",
+          "2 million tokens\n\nWe can use Gensim to convert the vector text files using glove2word2vec and then load them into the KeyedVector object:\nfrom gensim",
+          "models import Word2Vec, KeyedVectors\r\nfrom gensim",
+          "glove2word2vec import glove2word2vec\r\nglove2word2vec(glove_input_file=glove_file, word2vec_output_file=w2v_file)\r\nmodel = KeyedVectors"
+        ],
+        "length": 55894
+      }
+    },
+    {
+      "title": "Text/Chapter_17.xhtml",
+      "file": "Text/Chapter_17.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 3,
+            "examples": [
+              "idia, and configuration requires installation and setup of the cuda environment. the process continues to",
+              "earning algorithm could use to detect or classify patterns.",
+              "the data most useful for detecting or classifying patterns. dl combines this technique with specific assump"
+            ]
+          },
+          "backtesting": {
+            "count": 6,
+            "examples": [
+              "finally, we will develop, backtest, and evaluate a trading strategy based on signals",
+              "designing and backtesting a trading strategy based on deep nn signals",
+              "unately, given the highly nonlinear nature of the optimization problem, there is no guarantee that it will find "
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "35.7 percent for the 12 out-of-sample months. the sharpe ratio is 0.72 in-sample and 2.15 out-of-sample, d"
+            ]
+          },
+          "psychology": {
+            "count": 5,
+            "examples": [
+              "important subfield with a long history in related disciplines such as statistics and became prominent in the 1",
+              "tion of the input values. a layer may also have a bias node that always outputs a 1 and is used by the n",
+              "of the three hidden layer nodes (not counting the bias) has three weights, one for the input layer bias "
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 6,
+            "examples": [
+              "applied to a classification task, for example, higher levels of representatio",
+              "ghts and implement it in python to train a binary classification network that produces perfect results even though",
+              "n the subsequent layer, like a constant in linear regression. the goal of the training phase is to learn value"
+            ]
+          },
+          "features": {
+            "count": 1,
+            "examples": [
+              "the outcome, as discussed in chapter 4, financial feature engineering – how to research alpha factors, and throughout p"
+            ]
+          },
+          "models": {
+            "count": 4,
+            "examples": [
+              "in this chapter, we will present feedforward neural networks to introduce key elements of working with neural",
+              " based on signals generated by a deep feedforward neural network. we will design and tune the neural network and a",
+              "lly nonlinear (like the sigmoid function used for logistic regression; see chapter 7, linear models – from r"
+            ]
+          },
+          "validation": {
+            "count": 4,
+            "examples": [
+              "the models that perform best during the in-sample cross-validation period. to limit the risk of false discoveries, w",
+              "ased on arguments that can later be passed during cross-validation iterations.",
+              "backpropagation algorithm and manage the risks of overfitting. we will also show how to use the popular tensorf"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "             metrics=['accuracy'])\r",
+              "w the duration of training affects the predictive accuracy. the plots in figure 17.7, however, highlight few"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "In this chapter, we will present feedforward neural networks to introduce key elements of working with neural networks relevant to the various DL architectures covered in the following chapters",
+          "We will design and tune the neural network and analyze how key hyperparameter choices affect its performance",
+          "Deep learning – what's new and why it matters\nThe machine learning (ML) algorithms covered in Part 2 work well on a wide variety of important problems, including on text data, as demonstrated in Part 3",
+          "Hierarchical features tame high-dimensional data\nAs discussed throughout Part 2, the key challenge of supervised learning is to generalize from training data to new samples",
+          "One of the key challenges is to encode this knowledge so a computer can utilize it"
+        ],
+        "length": 77403
+      }
+    },
+    {
+      "title": "Text/Chapter_18.xhtml",
+      "file": "Text/Chapter_18.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 4,
+            "examples": [
+              "y, sutskever, and hinton 2012). this breakthrough triggered a renaissance in ml research and put deep learn",
+              "ost popular developments in cnn architectures and triggered numerous research efforts to refine and explain",
+              "velopment of hand-coded filters that extract such patterns for the use as features in machine learning (ml)"
+            ]
+          },
+          "backtesting": {
+            "count": 4,
+            "examples": [
+              "we store the predictions and proceed to backtest a trading strategy based on these daily return fo",
+              "backtesting a long-short trading strategy",
+              "ad to an exploding number of parameters that make overfitting during training all but certain."
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "sulting in a 35.6 percent cumulative return and a sharpe ratio of 0.53 (before transaction costs; right pa"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "nsist of units with parameters called weights and biases, and the training process adjusts these paramet",
+              "                           use_bias=true,\r",
+              "roviding clues about future trends, changing fundamentals, or specific events relevant to a target asset c"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 7,
+            "examples": [
+              "liver state-of-the-art performance on time-series classification across various domains (ismail fawaz et al. 2019)",
+              " and cnns have been shown to deliver high-quality classification results by exploiting their structural similarity",
+              "ly the sigmoid function that we used for logistic regression (see chapter 7, linear models – from risk factors"
+            ]
+          },
+          "features": {
+            "count": 2,
+            "examples": [
+              " (fama and french, 2015; see chapter 4, financial feature engineering – how to research alpha factors). they reflect th",
+              "using pandas_datareader (see chapter 4, financial feature engineering – how to research alpha factors): "
+            ]
+          },
+          "models": {
+            "count": 3,
+            "examples": [
+              " that we will cover in part 4. deep convolutional neural networks (cnns) have enabled superhuman performance in va",
+              "cnns are conceptually similar to feedforward neural networks (nns): they consist of units with parameters cal",
+              "ere, namely the sigmoid function that we used for logistic regression (see chapter 7, linear models – from r"
+            ]
+          },
+          "validation": {
+            "count": 4,
+            "examples": [
+              "cy does not improve for 20 rounds), we obtain the cross-validation trajectories and test accuracy for the four model",
+              "figure 18.9: cross-validation performance: accuracy and cross-entropy loss",
+              "ad to an exploding number of parameters that make overfitting during training all but certain."
+            ]
+          },
+          "metrics": {
+            "count": 3,
+            "examples": [
+              "the left side of figure 18.4 plots the top-1 accuracy against the computational cost of a variety of ne",
+              "the right side plots the top-1 accuracy per parameter for all networks. several new archi",
+              "and computational cost while providing sufficient precision for our use case:"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "By contrast, CNNs make the key assumption that the data has a grid-like topology and that the local structure matters",
+          "Furthermore, the values of nearby pixels are likely more relevant to detect key features such as edges and corners than faraway data points",
+          "CNNs also play a key role in AlphaGo, the first algorithm to win a game of Go against humans, where they evaluated different positions on the grid-like board",
+          "The most important element to encode the assumption of a grid-like topology is the convolution operation that gives CNNs their name, combined with pooling",
+          "We conclude by describing key architectural innovations over the last decade that saw enormous performance improvements"
+        ],
+        "length": 81930
+      }
+    },
+    {
+      "title": "Text/Chapter_19.xhtml",
+      "file": "Text/Chapter_19.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 4,
+            "examples": [
+              "of-sample forecast. you may want to tweak the var setup to obtain comparable forecasts and compare the pe",
+              "the difference with the rnn setup in the previous example is that we are going to p",
+              "s (rnns) that specialize in sequential data where patterns evolve over time and learning typically requires"
+            ]
+          },
+          "backtesting": {
+            "count": 2,
+            "examples": [
+              "row toward infinity (less frequent, but rendering optimization very difficult).",
+              "on the other hand, there are numerous optimizations that may well improve the result. starting with "
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "he gray elements represent layers with weight and bias parameters learned during training:",
+              "m perfect. it's unclear whether price data issues bias the results positively or negatively, but they ce",
+              "ries to predict asset prices using market or fundamental data. we will also cover how rnns can leverage al"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 4,
+            "examples": [
+              "equency characteristics that prove useful for the classification or regression task. we will demonstrate this appr",
+              "e first set of models includes the regression and classification of univariate and multivariate time series. the s",
+              "stics that prove useful for the classification or regression task. we will demonstrate this approach in the ne"
+            ]
+          },
+          "models": {
+            "count": 2,
+            "examples": [
+              "the previous chapter showed how convolutional neural networks (cnns) are designed to learn features that repre",
+              "so time series. this chapter introduces recurrent neural networks (rnns) that specialize in sequential data where "
+            ]
+          },
+          "validation": {
+            "count": 2,
+            "examples": [
+              "figure 19.7: cross-validation performance",
+              "figure 19.10: stacked lstm classification—cross-validation performance"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "            metrics=['accuracy', \r",
+              "pu. it results in a test auc of 0.6816 and a test accuracy of 0.6193 for the best model:"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "We will explore how RNNs can be applied to univariate and multivariate time series to predict asset prices using market or fundamental data",
+          "Note that input and output sequences can be of arbitrary lengths because the recurrent transformation that is fixed but learned from the data can be applied as many times as needed",
+          "The fundamental problem is the impact of repeated multiplication on gradients during backpropagation over many time steps",
+          "We'll obtain data for 2010-2019 from the Federal Reserve Bank's Data Service (FRED; see Chapter 2, Market and Fundamental Data – Sources and Techniques):\nsp500 = web",
+          "The input to every LSTM layer must have three dimensions, namely:\n\nBatch size: One sequence is one sample"
+        ],
+        "length": 62075
+      }
+    },
+    {
+      "title": "Text/Chapter_20.xhtml",
+      "file": "Text/Chapter_20.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              "xample, learn and synthesize increasingly complex patterns from grid-like data, for example, to identify or",
+              "tions and parameter sharing to learn hierarchical patterns and features irrespective of their location, tra"
+            ]
+          },
+          "risk": {
+            "count": 2,
+            "examples": [
+              " conditioned on a range of equity attributes (gu, kelly, and xiu 2020).",
+              "recent research by gu, kelly, and xiu (gkx, 2019) developed an asset pricing m"
+            ]
+          },
+          "backtesting": {
+            "count": 5,
+            "examples": [
+              "could use to create a zipline bundle for strategy backtesting (see chapter 8, the ml4t workflow – from model",
+              " to strategy backtesting).",
+              "pital asset pricing model in chapter 5, portfolio optimization and performance evaluation)."
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              " economically significant, yielding an attractive sharpe ratio when translated into a long-short decile sp"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "survivorship bias because we cannot get data for stocks that are no",
+              "es regression. they also adjust for data-snooping biases by factoring in conservative reporting lags for",
+              "leverage yfinance (see chapter 2, market and fundamental data – sources and techniques) to download price "
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 6,
+            "examples": [
+              "he observed risk factor return then allows linear regression to estimate the sensitivity of assets to these fa",
+              "tility is measured as the standard deviation of a regression of residuals of weekly returns on the returns of ",
+              "ml challenges such as the limited availability of labeled data and the curse of dimensionality, which requires e"
+            ]
+          },
+          "features": {
+            "count": 3,
+            "examples": [
+              "isk factor models covered in chapter 4, financial feature engineering – how to research alpha factors. they aim to show",
+              "r portfolios we discussed in chapter 4, financial feature engineering – how to research alpha factors, and summarized i",
+              " 20 most influential metrics while asserting that feature importance drops off quickly thereafter. the top 20 stock ch"
+            ]
+          },
+          "models": {
+            "count": 2,
+            "examples": [
+              "an autoencoder is a neural network (nn) trained to reproduce the input while learnin",
+              "underpin a trading strategy: we will build a deep neural network that uses an autoencoder to extract risk factors "
+            ]
+          },
+          "validation": {
+            "count": 3,
+            "examples": [
+              "figure 20.8: cross-validation performance for all factor and hidden-layer size ",
+              "s with other models, excess capacity will lead to overfitting, preventing the autoencoder from producing an inf",
+              "raining samples, subject to the perennial risk of overfitting."
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "Note that we encountered latent variables in Chapter 15, Topic Modeling – Summarizing Financial News, and Chapter 16, Word Embeddings for Earnings Calls and SEC Filings",
+          "4 shows that the 10 classes are well separated, suggesting that the encoding is useful as a lower-dimensional representation that preserves the key characteristics of the data (see the variational_autoencoder",
+          "We'll take a few shortcuts, such as using fewer assets and only the most important characteristics",
+          "We'll highlight the most important differences so that you can enhance the model accordingly",
+          "Since we do not have access to the high-quality but costly CRSP data, we leverage yfinance (see Chapter 2, Market and Fundamental Data – Sources and Techniques) to download price and metadata from Yahoo Finance"
+        ],
+        "length": 49441
+      }
+    },
+    {
+      "title": "Text/Chapter_21.xhtml",
+      "file": "Text/Chapter_21.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 4,
+            "examples": [
+              "gans have triggered a wave of research that initially focused on th",
+              "have attracted an enormous amount of interest and triggered a corresponding flurry of research.",
+              "hase and define the training step. it follows the pattern introduced with the dcgan example, using tf.gradi"
+            ]
+          },
+          "backtesting": {
+            "count": 5,
+            "examples": [
+              "ain supervised or reinforcement algorithms, or to backtest trading strategies. we will replicate the time-se",
+              "d the inputs available for training ml models and backtesting",
+              "unctions displayed in figure 21.4 drive the joint optimization of the network elements just described while trai"
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "ost likely (see chapter 10, bayesian ml – dynamic sharpe ratios and pairs trading), it often seems prefera"
+            ]
+          },
+          "psychology": {
+            "count": 3,
+            "examples": [
+              "                             use_bias=false,\r",
+              "                                       use_bias=false,\r",
+              "lution of 64×64 pixels. as the input changes incrementally, so do the generated images. the network consis"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 7,
+            "examples": [
+              "e, the discriminator aims to optimize the correct classification or real and fake inputs.",
+              "assessing fidelity – time-series classification performance",
+              "ts_regression = get_model()\r"
+            ]
+          },
+          "features": {
+            "count": 1,
+            "examples": [
+              "the context of more complex models, including for feature engineering. these are very early days for synthetic training"
+            ]
+          },
+          "models": {
+            "count": 2,
+            "examples": [
+              "ea in ai in the last ten years.\" a gan trains two neural networks, called the generator and discriminator, in a co",
+              "up a competitive, or adversarial game between two neural networks called the generator and the discriminator."
+            ]
+          },
+          "validation": {
+            "count": 2,
+            "examples": [
+              "rket data is a key driver of the risk of backtest overfitting.",
+              "the perennial problem of overfitting that we encountered throughout this book implies "
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "nd the adam optimizer, while tracking the auc and accuracy metrics:",
+              "                      metrics=[auc(name='auc'), 'accuracy'])\r"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "More recently, GAN instances have emerged that produce synthetic time series with significant potential for trading since the limited availability of historical market data is a key driver of the risk of backtest overfitting",
+          "Richard Feynman's quote \"What I cannot create, I do not understand\" emphasizes that modeling generative distributions is an important step towards more general AI and resembles human learning, which succeeds using much fewer samples",
+          "Adversarial training – a zero-sum game of trickery\nThe key innovation of GANs is a new way of learning the data-generating probability distribution",
+          "In this section, we will outline how this sophisticated model works, highlight key implementation steps that build on the previous DCGAN example, and show how to evaluate the quality of the resulting time series",
+          "A key element of the TimeGAN architecture is that both the generator and the embedding (or autoencoder) network are responsible for minimizing the supervised loss that measures how well the model learns the dynamic relationship"
+        ],
+        "length": 58824
+      }
+    },
+    {
+      "title": "Text/Chapter_22.xhtml",
+      "file": "Text/Chapter_22.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "risk": {
+            "count": 2,
+            "examples": [
+              "the net of trading costs and, depending on the position size, the reward for the last period",
+              "clude volatility and risk considerations, such as drawdown."
+            ]
+          },
+          "backtesting": {
+            "count": 3,
+            "examples": [
+              "o not rely on value functions, such as randomized optimization methods like genetic algorithms or simulated anne",
+              " policy and value functions used to formulate the optimization problem, and the bellman equations that form the ",
+              "t using a single stock also increases the risk of overfitting to the data—by a lot. you can test your trained a"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "de-off—too little exploration will likely produce biased value estimates and suboptimal policies, wherea",
+              "this bias can negatively affect the learning process and th",
+              "fundamental approaches to solving rl problems"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              "d and observing the consequences. it differs from supervised learning because it optimizes the agent's behavior one tri",
+              "ximate a value or policy function. they integrate supervised learning and, in particular, deep learning methods like th"
+            ]
+          },
+          "models": {
+            "count": 2,
+            "examples": [
+              "nstead, we will see how to approximate q* using a neural network (nn), which results in a deep q-network. we will ",
+              "value function approximation with neural networks"
+            ]
+          },
+          "validation": {
+            "count": 1,
+            "examples": [
+              "t using a single stock also increases the risk of overfitting to the data—by a lot. you can test your trained a"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "The following two sections outline the key features required for defining and solving an RL problem by learning a policy that automates decisions",
+          "Solving complex decision problems usually requires a simplified model that isolates the key aspects",
+          "Due to its critical impact on the agent's learning, the reward signal is often the most challenging part of designing an RL system",
+          "Rewards are the key inputs, and the goal of making value estimates is to achieve more rewards",
+          "See the resources on GitHub that include abstracts of key papers and algorithms beyond the scope of this chapter"
+        ],
+        "length": 71474
+      }
+    },
+    {
+      "title": "Text/Chapter_23.xhtml",
+      "file": "Text/Chapter_23.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 3,
+            "examples": [
+              "and are not robust to changes in the experimental setup. in other words, statistical significance often r",
+              " of powerful models with a high capacity to learn patterns requires particular care to avoid overfitting wh",
+              "e, the competitive nature of trading implies that patterns evolve quickly as signals decay, requiring addit"
+            ]
+          },
+          "backtesting": {
+            "count": 6,
+            "examples": [
+              "backtest overfitting is a huge challenge that requires sig",
+              "beware of backtest overfitting",
+              " research alpha factors, and chapter 5, portfolio optimization and performance evaluation."
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "ng the data speak.\" we covered how to deflate the sharpe ratio in chapter 7, linear models – from risk fac",
+              "account for repeated trials, such as the deflated sharpe ratio. when working toward a live trading strateg"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              " and data complexity need to match to balance the bias-variance trade-off, which becomes more challengin",
+              "al publication. otherwise, we introduce lookahead bias by testing an algorithm with data before it actua",
+              " of a broad range of ml algorithms, from the fundamental to the advanced, we saw how ml can add value at m"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              "ice is simple, such as in a regression problem. a classification task can be more difficult, for example, when we ",
+              "ze. sometimes, the choice is simple, such as in a regression problem. a classification task can be more diffic"
+            ]
+          },
+          "features": {
+            "count": 4,
+            "examples": [
+              "ts. we outlined key ideas in chapter 4, financial feature engineering – how to research alpha factors, and chapter 5, p",
+              "more than the raw data, feature engineering is often the key to making signals useful for an ",
+              "in addition to conventional measures of feature importance, the recent game-theoretic innovation of shapley "
+            ]
+          },
+          "models": {
+            "count": 5,
+            "examples": [
+              " forecasts, to nonlinear ensembles in chapter 11, random forests – a long-short strategy for japanese stocks, and",
+              "tandard for modern, specialized ml libraries like xgboost or lightgbm that often interface with the workflo",
+              "a very simple form, whereas nonlinear models like gradient boosting or neural networks aim to learn more complex f"
+            ]
+          },
+          "validation": {
+            "count": 3,
+            "examples": [
+              "m the perspective of tomorrow's outcomes. careful cross-validation that avoids lookahead bias and robust model diagn",
+              " learn patterns requires particular care to avoid overfitting when the signal-to-noise ratio is as low as is of",
+              "backtest overfitting is a huge challenge that requires significant att"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "e more difficult, for example, when we care about precision and recall. consolidating conflicting objectives ",
+              "lt, for example, when we care about precision and recall. consolidating conflicting objectives into a sing"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "To this end, we took a more comprehensive view of the investment process, from idea generation to strategy evaluation, and introduced ML as an important element of this process in the form of the ML4T workflow",
+          "While demonstrating the use of a broad range of ML algorithms, from the fundamental to the advanced, we saw how ML can add value at multiple steps in the process of designing, testing, and executing a strategy",
+          "In this concluding chapter, we will briefly summarize the key tools, applications, and lessons learned throughout the book to avoid losing sight of the big picture after so much detail",
+          "The key takeaways summarized in this section relate to specific challenges we encounter when building sophisticated predictive models for large datasets in the context of financial markets:\n\nFigure 23",
+          "1: Key elements of using ML for trading\nImportant insights to keep in mind as you proceed to the practice of ML for trading include the following:\n\nData is the single most important ingredient that requires careful sourcing and handling"
+        ],
+        "length": 27955
+      }
+    },
+    {
+      "title": "Chapter 4, Financial Feature Engineering – How to Research Alpha Factors, summarized the long-standing efforts of academics and practitioners to identify information or variables that help reliably predict asset returns. This research led from the single-factor capital asset pricing model to a \"zoo of new factors\" (Cochrane, 2011). This factor zoo contains hundreds of firm characteristics and security price metrics presented as statistically significant predictors of equity returns in the anomalies literature since 1970 (see a summary in Green, Hand, and Zhang, 2017).",
+      "file": "Text/Appendix.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              "er 60 functions that aim to recognize candlestick patterns popular with traders that rely on the visual ins",
+              "ng, and rose 2006), and the goal of learning such patterns from data using the ml algorithms covered in thi"
+            ]
+          },
+          "exits": {
+            "count": 2,
+            "examples": [
+              "ing) indicator that can be used to set a trailing stop loss or determine entry or exit points. it is usually ",
+              "ing (lagging) indicator that can be used to set a trailing stop loss or determine entry or exit points. it is usu"
+            ]
+          },
+          "psychology": {
+            "count": 3,
+            "examples": [
+              "ls in large datasets is prone to multiple testing bias and false discoveries. regardless of these import",
+              "cribed how to engineer features from market, fundamental, and alternative data to build machine learning (",
+              "entum, volume and liquidity, volatility, and fundamental risk factors in this section."
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              "nger bands, to statistic functions such as linear regression. the following table summarizes the main categori",
+              " the gradient of the price trend using the linear regression coefficient  of a time trend on daily prices for "
+            ]
+          },
+          "features": {
+            "count": 4,
+            "examples": [
+              "pendix synthesizes some of the lessons learned on feature engineering and provides additional information on this impor",
+              "chapter 4, financial feature engineering – how to research alpha factors, summarized the l",
+              "multivariate measures of feature importance for a gradient boosting model trained to predict "
+            ]
+          },
+          "models": {
+            "count": 2,
+            "examples": [
+              "multivariate measures of feature importance for a gradient boosting model trained to predict the one-day forward r",
+              " other available factors, we can train a lightgbm gradient boosting model with default settings to predict the for"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "Alpha Factor Library\nThroughout this book, we've described how to engineer features from market, fundamental, and alternative data to build machine learning (ML) models that yield signals for a trading strategy",
+          "This appendix synthesizes some of the lessons learned on feature engineering and provides additional information on this important topic",
+          "Specifically, we will focus on moving averages, overlap studies, momentum, volume and liquidity, volatility, and fundamental risk factors in this section",
+          "A key building block – moving averages\nNumerous indicators allow for calculation using different types of moving averages (MAs)",
+          "TA-Lib implements 30 momentum indicators; the most important ones are listed in the following table"
+        ],
+        "length": 41398
+      }
+    },
+    {
+      "title": "Text/References.xhtml",
+      "file": "Text/References.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              "eview and new perspectives.\" ieee transactions on pattern analysis and machine intelligence 35 (8): 1798–18",
+              "bishop, christopher. 2006. pattern recognition and machine learning. information sci"
+            ]
+          },
+          "risk": {
+            "count": 2,
+            "examples": [
+              "gu, s., kelly, b., and xu, d. 2020 \"autoencoder asset pricing m",
+              "gu, shihao, bryan kelly, and dacheng xiu. 2020. \"empirical asset pricing "
+            ]
+          },
+          "backtesting": {
+            "count": 6,
+            "examples": [
+              "d marcos lopez de prado. 2016. the probability of backtest overfitting. journal of computational finance, se",
+              "david h. bailey et al. (2015), backtest overfitting: an interactive example. http://datag",
+              "nd jimmy ba. 2014. \"adam: a method for stochastic optimization,\" december. https://arxiv.org/abs/1412.6980v8."
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "lo, a.w., 2002. the statistics of sharpe ratios. https://doi.org/10.2469/faj.v58.n4.2453."
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "asness, clifford s., tobias j. moskowitz, and lasse heje pedersen. 2013. \"val",
+              "e, and robert w kennard. 1970. \"ridge regression: biased estimation for nonorthogonal problems.\" technom",
+              "ley, s., 2002. portfolio constraints and the fundamental law of active management. financial analysts jour"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 6,
+            "examples": [
+              "rem and its effect on real-world machine learning classification.\" neural computation 28 (1): 216–28. https://doi.",
+              "lain muller. 2019. \"deep learning for time series classification: a review.\" data mining and knowledge discovery 3",
+              "erl, arthur e, and robert w kennard. 1970. \"ridge regression: biased estimation for nonorthogonal problems.\" t"
+            ]
+          },
+          "models": {
+            "count": 8,
+            "examples": [
+              "7. \"deep neural networks, gradient-boosted trees, random forests: statistical arbitrage on the s&p 500.\" european",
+              "chen, tianqi, and carlos guestrin. 2016. \"xgboost: a scalable tree boosting system.\" proceedings of",
+              "jerome h. 2001. \"greedy function approximation: a gradient boosting machine.\" the annals of statistics 29 (5): 118"
+            ]
+          },
+          "validation": {
+            "count": 2,
+            "examples": [
+              "lopez de prado. 2016. the probability of backtest overfitting. journal of computational finance, september. htt",
+              "david h. bailey et al. (2015), backtest overfitting: an interactive example. http://datagrid.lbl.gov/"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "Portfolio Constraints and the Fundamental Law of Active Management",
+          "The fundamental law of active management",
+          "The \"Fundamental Law of Active Management\" is No Law of Anything",
+          "Rasekhschaffe, Keywan Christian, and Robert C",
+          "Extending the Fundamental Law of Investment Management"
+        ],
+        "length": 38095
+      }
+    },
+    {
+      "title": "Text/Index.xhtml",
+      "file": "Text/Index.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              "time-series patterns"
+            ]
+          },
+          "risk": {
+            "count": 3,
+            "examples": [
+              "drawdown periods 145, 146",
+              "kelly criterion 133",
+              "kelly criterion 133"
+            ]
+          },
+          "backtesting": {
+            "count": 6,
+            "examples": [
+              "pybacktest ",
+              "use, for backtesting long-short trading strategy ",
+              "for portfolio optimization "
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "bayesian sharpe ratio",
+              "sharpe ratio (sr) 123, 224"
+            ]
+          },
+          "psychology": {
+            "count": 5,
+            "examples": [
+              "best linear unbiased estimates (blue) 181",
+              "bias 162",
+              "fundamental data 52"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 6,
+            "examples": [
+              "binary sentiment classification, with twitter data",
+              "classification 154, 214",
+              "bayesian rolling regression"
+            ]
+          },
+          "features": {
+            "count": 2,
+            "examples": [
+              "feature importance 396",
+              "feature importance, capturing 350"
+            ]
+          },
+          "models": {
+            "count": 9,
+            "examples": [
+              "ols regression, of random forest configuration parameters on ic ",
+              "lightgbm random forest model",
+              "xgboost 382"
+            ]
+          },
+          "validation": {
+            "count": 5,
+            "examples": [
+              "combinatorial cross-validation 169",
+              "cross-validation",
+              "backtest overfitting 722"
+            ]
+          },
+          "metrics": {
+            "count": 6,
+            "examples": [
+              "benchmark accuracy 461",
+              "prediction accuracy, improving 195",
+              "precision 159"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 55372
+      }
+    },
+    {
+      "title": "TOC.xhtml",
+      "file": "TOC.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              "unsupervised learning – uncovering useful patterns",
+              "how to decompose time-series patterns"
+            ]
+          },
+          "risk": {
+            "count": 3,
+            "examples": [
+              "use cases – from risk management to text processing",
+              "drawdown periods and factor exposure",
+              "how to size your bets – the kelly criterion"
+            ]
+          },
+          "backtesting": {
+            "count": 7,
+            "examples": [
+              "strategy backtesting",
+              "from signals to trades – zipline for backtests ",
+              "walk-forward testing – out-of-sample returns"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "the sharpe ratio",
+              "bayesian ml – dynamic sharpe ratios and pairs trading"
+            ]
+          },
+          "psychology": {
+            "count": 5,
+            "examples": [
+              "the bias-variance trade-off",
+              "how to manage the bias-variance trade-off",
+              "the emergence of quantamental funds"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 6,
+            "examples": [
+              "classification – making sense of the confusion matrix",
+              "linear classification",
+              "regression – popular loss functions and error metrics"
+            ]
+          },
+          "features": {
+            "count": 3,
+            "examples": [
+              "financial feature engineering – how to research alpha factors",
+              "gaining insight from feature importance",
+              "feature importance for random forests"
+            ]
+          },
+          "models": {
+            "count": 9,
+            "examples": [
+              "random forests – a long-short strategy for japanese stocks",
+              "random forests – making trees more reliable",
+              "using xgboost, lightgbm, and catboost"
+            ]
+          },
+          "validation": {
+            "count": 5,
+            "examples": [
+              "how to select a model using cross-validation",
+              "how to implement cross-validation in python",
+              "underfitting versus overfitting – a visual example"
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "classification – making sense of the confusion matrix"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "How to measure momentum and sentiment\n\n\nValue factors – hunting fundamental bargains\n\nRelative value strategies\nWhy do value factors help predict returns"
+        ],
+        "length": 35521
+      }
+    }
+  ],
+  "analyzed_date": "2026-02-09T15:15:05.044581"
+}

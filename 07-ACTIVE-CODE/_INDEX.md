@@ -1,0 +1,68 @@
+# Active Code Files
+
+Generated 2026-02-14
+
+## Index
+
+- [fetcher.py](PROJECTS_four-pillars-backtester_data_fetcher_py.md) — imported by 10 files, recently modified
+- [normalizer.py](PROJECTS_four-pillars-backtester_data_normalizer_py.md) — imported by 8 files, recently modified
+- [period_loader.py](PROJECTS_four-pillars-backtester_data_period_loader_py.md) — imported by 2 files, recently modified
+- [avwap.py](PROJECTS_four-pillars-backtester_engine_avwap_py.md) — imported by 10 files, recently modified
+- [backtester_v382.py](PROJECTS_four-pillars-backtester_engine_backtester_v382_py.md) — imported by 6 files, recently modified
+- [backtester_v383.py](PROJECTS_four-pillars-backtester_engine_backtester_v383_py.md) — imported by 7 files, recently modified
+- [backtester_v384.py](PROJECTS_four-pillars-backtester_engine_backtester_v384_py.md) — imported by 12 files, recently modified
+- [backtester_v385.py](PROJECTS_four-pillars-backtester_engine_backtester_v385_py.md) — imported by 4 files, recently modified
+- [commission.py](PROJECTS_four-pillars-backtester_engine_commission_py.md) — imported by 4 files, recently modified
+- [metrics.py](PROJECTS_four-pillars-backtester_engine_metrics_py.md) — imported by 1 files, recently modified
+- [position_v382.py](PROJECTS_four-pillars-backtester_engine_position_v382_py.md) — imported by 3 files, recently modified
+- [position_v383.py](PROJECTS_four-pillars-backtester_engine_position_v383_py.md) — imported by 5 files, recently modified
+- [position_v384.py](PROJECTS_four-pillars-backtester_engine_position_v384_py.md) — imported by 3 files, recently modified
+- [coin_features.py](PROJECTS_four-pillars-backtester_ml_coin_features_py.md) — imported by 2 files, recently modified
+- [features_v2.py](PROJECTS_four-pillars-backtester_ml_features_v2_py.md) — imported by 3 files, recently modified
+- [training_pipeline.py](PROJECTS_four-pillars-backtester_ml_training_pipeline_py.md) — imported by 2 files, recently modified
+- [vince_model.py](PROJECTS_four-pillars-backtester_ml_vince_model_py.md) — imported by 2 files, recently modified
+- [xgboost_auditor.py](PROJECTS_four-pillars-backtester_ml_xgboost_auditor_py.md) — imported by 2 files, recently modified
+- [batch_sweep_v382.py](PROJECTS_four-pillars-backtester_scripts_batch_sweep_v382_py.md) — has __main__, recently modified
+- [batch_sweep_v382_be.py](PROJECTS_four-pillars-backtester_scripts_batch_sweep_v382_be_py.md) — has __main__, recently modified
+- [build_all_specs.py](PROJECTS_four-pillars-backtester_scripts_build_all_specs_py.md) — has __main__, recently modified
+- [capital_analysis_v383.py](PROJECTS_four-pillars-backtester_scripts_capital_analysis_v383_py.md) — has __main__, recently modified
+- [capital_analysis_v384.py](PROJECTS_four-pillars-backtester_scripts_capital_analysis_v384_py.md) — has __main__, recently modified
+- [convert_csv.py](PROJECTS_four-pillars-backtester_scripts_convert_csv_py.md) — has __main__, recently modified
+- [dashboard.py](PROJECTS_four-pillars-backtester_scripts_dashboard_py.md) — recently modified
+- [dashboard_v2.py](PROJECTS_four-pillars-backtester_scripts_dashboard_v2_py.md) — recently modified
+- [dashboard_v3.py](PROJECTS_four-pillars-backtester_scripts_dashboard_v3_py.md) — has __main__, recently modified
+- [download_1year_gap_FIXED.py](PROJECTS_four-pillars-backtester_scripts_download_1year_gap_FIXED_py.md) — has __main__, recently modified
+- [download_all_available.py](PROJECTS_four-pillars-backtester_scripts_download_all_available_py.md) — has __main__, recently modified
+- [download_periods.py](PROJECTS_four-pillars-backtester_scripts_download_periods_py.md) — has __main__, imported by 2 files, recently modified
+- [download_periods_v2.py](PROJECTS_four-pillars-backtester_scripts_download_periods_v2_py.md) — has __main__, imported by 2 files, recently modified
+- [fetch_coingecko_v2.py](PROJECTS_four-pillars-backtester_scripts_fetch_coingecko_v2_py.md) — has __main__, recently modified
+- [fetch_market_caps.py](PROJECTS_four-pillars-backtester_scripts_fetch_market_caps_py.md) — has __main__, imported by 2 files, recently modified
+- [lsg_diagnostic_v382.py](PROJECTS_four-pillars-backtester_scripts_lsg_diagnostic_v382_py.md) — has __main__, recently modified
+- [mfe_analysis_v383.py](PROJECTS_four-pillars-backtester_scripts_mfe_analysis_v383_py.md) — has __main__, recently modified
+- [run_backtest_v382.py](PROJECTS_four-pillars-backtester_scripts_run_backtest_v382_py.md) — has __main__, recently modified
+- [run_backtest_v383.py](PROJECTS_four-pillars-backtester_scripts_run_backtest_v383_py.md) — has __main__, recently modified
+- [run_backtest_v384.py](PROJECTS_four-pillars-backtester_scripts_run_backtest_v384_py.md) — has __main__, recently modified
+- [sanity_check_cache.py](PROJECTS_four-pillars-backtester_scripts_sanity_check_cache_py.md) — has __main__, recently modified
+- [sweep_sl_mult_v383.py](PROJECTS_four-pillars-backtester_scripts_sweep_sl_mult_v383_py.md) — has __main__, recently modified
+- [sweep_tp_v384.py](PROJECTS_four-pillars-backtester_scripts_sweep_tp_v384_py.md) — has __main__, recently modified
+- [test_dashboard_v3.py](PROJECTS_four-pillars-backtester_scripts_test_dashboard_v3_py.md) — has __main__, recently modified
+- [test_download_periods.py](PROJECTS_four-pillars-backtester_scripts_test_download_periods_py.md) — has __main__, recently modified
+- [test_download_periods_v2.py](PROJECTS_four-pillars-backtester_scripts_test_download_periods_v2_py.md) — has __main__, recently modified
+- [test_features_v2.py](PROJECTS_four-pillars-backtester_scripts_test_features_v2_py.md) — has __main__, recently modified
+- [test_fetch_market_caps.py](PROJECTS_four-pillars-backtester_scripts_test_fetch_market_caps_py.md) — has __main__, recently modified
+- [test_normalizer.py](PROJECTS_four-pillars-backtester_scripts_test_normalizer_py.md) — has __main__, recently modified
+- [test_period_loader.py](PROJECTS_four-pillars-backtester_scripts_test_period_loader_py.md) — has __main__, recently modified
+- [test_sweep.py](PROJECTS_four-pillars-backtester_scripts_test_sweep_py.md) — has __main__, recently modified
+- [test_v382.py](PROJECTS_four-pillars-backtester_scripts_test_v382_py.md) — has __main__, recently modified
+- [test_v383.py](PROJECTS_four-pillars-backtester_scripts_test_v383_py.md) — has __main__, recently modified
+- [test_v385.py](PROJECTS_four-pillars-backtester_scripts_test_v385_py.md) — has __main__, recently modified
+- [test_vince_ml.py](PROJECTS_four-pillars-backtester_scripts_test_vince_ml_py.md) — has __main__, recently modified
+- [validation_v371_vs_v383.py](PROJECTS_four-pillars-backtester_scripts_validation_v371_vs_v383_py.md) — has __main__, recently modified
+- [four_pillars_v382.py](PROJECTS_four-pillars-backtester_signals_four_pillars_v382_py.md) — imported by 6 files, recently modified
+- [four_pillars_v383.py](PROJECTS_four-pillars-backtester_signals_four_pillars_v383_py.md) — imported by 18 files, recently modified
+- [state_machine_v382.py](PROJECTS_four-pillars-backtester_signals_state_machine_v382_py.md) — imported by 3 files, recently modified
+- [state_machine_v383.py](PROJECTS_four-pillars-backtester_signals_state_machine_v383_py.md) — imported by 3 files, recently modified
+- [test_example.py](localllm_test_example_py.md) — recently modified
+- [vault_sweep.py](vault_sweep_py.md) — has __main__, recently modified
+- [vault_sweep_3.py](vault_sweep_3_py.md) — has __main__, recently modified
+- [vault_sweep_4.py](vault_sweep_4_py.md) — has __main__, recently modified

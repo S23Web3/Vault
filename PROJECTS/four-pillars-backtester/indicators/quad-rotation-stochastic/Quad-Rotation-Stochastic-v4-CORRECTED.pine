@@ -1,0 +1,741 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Quad Rotation Stochastic v4.3 CORRECTED
+// Methodology: John Kurisko (DayTraderRockStar) HPS
+// Corrections: Fixed agreement logic, smoothing mismatch, flip detection, timing issues
+
+//@version=6
+indicator("Quad Rotation Stochastic v4.3", shorttitle="QRS4.3", overlay=false)
+
+// ============================================================================
+// INPUTS
+// ============================================================================
+
+// === DIVERGENCE SETTINGS ===
+i_price_threshold = input.float(0.1, "Price Threshold %", minval=0.0, maxval=1.0, step=0.05,
+    group="Divergence", tooltip="Tolerance for equal high/low. 0.1 = 0.1%")
+i_div_lookback = input.int(20, "Divergence Lookback", minval=10, maxval=50,
+    group="Divergence", tooltip="Max bars between Stage 2 entry and confirmation")
+i_div_confirmation_window = input.int(2, "Confirmation Window", minval=1, maxval=5,
+    group="Divergence", tooltip="Bars allowed between price condition and turn confirmation")
+
+// === ANGLE SETTINGS ===
+i_lookback = input.int(5, "Lookback Bars", minval=3, maxval=10, group="Angle",
+    tooltip="Used for angle calculation and agreement check")
+i_signal_threshold = input.float(3.0, "Signal Threshold", minval=1.0, maxval=10.0, group="Angle")
+i_agreement_factor = input.float(0.7, "Agreement Factor", minval=0.3, maxval=0.9, step=0.1, group="Angle")
+
+// === SUPERSIGNAL SETTINGS ===
+i_div_persistence = input.int(5, "Divergence Persistence", minval=1, maxval=10, group="Supersignal",
+    tooltip="Bars after divergence to qualify for supersignal")
+
+// === ALIGNMENT SETTINGS ===
+i_align_bull = input.int(60, "Bullish Threshold", minval=50, maxval=70, group="Alignment")
+i_align_bear = input.int(40, "Bearish Threshold", minval=30, maxval=50, group="Alignment")
+
+// === ZONE HYSTERESIS ===
+i_overbought_enter = input.int(80, "Overbought Entry", minval=75, maxval=85, group="Zones")
+i_overbought_exit = input.int(75, "Overbought Exit", minval=70, maxval=80, group="Zones",
+    tooltip="Must drop below this to confirm exit from overbought")
+i_oversold_enter = input.int(20, "Oversold Entry", minval=15, maxval=25, group="Zones")
+i_oversold_exit = input.int(25, "Oversold Exit", minval=20, maxval=30, group="Zones",
+    tooltip="Must rise above this to confirm exit from oversold")
+
+// === FILTERS ===
+i_require_slow_confirm = input.bool(true, "Require 60-10 Confirmation", group="Filters",
+    tooltip="Divergence requires 60-10 to confirm direction")
+
+// === VISUAL ===
+i_show_40_4 = input.bool(true, "Show 40-4 Stochastic", group="Display")
+i_show_all_stochs = input.bool(false, "Show All Stochastics", group="Display")
+i_show_warmup = input.bool(true, "Show Warmup Period", group="Display")
+i_show_div_lines = input.bool(true, "Show Divergence Lines", group="Display")
+i_show_info_table = input.bool(true, "Show Info Table", group="Display")
+i_table_position = input.string("top_right", "Table Position",
+    options=["top_right", "top_left", "bottom_right", "bottom_left"], group="Display")
+i_show_stage_markers = input.bool(true, "Show Stage Markers (S1/S2)", group="Display")
+i_show_flip_markers = input.bool(true, "Show Flip Markers", group="Display")
+i_show_mgmt_markers = input.bool(true, "Show Management Markers", group="Display")
+i_show_embedded = input.bool(true, "Show Embedded Zone Highlight", group="Display")
+i_color_signal_candles = input.bool(true, "Color Signal Candles", group="Display",
+    tooltip="Colors price candles orange on divergence/supersignal bars")
+i_signal_candle_color = input.color(color.orange, "Signal Candle Color", group="Display")
+i_show_price_triangles = input.bool(true, "Show Triangles on Price Chart", group="Display",
+    tooltip="Shows buy/sell triangles directly on the price candles")
+
+// ============================================================================
+// CONSTANTS
+// ============================================================================
+
+int WARMUP_BARS = 80  // 60-10 stochastic needs ~80 bars to initialize
+
+// ============================================================================
+// COMPONENT 1: STOCHASTIC CALCULATIONS
+// ============================================================================
+
+// FAST STOCHASTIC - Single smoothing
+stoch_fast(int k_len, int smooth_k) =>
+    float lowest_low = ta.lowest(low, k_len)
+    float highest_high = ta.highest(high, k_len)
+    float range_val = highest_high - lowest_low
+    float k_raw = range_val == 0 ? 50.0 : 100.0 * (close - lowest_low) / range_val
+    float k = ta.sma(k_raw, smooth_k)
+    k
+
+// FULL STOCHASTIC - Double smoothing
+stoch_full(int k_len, int smooth_k) =>
+    float lowest_low = ta.lowest(low, k_len)
+    float highest_high = ta.highest(high, k_len)
+    float range_val = highest_high - lowest_low
+    float k_raw = range_val == 0 ? 50.0 : 100.0 * (close - lowest_low) / range_val
+    float k_smooth1 = ta.sma(k_raw, smooth_k)
+    float k_full = ta.sma(k_smooth1, smooth_k)
+    k_full
+
+// Calculate all 4 stochastics (John Kurisko HPS settings)
+float stoch_9_3  = stoch_fast(9, 3)    // Fast: K=9, Smooth=3
+float stoch_14_3 = stoch_fast(14, 3)   // Fast: K=14, Smooth=3
+float stoch_40_4 = stoch_fast(40, 3)   // Fast: K=40, Smooth=3 (PRIMARY) - Kurisko original
+float stoch_60_10 = stoch_full(60, 10) // Full: K=60, Smooth=10 (DOUBLE)
+
+// Warmup check
+bool is_warmed_up = bar_index >= WARMUP_BARS
+
+// ============================================================================
+// COMPONENT 2: 40-4 STAGE-BASED DIVERGENCE (with fixes)
+// ============================================================================
+
+// Divergence state variables
+var int bull_state = 0  // 0=waiting, 1=in_oversold, 2=bounced
+var float bull_stage1_price = na
+var float bull_stage1_stoch = na
+var int bull_stage2_bar = na  // FIX: Track stage 2 entry for lookback
+
+var int bear_state = 0
+var float bear_stage1_price = na
+var float bear_stage1_stoch = na
+var int bear_stage2_bar = na
+
+// FIX #4: Capped counters
+var int bars_since_bull_div = 999
+var int bars_since_bear_div = 999
+
+// FIX #6: Multi-bar confirmation tracking
+var int bull_bars_since_price_cond = 999
+var float bull_confirmed_stage1_stoch = na
+var int bear_bars_since_price_cond = 999
+var float bear_confirmed_stage1_stoch = na
+
+// ============================================================================
+// BULLISH DIVERGENCE STATE MACHINE (with hysteresis and multi-bar confirmation)
+// ============================================================================
+
+bool bullish_divergence = false
+
+if is_warmed_up
+    if bull_state == 0 and stoch_40_4 < i_oversold_enter
+        // State 0 -> 1: Enter oversold
+        bull_state := 1
+        bull_stage1_price := low
+        bull_stage1_stoch := stoch_40_4
+        bull_bars_since_price_cond := 999
+        bull_confirmed_stage1_stoch := na
+
+    else if bull_state == 1 and stoch_40_4 < i_oversold_enter
+        // State 1: Track lowest price while in oversold
+        if low < bull_stage1_price
+            bull_stage1_price := low
+            bull_stage1_stoch := stoch_40_4
+
+    else if bull_state == 1 and stoch_40_4 >= i_oversold_exit  // FIX: Hysteresis
+        // State 1 -> 2: Exit oversold (bounce confirmed)
+        bull_state := 2
+        bull_stage2_bar := bar_index  // FIX: Track stage 2 entry
+
+    else if bull_state == 2
+        if stoch_40_4 < i_oversold_enter
+            // Reset: re-entered oversold
+            bull_state := 1
+            bull_stage1_price := low
+            bull_stage1_stoch := stoch_40_4
+            bull_bars_since_price_cond := 999
+            bull_confirmed_stage1_stoch := na
+        else if bar_index - bull_stage2_bar > i_div_lookback  // FIX: Measure from stage 2
+            // Reset: lookback exceeded
+            bull_state := 0
+            bull_bars_since_price_cond := 999
+            bull_confirmed_stage1_stoch := na
+        else
+            // Check divergence conditions with multi-bar confirmation
+            float price_threshold_band = bull_stage1_price * (1 + i_price_threshold / 100)
+            bool price_lower_or_equal = low <= price_threshold_band
+            bool stoch_higher_low = stoch_40_4 > bull_stage1_stoch
+            bool stoch_turning_up = stoch_40_4 > stoch_40_4[1]
+
+            // FIX: 60-10 confirmation filter
+            bool slow_confirming = not i_require_slow_confirm or stoch_60_10 > nz(stoch_60_10[i_lookback], 50)
+
+            // FIX #6: Track price condition for multi-bar window
+            if price_lower_or_equal and stoch_higher_low
+                bull_bars_since_price_cond := 0
+                bull_confirmed_stage1_stoch := bull_stage1_stoch
+            else
+                bull_bars_since_price_cond := math.min(bull_bars_since_price_cond + 1, 999)
+
+            // Check with confirmation window
+            bool recent_price_cond = bull_bars_since_price_cond <= i_div_confirmation_window
+            bool stoch_still_higher = not na(bull_confirmed_stage1_stoch) and stoch_40_4 > bull_confirmed_stage1_stoch
+
+            if recent_price_cond and stoch_still_higher and stoch_turning_up and slow_confirming
+                bullish_divergence := true
+                bull_state := 0
+                bull_bars_since_price_cond := 999
+                bull_confirmed_stage1_stoch := na
+
+// Update bars since divergence (capped)
+if bullish_divergence
+    bars_since_bull_div := 0
+else
+    bars_since_bull_div := math.min(bars_since_bull_div + 1, 999)
+
+// ============================================================================
+// BEARISH DIVERGENCE STATE MACHINE (with hysteresis and multi-bar confirmation)
+// ============================================================================
+
+bool bearish_divergence = false
+
+if is_warmed_up
+    if bear_state == 0 and stoch_40_4 > i_overbought_enter
+        // State 0 -> 1: Enter overbought
+        bear_state := 1
+        bear_stage1_price := high
+        bear_stage1_stoch := stoch_40_4
+        bear_bars_since_price_cond := 999
+        bear_confirmed_stage1_stoch := na
+
+    else if bear_state == 1 and stoch_40_4 > i_overbought_enter
+        // State 1: Track highest price while in overbought
+        if high > bear_stage1_price
+            bear_stage1_price := high
+            bear_stage1_stoch := stoch_40_4
+
+    else if bear_state == 1 and stoch_40_4 <= i_overbought_exit  // FIX: Hysteresis
+        // State 1 -> 2: Exit overbought (pullback confirmed)
+        bear_state := 2
+        bear_stage2_bar := bar_index
+
+    else if bear_state == 2
+        if stoch_40_4 > i_overbought_enter
+            // Reset: re-entered overbought
+            bear_state := 1
+            bear_stage1_price := high
+            bear_stage1_stoch := stoch_40_4
+            bear_bars_since_price_cond := 999
+            bear_confirmed_stage1_stoch := na
+        else if bar_index - bear_stage2_bar > i_div_lookback
+            // Reset: lookback exceeded
+            bear_state := 0
+            bear_bars_since_price_cond := 999
+            bear_confirmed_stage1_stoch := na
+        else
+            // Check divergence conditions
+            float price_threshold_band = bear_stage1_price * (1 - i_price_threshold / 100)
+            bool price_higher_or_equal = high >= price_threshold_band
+            bool stoch_lower_high = stoch_40_4 < bear_stage1_stoch
+            bool stoch_turning_down = stoch_40_4 < stoch_40_4[1]
+
+            // FIX: 60-10 confirmation filter
+            bool slow_confirming = not i_require_slow_confirm or stoch_60_10 < nz(stoch_60_10[i_lookback], 50)
+
+            // FIX #6: Track price condition for multi-bar window
+            if price_higher_or_equal and stoch_lower_high
+                bear_bars_since_price_cond := 0
+                bear_confirmed_stage1_stoch := bear_stage1_stoch
+            else
+                bear_bars_since_price_cond := math.min(bear_bars_since_price_cond + 1, 999)
+
+            // Check with confirmation window
+            bool recent_price_cond = bear_bars_since_price_cond <= i_div_confirmation_window
+            bool stoch_still_lower = not na(bear_confirmed_stage1_stoch) and stoch_40_4 < bear_confirmed_stage1_stoch
+
+            if recent_price_cond and stoch_still_lower and stoch_turning_down and slow_confirming
+                bearish_divergence := true
+                bear_state := 0
+                bear_bars_since_price_cond := 999
+                bear_confirmed_stage1_stoch := na
+
+// Update bars since divergence (capped)
+if bearish_divergence
+    bars_since_bear_div := 0
+else
+    bars_since_bear_div := math.min(bars_since_bear_div + 1, 999)
+
+// ============================================================================
+// COMPONENT 2B: DIVERGENCE LINE TRACKING
+// ============================================================================
+
+// Store divergence points for drawing lines
+var int bull_div_bar1 = na      // Stage 1 bar (initial low)
+var float bull_div_stoch1 = na  // Stage 1 stochastic value
+var int bull_div_bar2 = na      // Confirmation bar
+var float bull_div_stoch2 = na  // Confirmation stochastic value
+
+var int bear_div_bar1 = na
+var float bear_div_stoch1 = na
+var int bear_div_bar2 = na
+var float bear_div_stoch2 = na
+
+// Track stage 1 entry for line drawing
+if bull_state == 1 and bull_state[1] == 0
+    bull_div_bar1 := bar_index
+    bull_div_stoch1 := stoch_40_4
+
+if bear_state == 1 and bear_state[1] == 0
+    bear_div_bar1 := bar_index
+    bear_div_stoch1 := stoch_40_4
+
+// Update stage 1 point if we find new extreme while in state 1
+if bull_state == 1 and low < nz(bull_stage1_price, high)
+    bull_div_bar1 := bar_index
+    bull_div_stoch1 := stoch_40_4
+
+if bear_state == 1 and high > nz(bear_stage1_price, low)
+    bear_div_bar1 := bar_index
+    bear_div_stoch1 := stoch_40_4
+
+// Capture confirmation point when divergence fires
+if bullish_divergence
+    bull_div_bar2 := bar_index
+    bull_div_stoch2 := stoch_40_4
+
+if bearish_divergence
+    bear_div_bar2 := bar_index
+    bear_div_stoch2 := stoch_40_4
+
+// ============================================================================
+// COMPONENT 3: QUAD ROTATION ANGLE (Fixed agreement logic)
+// ============================================================================
+
+float stoch_prev = nz(stoch_40_4[i_lookback], 50)
+float stoch_change = (stoch_40_4 - stoch_prev) / 100.0
+float base_angle = math.atan(stoch_change * 10) * (180.0 / math.pi)
+
+bool base_rising = stoch_40_4 > stoch_prev
+
+// FIX #2: Agreement counts OTHER stochastics only (not 40-4 itself)
+int agreement_count = 0
+if (stoch_9_3 > nz(stoch_9_3[i_lookback], 50)) == base_rising
+    agreement_count += 1
+if (stoch_14_3 > nz(stoch_14_3[i_lookback], 50)) == base_rising
+    agreement_count += 1
+// REMOVED: stoch_40_4 self-comparison (was always true, inflating agreement)
+if (stoch_60_10 > nz(stoch_60_10[i_lookback], 50)) == base_rising
+    agreement_count += 1
+
+// FIX #2: Divide by 3 (the number of OTHER stochastics)
+float agreement = agreement_count / 3.0
+
+float quad_angle = base_angle * (i_agreement_factor + (1.0 - i_agreement_factor) * agreement)
+
+bool rotation_bullish = quad_angle > i_signal_threshold
+bool rotation_bearish = quad_angle < -i_signal_threshold
+bool rotation_neutral = math.abs(quad_angle) <= i_signal_threshold
+
+// ============================================================================
+// COMPONENT 4: ALIGNMENT COUNTING
+// ============================================================================
+
+int bull_count = 0
+int bear_count = 0
+
+// Only count if stochastic is valid (not na)
+if not na(stoch_9_3) and stoch_9_3 > i_align_bull
+    bull_count += 1
+if not na(stoch_14_3) and stoch_14_3 > i_align_bull
+    bull_count += 1
+if not na(stoch_40_4) and stoch_40_4 > i_align_bull
+    bull_count += 1
+if not na(stoch_60_10) and stoch_60_10 > i_align_bull
+    bull_count += 1
+
+if not na(stoch_9_3) and stoch_9_3 < i_align_bear
+    bear_count += 1
+if not na(stoch_14_3) and stoch_14_3 < i_align_bear
+    bear_count += 1
+if not na(stoch_40_4) and stoch_40_4 < i_align_bear
+    bear_count += 1
+if not na(stoch_60_10) and stoch_60_10 < i_align_bear
+    bear_count += 1
+
+bool full_bull = bull_count == 4
+bool strong_bull = bull_count >= 3
+bool full_bear = bear_count == 4
+bool strong_bear = bear_count >= 3
+
+// FIX #3: Improved flip detection - tracks LAST strong state, not just previous bar
+var bool last_was_strong_bull = false
+var bool last_was_strong_bear = false
+
+bool flip_bullish = false
+bool flip_bearish = false
+
+if bull_count >= 3
+    if last_was_strong_bear
+        flip_bullish := true
+    last_was_strong_bull := true
+    last_was_strong_bear := false
+else if bear_count >= 3
+    if last_was_strong_bull
+        flip_bearish := true
+    last_was_strong_bear := true
+    last_was_strong_bull := false
+// Note: If neither strong bull nor strong bear, we preserve the last known state
+
+// ============================================================================
+// COMPONENT 5: ZONE & MANAGEMENT ALERTS
+// ============================================================================
+
+bool entering_oversold = ta.crossunder(stoch_40_4, i_oversold_enter)
+bool exiting_oversold = ta.crossover(stoch_40_4, i_oversold_exit)
+bool entering_overbought = ta.crossover(stoch_40_4, i_overbought_enter)
+bool exiting_overbought = ta.crossunder(stoch_40_4, i_overbought_exit)
+
+bool slow_embedded_high = stoch_60_10 > i_overbought_enter and stoch_40_4 > i_overbought_enter
+bool slow_embedded_low = stoch_60_10 < i_oversold_enter and stoch_40_4 < i_oversold_enter
+
+bool mgmt_long_signal = ta.crossover(stoch_9_3, i_overbought_enter)
+bool mgmt_short_signal = ta.crossunder(stoch_9_3, i_oversold_enter)
+
+// ============================================================================
+// COMPONENT 6: SUPERSIGNAL COMBINATION
+// ============================================================================
+
+bool bull_div_active = bars_since_bull_div <= i_div_persistence
+bool bear_div_active = bars_since_bear_div <= i_div_persistence
+
+bool supersignal_long = bull_div_active and bull_count >= 3
+bool supersignal_short = bear_div_active and bear_count >= 3
+
+bool fresh_bull_div = bullish_divergence
+bool fresh_bear_div = bearish_divergence
+
+// ============================================================================
+// PLOTTING - VISIBLE
+// ============================================================================
+
+// Main stochastic
+plot(i_show_40_4 ? stoch_40_4 : na, "40-4 Stochastic", color=color.blue, linewidth=2)
+
+// Optional: Show all stochastics
+plot(i_show_all_stochs ? stoch_9_3 : na, "9-3 Stochastic", color=color.orange, linewidth=1)
+plot(i_show_all_stochs ? stoch_14_3 : na, "14-3 Stochastic", color=color.yellow, linewidth=1)
+plot(i_show_all_stochs ? stoch_60_10 : na, "60-10 Stochastic", color=color.purple, linewidth=1)
+
+hline(i_overbought_enter, "Overbought", color=color.red, linestyle=hline.style_dashed)
+hline(60, "Bull Zone", color=color.gray, linestyle=hline.style_dotted)
+hline(40, "Bear Zone", color=color.gray, linestyle=hline.style_dotted)
+hline(i_oversold_enter, "Oversold", color=color.green, linestyle=hline.style_dashed)
+
+// Warmup indicator
+bgcolor(i_show_warmup and not is_warmed_up ? color.new(color.gray, 95) : na)
+
+// ============================================================================
+// SIGNAL CANDLE COLORING (colors price chart candles)
+// ============================================================================
+
+// Determine if this is a signal bar
+bool is_div_signal = bullish_divergence or bearish_divergence
+bool is_super_signal = (supersignal_long and not supersignal_long[1]) or (supersignal_short and not supersignal_short[1])
+bool is_signal_bar = is_div_signal or is_super_signal
+
+// Color the price candles on signal bars (works even with overlay=false)
+barcolor(i_color_signal_candles and is_signal_bar ? i_signal_candle_color : na)
+
+// Triangles on PRICE CHART (force_overlay puts them on main chart)
+// Divergence triangles on price
+plotshape(i_show_price_triangles and bullish_divergence, "Price Bull Div",
+    shape.triangleup, location.belowbar, color=color.green, size=size.small,
+    text="LONG", textcolor=color.green, force_overlay=true)
+plotshape(i_show_price_triangles and bearish_divergence, "Price Bear Div",
+    shape.triangledown, location.abovebar, color=color.red, size=size.small,
+    text="SHORT", textcolor=color.red, force_overlay=true)
+
+// Supersignal triangles on price (larger, more prominent)
+plotshape(i_show_price_triangles and supersignal_long and not supersignal_long[1], "Price Super Long",
+    shape.triangleup, location.belowbar, color=color.lime, size=size.normal,
+    text="SUPER", textcolor=color.lime, force_overlay=true)
+plotshape(i_show_price_triangles and supersignal_short and not supersignal_short[1], "Price Super Short",
+    shape.triangledown, location.abovebar, color=color.fuchsia, size=size.normal,
+    text="SUPER", textcolor=color.fuchsia, force_overlay=true)
+
+// ============================================================================
+// DIVERGENCE LINES
+// ============================================================================
+
+var line bull_div_line = na
+var line bear_div_line = na
+
+// Draw bullish divergence line when divergence fires
+if bullish_divergence and i_show_div_lines
+    // Delete old line if exists
+    if not na(bull_div_line)
+        line.delete(bull_div_line)
+    // Draw new line from stage 1 low to confirmation point
+    if not na(bull_div_bar1) and not na(bull_div_stoch1)
+        bull_div_line := line.new(
+            x1=bull_div_bar1, y1=bull_div_stoch1,
+            x2=bar_index, y2=stoch_40_4,
+            color=color.green, width=2, style=line.style_solid)
+        // Add label
+        label.new(bar_index, stoch_40_4 - 5, "BULL DIV",
+            color=color.new(color.green, 70), textcolor=color.white,
+            style=label.style_label_up, size=size.small)
+
+// Draw bearish divergence line when divergence fires
+if bearish_divergence and i_show_div_lines
+    if not na(bear_div_line)
+        line.delete(bear_div_line)
+    if not na(bear_div_bar1) and not na(bear_div_stoch1)
+        bear_div_line := line.new(
+            x1=bear_div_bar1, y1=bear_div_stoch1,
+            x2=bar_index, y2=stoch_40_4,
+            color=color.red, width=2, style=line.style_solid)
+        label.new(bar_index, stoch_40_4 + 5, "BEAR DIV",
+            color=color.new(color.red, 70), textcolor=color.white,
+            style=label.style_label_down, size=size.small)
+
+// ============================================================================
+// INFO TABLE
+// ============================================================================
+
+var table info_table = na
+
+if i_show_info_table
+    // Create table once
+    if na(info_table)
+        table_pos = switch i_table_position
+            "top_right" => position.top_right
+            "top_left" => position.top_left
+            "bottom_right" => position.bottom_right
+            "bottom_left" => position.bottom_left
+            => position.top_right
+        info_table := table.new(table_pos, 2, 13, bgcolor=color.new(color.black, 80), border_width=1)
+
+    // Header
+    table.cell(info_table, 0, 0, "QRS4.3", text_color=color.white, text_size=size.small)
+    table.cell(info_table, 1, 0, "VALUE", text_color=color.white, text_size=size.small)
+
+    // Alignment
+    align_text = str.tostring(bull_count) + " Bull / " + str.tostring(bear_count) + " Bear"
+    align_color = bull_count >= 3 ? color.green : bear_count >= 3 ? color.red : color.gray
+    table.cell(info_table, 0, 1, "Alignment", text_color=color.white, text_size=size.tiny)
+    table.cell(info_table, 1, 1, align_text, text_color=align_color, text_size=size.tiny)
+
+    // Quad Angle
+    angle_text = str.tostring(quad_angle, "#.#") + "°"
+    angle_color = rotation_bullish ? color.green : rotation_bearish ? color.red : color.gray
+    table.cell(info_table, 0, 2, "Angle", text_color=color.white, text_size=size.tiny)
+    table.cell(info_table, 1, 2, angle_text, text_color=angle_color, text_size=size.tiny)
+
+    // Agreement
+    agree_text = str.tostring(agreement * 100, "#") + "%"
+    table.cell(info_table, 0, 3, "Agreement", text_color=color.white, text_size=size.tiny)
+    table.cell(info_table, 1, 3, agree_text, text_color=color.white, text_size=size.tiny)
+
+    // Bull State
+    bull_state_text = switch bull_state
+        0 => "Waiting"
+        1 => "In Oversold"
+        2 => "Bounced"
+        => "?"
+    bull_state_color = bull_state == 1 ? color.yellow : bull_state == 2 ? color.lime : color.gray
+    table.cell(info_table, 0, 4, "Bull Stage", text_color=color.white, text_size=size.tiny)
+    table.cell(info_table, 1, 4, bull_state_text, text_color=bull_state_color, text_size=size.tiny)
+
+    // Bear State
+    bear_state_text = switch bear_state
+        0 => "Waiting"
+        1 => "In Overbought"
+        2 => "Pulled Back"
+        => "?"
+    bear_state_color = bear_state == 1 ? color.yellow : bear_state == 2 ? color.orange : color.gray
+    table.cell(info_table, 0, 5, "Bear Stage", text_color=color.white, text_size=size.tiny)
+    table.cell(info_table, 1, 5, bear_state_text, text_color=bear_state_color, text_size=size.tiny)
+
+    // Div Active
+    div_text = bull_div_active ? "BULL (" + str.tostring(bars_since_bull_div) + ")" :
+               bear_div_active ? "BEAR (" + str.tostring(bars_since_bear_div) + ")" : "None"
+    div_color = bull_div_active ? color.green : bear_div_active ? color.red : color.gray
+    table.cell(info_table, 0, 6, "Div Active", text_color=color.white, text_size=size.tiny)
+    table.cell(info_table, 1, 6, div_text, text_color=div_color, text_size=size.tiny)
+
+    // Supersignal Status
+    super_text = supersignal_long ? "LONG READY" : supersignal_short ? "SHORT READY" : "-"
+    super_color = supersignal_long ? color.lime : supersignal_short ? color.fuchsia : color.gray
+    table.cell(info_table, 0, 7, "Supersignal", text_color=color.white, text_size=size.tiny)
+    table.cell(info_table, 1, 7, super_text, text_color=super_color, text_size=size.tiny)
+
+    // Stochastic Values Header
+    table.cell(info_table, 0, 8, "─────", text_color=color.gray, text_size=size.tiny)
+    table.cell(info_table, 1, 8, "─────", text_color=color.gray, text_size=size.tiny)
+
+    // Individual stochastic values with zone coloring
+    stoch_color(float val) =>
+        val > i_align_bull ? color.green : val < i_align_bear ? color.red : color.gray
+
+    table.cell(info_table, 0, 9, "9-3", text_color=color.orange, text_size=size.tiny)
+    table.cell(info_table, 1, 9, str.tostring(stoch_9_3, "#.#"), text_color=stoch_color(stoch_9_3), text_size=size.tiny)
+
+    table.cell(info_table, 0, 10, "14-3", text_color=color.yellow, text_size=size.tiny)
+    table.cell(info_table, 1, 10, str.tostring(stoch_14_3, "#.#"), text_color=stoch_color(stoch_14_3), text_size=size.tiny)
+
+    table.cell(info_table, 0, 11, "40-4", text_color=color.blue, text_size=size.tiny)
+    table.cell(info_table, 1, 11, str.tostring(stoch_40_4, "#.#"), text_color=stoch_color(stoch_40_4), text_size=size.tiny)
+
+    table.cell(info_table, 0, 12, "60-10", text_color=color.purple, text_size=size.tiny)
+    table.cell(info_table, 1, 12, str.tostring(stoch_60_10, "#.#"), text_color=stoch_color(stoch_60_10), text_size=size.tiny)
+
+// ============================================================================
+// ADDITIONAL CONTEXT OUTPUTS (for integration)
+// ============================================================================
+
+// Channel state (60-10)
+bool stoch_60_10_bullish = stoch_60_10 > 50
+bool stoch_60_10_rising = stoch_60_10 > stoch_60_10[1]
+plot(stoch_60_10_bullish ? (stoch_60_10_rising ? 2 : 1) : (stoch_60_10_rising ? -1 : -2), "channel_numeric", display=display.none)
+
+// Mid context (40-4)
+bool stoch_40_4_bullish = stoch_40_4 > 50
+plot(stoch_40_4_bullish ? 1 : -1, "mid_numeric", display=display.none)
+
+// Divergence timing
+plot(bars_since_bull_div, "bars_since_bull_div", display=display.none)
+plot(bars_since_bear_div, "bars_since_bear_div", display=display.none)
+plot(bull_div_active ? 1 : bear_div_active ? -1 : 0, "div_active", display=display.none)
+
+// Slow confirmation state
+bool slow_confirming_bull = stoch_60_10 > nz(stoch_60_10[i_lookback], 50)
+bool slow_confirming_bear = stoch_60_10 < nz(stoch_60_10[i_lookback], 50)
+plot(slow_confirming_bull ? 1 : slow_confirming_bear ? -1 : 0, "slow_confirm", display=display.none)
+
+// ============================================================================
+// PLOTTING - HIDDEN (for JSON alert payloads)
+// ============================================================================
+
+plot(stoch_9_3, "stoch_9_3", display=display.none)
+plot(stoch_14_3, "stoch_14_3", display=display.none)
+plot(stoch_40_4, "stoch_40_4", display=display.none)
+plot(stoch_60_10, "stoch_60_10", display=display.none)
+plot(quad_angle, "quad_angle", display=display.none)
+plot(bull_count, "bull_count", display=display.none)
+plot(bear_count, "bear_count", display=display.none)
+plot(bull_state, "bull_state", display=display.none)
+plot(bear_state, "bear_state", display=display.none)
+plot(agreement, "agreement", display=display.none)
+plot(is_warmed_up ? 1 : 0, "is_warmed_up", display=display.none)
+
+// ============================================================================
+// PLOTTING - SIGNAL MARKERS
+// ============================================================================
+
+plotshape(fresh_bull_div, "Bull Div", shape.triangleup, location.bottom,
+    color=color.green, size=size.small, text="DIV")
+plotshape(fresh_bear_div, "Bear Div", shape.triangledown, location.top,
+    color=color.red, size=size.small, text="DIV")
+
+plotshape(supersignal_long and not supersignal_long[1], "SUPER LONG", shape.labelup, location.bottom,
+    color=color.lime, size=size.normal, text="SUPER")
+plotshape(supersignal_short and not supersignal_short[1], "SUPER SHORT", shape.labeldown, location.top,
+    color=color.fuchsia, size=size.normal, text="SUPER")
+
+bgcolor(full_bull ? color.new(color.green, 90) : na)
+bgcolor(full_bear ? color.new(color.red, 90) : na)
+
+// Embedded zone highlighting (stronger than alignment)
+bgcolor(i_show_embedded and slow_embedded_high ? color.new(color.orange, 85) : na)
+bgcolor(i_show_embedded and slow_embedded_low ? color.new(color.aqua, 85) : na)
+
+// Stage transition markers (helps visualize divergence building)
+plotshape(i_show_stage_markers and bull_state == 1 and bull_state[1] == 0, "Bull S1", shape.circle, location.bottom,
+    color=color.new(color.green, 50), size=size.tiny, text="S1")
+plotshape(i_show_stage_markers and bull_state == 2 and bull_state[1] == 1, "Bull S2", shape.circle, location.bottom,
+    color=color.new(color.lime, 50), size=size.tiny, text="S2")
+plotshape(i_show_stage_markers and bear_state == 1 and bear_state[1] == 0, "Bear S1", shape.circle, location.top,
+    color=color.new(color.red, 50), size=size.tiny, text="S1")
+plotshape(i_show_stage_markers and bear_state == 2 and bear_state[1] == 1, "Bear S2", shape.circle, location.top,
+    color=color.new(color.orange, 50), size=size.tiny, text="S2")
+
+// Flip markers
+plotshape(i_show_flip_markers and flip_bullish, "Flip Bull", shape.arrowup, location.bottom,
+    color=color.teal, size=size.small, text="FLIP")
+plotshape(i_show_flip_markers and flip_bearish, "Flip Bear", shape.arrowdown, location.top,
+    color=color.maroon, size=size.small, text="FLIP")
+
+// Management signals (raise stop alerts)
+plotshape(i_show_mgmt_markers and mgmt_long_signal, "Mgmt Long", shape.xcross, location.top,
+    color=color.yellow, size=size.tiny, text="STOP")
+plotshape(i_show_mgmt_markers and mgmt_short_signal, "Mgmt Short", shape.xcross, location.bottom,
+    color=color.yellow, size=size.tiny, text="STOP")
+
+// ============================================================================
+// ALERTS - DIVERGENCE
+// ============================================================================
+
+alertcondition(bullish_divergence, "40-4 Bullish Divergence", "Bullish divergence on 40-4")
+alertcondition(bearish_divergence, "40-4 Bearish Divergence", "Bearish divergence on 40-4")
+
+// ============================================================================
+// ALERTS - SUPERSIGNAL (edge-triggered)
+// ============================================================================
+
+alertcondition(supersignal_long and not supersignal_long[1], "SUPERSIGNAL LONG", "Divergence + 3/4 Bullish Alignment")
+alertcondition(supersignal_short and not supersignal_short[1], "SUPERSIGNAL SHORT", "Divergence + 3/4 Bearish Alignment")
+
+// ============================================================================
+// ALERTS - ALIGNMENT (edge-triggered)
+// ============================================================================
+
+alertcondition(full_bull and not full_bull[1], "Full Bullish (4/4)", "All 4 stochastics above 60")
+alertcondition(full_bear and not full_bear[1], "Full Bearish (4/4)", "All 4 stochastics below 40")
+alertcondition(strong_bull and not strong_bull[1], "Strong Bullish (3/4)", "3+ stochastics above 60")
+alertcondition(strong_bear and not strong_bear[1], "Strong Bearish (3/4)", "3+ stochastics below 40")
+alertcondition(flip_bullish, "Flip to Bullish", "Alignment flipped bullish")
+alertcondition(flip_bearish, "Flip to Bearish", "Alignment flipped bearish")
+
+// ============================================================================
+// ALERTS - ZONE
+// ============================================================================
+
+alertcondition(entering_oversold, "40-4 Entering Oversold", "40-4 crossed below oversold")
+alertcondition(exiting_oversold, "40-4 Exiting Oversold", "40-4 crossed above oversold exit")
+alertcondition(entering_overbought, "40-4 Entering Overbought", "40-4 crossed above overbought")
+alertcondition(exiting_overbought, "40-4 Exiting Overbought", "40-4 crossed below overbought exit")
+
+// ============================================================================
+// ALERTS - MANAGEMENT
+// ============================================================================
+
+alertcondition(mgmt_long_signal, "Mgmt Long (9-3 >80)", "9-3 crossed above 80 - RAISE STOP")
+alertcondition(mgmt_short_signal, "Mgmt Short (9-3 <20)", "9-3 crossed below 20 - RAISE STOP")
+
+// ============================================================================
+// ALERTS - EMBEDDED
+// ============================================================================
+
+alertcondition(slow_embedded_high and not slow_embedded_high[1], "Embedded High", "60-10 and 40-4 both overbought")
+alertcondition(slow_embedded_low and not slow_embedded_low[1], "Embedded Low", "60-10 and 40-4 both oversold")
+
+// ============================================================================
+// ALERTS - ROTATION
+// ============================================================================
+
+alertcondition(rotation_bullish and not rotation_bullish[1], "Rotation Bullish", "Angle crossed above threshold")
+alertcondition(rotation_bearish and not rotation_bearish[1], "Rotation Bearish", "Angle crossed below threshold")
+
+// ============================================================================
+// ALERTS - STAGE
+// ============================================================================
+
+alertcondition(bull_state == 1 and bull_state[1] == 0, "Bull Stage 1", "40-4 entered oversold")
+alertcondition(bear_state == 1 and bear_state[1] == 0, "Bear Stage 1", "40-4 entered overbought")
+alertcondition(bull_state == 2 and bull_state[1] == 1, "Bull Stage 2", "40-4 bounced from oversold")
+alertcondition(bear_state == 2 and bear_state[1] == 1, "Bear Stage 2", "40-4 pulled back from overbought")

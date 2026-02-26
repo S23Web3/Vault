@@ -1,0 +1,2760 @@
+[
+  {
+    "bybit_symbol": "ATOMUSDT",
+    "name": "Cosmos Hub",
+    "market_cap": 975661178,
+    "price": 1.98,
+    "cg_id": "cosmos"
+  },
+  {
+    "bybit_symbol": "QNTUSDT",
+    "name": "Quant",
+    "market_cap": 923295964,
+    "price": 63.45,
+    "cg_id": "quant-network"
+  },
+  {
+    "bybit_symbol": "NIGHTUSDT",
+    "name": "Midnight",
+    "market_cap": 880769165,
+    "price": 0.053033,
+    "cg_id": "midnight-3"
+  },
+  {
+    "bybit_symbol": "ALGOUSDT",
+    "name": "Algorand",
+    "market_cap": 867958224,
+    "price": 0.097799,
+    "cg_id": "algorand"
+  },
+  {
+    "bybit_symbol": "APTUSDT",
+    "name": "Aptos",
+    "market_cap": 852159070,
+    "price": 1.11,
+    "cg_id": "aptos"
+  },
+  {
+    "bybit_symbol": "KASUSDT",
+    "name": "Kaspa",
+    "market_cap": 842846015,
+    "price": 0.03147345,
+    "cg_id": "kaspa"
+  },
+  {
+    "bybit_symbol": "FLRUSDT",
+    "name": "Flare",
+    "market_cap": 802037967,
+    "price": 0.00945289,
+    "cg_id": "flare-networks"
+  },
+  {
+    "bybit_symbol": "TRUMPUSDT",
+    "name": "Official Trump",
+    "market_cap": 788558608,
+    "price": 3.39,
+    "cg_id": "official-trump"
+  },
+  {
+    "bybit_symbol": "XDCUSDT",
+    "name": "XDC Network",
+    "market_cap": 749997922,
+    "price": 0.03762275,
+    "cg_id": "xdce-crowd-sale"
+  },
+  {
+    "bybit_symbol": "FILUSDT",
+    "name": "Filecoin",
+    "market_cap": 732162831,
+    "price": 0.974779,
+    "cg_id": "filecoin"
+  },
+  {
+    "bybit_symbol": "RENDERUSDT",
+    "name": "Render",
+    "market_cap": 704572907,
+    "price": 1.36,
+    "cg_id": "render-token"
+  },
+  {
+    "bybit_symbol": "ARBUSDT",
+    "name": "Arbitrum",
+    "market_cap": 696585682,
+    "price": 0.119443,
+    "cg_id": "arbitrum"
+  },
+  {
+    "bybit_symbol": "VETUSDT",
+    "name": "VeChain",
+    "market_cap": 691685268,
+    "price": 0.00804331,
+    "cg_id": "vechain"
+  },
+  {
+    "bybit_symbol": "MORPHOUSDT",
+    "name": "Morpho",
+    "market_cap": 627803313,
+    "price": 1.15,
+    "cg_id": "morpho"
+  },
+  {
+    "bybit_symbol": "1000BONKUSDT",
+    "name": "Bonk",
+    "market_cap": 560712464,
+    "price": 6.37e-06,
+    "cg_id": "bonk"
+  },
+  {
+    "bybit_symbol": "JUPUSDT",
+    "name": "Jupiter",
+    "market_cap": 523980364,
+    "price": 0.161504,
+    "cg_id": "jupiter-exchange-solana"
+  },
+  {
+    "bybit_symbol": "SEIUSDT",
+    "name": "Sei",
+    "market_cap": 510013388,
+    "price": 0.077037,
+    "cg_id": "sei-network"
+  },
+  {
+    "bybit_symbol": "STXUSDT",
+    "name": "Stacks",
+    "market_cap": 483577174,
+    "price": 0.271402,
+    "cg_id": "blockstack"
+  },
+  {
+    "bybit_symbol": "DASHUSDT",
+    "name": "Dash",
+    "market_cap": 461487040,
+    "price": 36.64,
+    "cg_id": "dash"
+  },
+  {
+    "bybit_symbol": "IPUSDT",
+    "name": "Story",
+    "market_cap": 457252638,
+    "price": 1.31,
+    "cg_id": "story-2"
+  },
+  {
+    "bybit_symbol": "XTZUSDT",
+    "name": "Tezos",
+    "market_cap": 453642152,
+    "price": 0.42198,
+    "cg_id": "tezos"
+  },
+  {
+    "bybit_symbol": "CAKEUSDT",
+    "name": "PancakeSwap",
+    "market_cap": 452069087,
+    "price": 1.36,
+    "cg_id": "pancakeswap-token"
+  },
+  {
+    "bybit_symbol": "CHZUSDT",
+    "name": "Chiliz",
+    "market_cap": 437522174,
+    "price": 0.04259694,
+    "cg_id": "chiliz"
+  },
+  {
+    "bybit_symbol": "OPUSDT",
+    "name": "Optimism",
+    "market_cap": 414833210,
+    "price": 0.196067,
+    "cg_id": "optimism"
+  },
+  {
+    "bybit_symbol": "PENGUUSDT",
+    "name": "Pudgy Penguins",
+    "market_cap": 410310307,
+    "price": 0.00652723,
+    "cg_id": "pudgy-penguins"
+  },
+  {
+    "bybit_symbol": "LITUSDT",
+    "name": "Lighter",
+    "market_cap": 406711572,
+    "price": 1.63,
+    "cg_id": "lighter"
+  },
+  {
+    "bybit_symbol": "VIRTUALUSDT",
+    "name": "Virtuals Protocol",
+    "market_cap": 381232723,
+    "price": 0.581764,
+    "cg_id": "virtual-protocol"
+  },
+  {
+    "bybit_symbol": "CRVUSDT",
+    "name": "Curve DAO",
+    "market_cap": 377772815,
+    "price": 0.256095,
+    "cg_id": "curve-dao-token"
+  },
+  {
+    "bybit_symbol": "JSTUSDT",
+    "name": "JUST",
+    "market_cap": 360892093,
+    "price": 0.04093142,
+    "cg_id": "just"
+  },
+  {
+    "bybit_symbol": "ZROUSDT",
+    "name": "LayerZero",
+    "market_cap": 329111272,
+    "price": 1.62,
+    "cg_id": "layerzero"
+  },
+  {
+    "bybit_symbol": "INJUSDT",
+    "name": "Injective",
+    "market_cap": 324801378,
+    "price": 3.25,
+    "cg_id": "injective-protocol"
+  },
+  {
+    "bybit_symbol": "ETHFIUSDT",
+    "name": "Ether.fi",
+    "market_cap": 324014345,
+    "price": 0.463178,
+    "cg_id": "ether-fi"
+  },
+  {
+    "bybit_symbol": "KAIAUSDT",
+    "name": "Kaia",
+    "market_cap": 323572568,
+    "price": 0.055361,
+    "cg_id": "kaia"
+  },
+  {
+    "bybit_symbol": "1000BTTUSDT",
+    "name": "BitTorrent",
+    "market_cap": 323246999,
+    "price": 3.27526e-07,
+    "cg_id": "bittorrent"
+  },
+  {
+    "bybit_symbol": "SYRUPUSDT",
+    "name": "Maple Finance",
+    "market_cap": 317276949,
+    "price": 0.274038,
+    "cg_id": "syrup"
+  },
+  {
+    "bybit_symbol": "SUNUSDT",
+    "name": "Sun Token",
+    "market_cap": 314196413,
+    "price": 0.01635613,
+    "cg_id": "sun-token"
+  },
+  {
+    "bybit_symbol": "GNOUSDT",
+    "name": "Gnosis",
+    "market_cap": 308938546,
+    "price": 116.96,
+    "cg_id": "gnosis"
+  },
+  {
+    "bybit_symbol": "IOTAUSDT",
+    "name": "IOTA",
+    "market_cap": 307372137,
+    "price": 0.071736,
+    "cg_id": "iota"
+  },
+  {
+    "bybit_symbol": "1000FLOKIUSDT",
+    "name": "FLOKI",
+    "market_cap": 306316332,
+    "price": 3.172e-05,
+    "cg_id": "floki"
+  },
+  {
+    "bybit_symbol": "LDOUSDT",
+    "name": "Lido DAO",
+    "market_cap": 303402098,
+    "price": 0.357334,
+    "cg_id": "lido-dao"
+  },
+  {
+    "bybit_symbol": "GRTUSDT",
+    "name": "The Graph",
+    "market_cap": 299777523,
+    "price": 0.02797968,
+    "cg_id": "the-graph"
+  },
+  {
+    "bybit_symbol": "TIAUSDT",
+    "name": "Celestia",
+    "market_cap": 298641403,
+    "price": 0.340198,
+    "cg_id": "celestia"
+  },
+  {
+    "bybit_symbol": "STABLEUSDT",
+    "name": "\u200b\u200bStable",
+    "market_cap": 296719630,
+    "price": 0.0164894,
+    "cg_id": "stable-2"
+  },
+  {
+    "bybit_symbol": "AEROUSDT",
+    "name": "Aerodrome Finance",
+    "market_cap": 295144109,
+    "price": 0.321478,
+    "cg_id": "aerodrome-finance"
+  },
+  {
+    "bybit_symbol": "BSVUSDT",
+    "name": "Bitcoin SV",
+    "market_cap": 282392401,
+    "price": 14.11,
+    "cg_id": "bitcoin-cash-sv"
+  },
+  {
+    "bybit_symbol": "JASMYUSDT",
+    "name": "JasmyCoin",
+    "market_cap": 277791912,
+    "price": 0.00560883,
+    "cg_id": "jasmycoin"
+  },
+  {
+    "bybit_symbol": "SPXUSDT",
+    "name": "SPX6900",
+    "market_cap": 272483567,
+    "price": 0.292145,
+    "cg_id": "spx6900"
+  },
+  {
+    "bybit_symbol": "PYTHUSDT",
+    "name": "Pyth Network",
+    "market_cap": 265955844,
+    "price": 0.04620226,
+    "cg_id": "pyth-network"
+  },
+  {
+    "bybit_symbol": "STRKUSDT",
+    "name": "Starknet",
+    "market_cap": 265582763,
+    "price": 0.050261,
+    "cg_id": "starknet"
+  },
+  {
+    "bybit_symbol": "KITEUSDT",
+    "name": "Kite",
+    "market_cap": 262613209,
+    "price": 0.145649,
+    "cg_id": "kite-2"
+  },
+  {
+    "bybit_symbol": "CFXUSDT",
+    "name": "Conflux",
+    "market_cap": 254588141,
+    "price": 0.04934705,
+    "cg_id": "conflux-token"
+  },
+  {
+    "bybit_symbol": "RIVERUSDT",
+    "name": "River",
+    "market_cap": 251898509,
+    "price": 12.85,
+    "cg_id": "river"
+  },
+  {
+    "bybit_symbol": "SANDUSDT",
+    "name": "The Sandbox",
+    "market_cap": 249354546,
+    "price": 0.093281,
+    "cg_id": "the-sandbox"
+  },
+  {
+    "bybit_symbol": "ZKUSDT",
+    "name": "ZKsync",
+    "market_cap": 249026975,
+    "price": 0.02183172,
+    "cg_id": "zksync"
+  },
+  {
+    "bybit_symbol": "AXSUSDT",
+    "name": "Axie Infinity",
+    "market_cap": 235198171,
+    "price": 1.39,
+    "cg_id": "axie-infinity"
+  },
+  {
+    "bybit_symbol": "ENSUSDT",
+    "name": "Ethereum Name Service",
+    "market_cap": 229987060,
+    "price": 6.02,
+    "cg_id": "ethereum-name-service"
+  },
+  {
+    "bybit_symbol": "WIFUSDT",
+    "name": "dogwifhat",
+    "market_cap": 229128502,
+    "price": 0.229237,
+    "cg_id": "dogwifcoin"
+  },
+  {
+    "bybit_symbol": "HUSDT",
+    "name": "Humanity",
+    "market_cap": 224944117,
+    "price": 0.122903,
+    "cg_id": "humanity"
+  },
+  {
+    "bybit_symbol": "TWTUSDT",
+    "name": "Trust Wallet",
+    "market_cap": 216939027,
+    "price": 0.52013,
+    "cg_id": "trust-wallet-token"
+  },
+  {
+    "bybit_symbol": "THETAUSDT",
+    "name": "Theta Network",
+    "market_cap": 209885911,
+    "price": 0.209647,
+    "cg_id": "theta-token"
+  },
+  {
+    "bybit_symbol": "SENTUSDT",
+    "name": "Sentient",
+    "market_cap": 209349606,
+    "price": 0.02908469,
+    "cg_id": "sentient"
+  },
+  {
+    "bybit_symbol": "ZBCNUSDT",
+    "name": "Zebec Network",
+    "market_cap": 205092335,
+    "price": 0.00208873,
+    "cg_id": "zebec-network"
+  },
+  {
+    "bybit_symbol": "MANAUSDT",
+    "name": "Decentraland",
+    "market_cap": 204445655,
+    "price": 0.106266,
+    "cg_id": "decentraland"
+  },
+  {
+    "bybit_symbol": "GALAUSDT",
+    "name": "GALA",
+    "market_cap": 200867165,
+    "price": 0.00425143,
+    "cg_id": "gala"
+  },
+  {
+    "bybit_symbol": "XCNUSDT",
+    "name": "Onyxcoin",
+    "market_cap": 200864014,
+    "price": 0.00542709,
+    "cg_id": "chain-2"
+  },
+  {
+    "bybit_symbol": "FARTCOINUSDT",
+    "name": "Fartcoin",
+    "market_cap": 200677689,
+    "price": 0.200332,
+    "cg_id": "fartcoin"
+  },
+  {
+    "bybit_symbol": "PENDLEUSDT",
+    "name": "Pendle",
+    "market_cap": 198263975,
+    "price": 1.2,
+    "cg_id": "pendle"
+  },
+  {
+    "bybit_symbol": "NEOUSDT",
+    "name": "NEO",
+    "market_cap": 196265698,
+    "price": 2.78,
+    "cg_id": "neo"
+  },
+  {
+    "bybit_symbol": "MONUSDT",
+    "name": "Monad",
+    "market_cap": 196183620,
+    "price": 0.0180609,
+    "cg_id": "monad"
+  },
+  {
+    "bybit_symbol": "GLMUSDT",
+    "name": "Golem",
+    "market_cap": 195897225,
+    "price": 0.195756,
+    "cg_id": "golem"
+  },
+  {
+    "bybit_symbol": "1000LUNCUSDT",
+    "name": "Terra Luna Classic",
+    "market_cap": 194965572,
+    "price": 3.569e-05,
+    "cg_id": "terra-luna"
+  },
+  {
+    "bybit_symbol": "FFUSDT",
+    "name": "Falcon Finance",
+    "market_cap": 188806417,
+    "price": 0.080632,
+    "cg_id": "falcon-finance-ff"
+  },
+  {
+    "bybit_symbol": "PIPPINUSDT",
+    "name": "pippin",
+    "market_cap": 185473637,
+    "price": 0.185359,
+    "cg_id": "pippin"
+  },
+  {
+    "bybit_symbol": "BATUSDT",
+    "name": "Basic Attention",
+    "market_cap": 181416310,
+    "price": 0.121184,
+    "cg_id": "basic-attention-token"
+  },
+  {
+    "bybit_symbol": "FLUIDUSDT",
+    "name": "Fluid",
+    "market_cap": 180734072,
+    "price": 2.33,
+    "cg_id": "instadapp"
+  },
+  {
+    "bybit_symbol": "XPLUSDT",
+    "name": "Plasma",
+    "market_cap": 177539777,
+    "price": 0.082244,
+    "cg_id": "plasma"
+  },
+  {
+    "bybit_symbol": "SUSDT",
+    "name": "Sonic",
+    "market_cap": 174678699,
+    "price": 0.04607947,
+    "cg_id": "sonic-3"
+  },
+  {
+    "bybit_symbol": "BARDUSDT",
+    "name": "Lombard",
+    "market_cap": 172980768,
+    "price": 0.768077,
+    "cg_id": "lombard-protocol"
+  },
+  {
+    "bybit_symbol": "COMPUSDT",
+    "name": "Compound",
+    "market_cap": 167465079,
+    "price": 17.32,
+    "cg_id": "compound-governance-token"
+  },
+  {
+    "bybit_symbol": "1000XECUSDT",
+    "name": "eCash",
+    "market_cap": 161181896,
+    "price": 8.06e-06,
+    "cg_id": "ecash"
+  },
+  {
+    "bybit_symbol": "CVXUSDT",
+    "name": "Convex Finance",
+    "market_cap": 160807277,
+    "price": 1.75,
+    "cg_id": "convex-finance"
+  },
+  {
+    "bybit_symbol": "HNTUSDT",
+    "name": "Helium",
+    "market_cap": 152713464,
+    "price": 0.818497,
+    "cg_id": "helium"
+  },
+  {
+    "bybit_symbol": "AWEUSDT",
+    "name": "AWE Network",
+    "market_cap": 147856101,
+    "price": 0.076122,
+    "cg_id": "stp-network"
+  },
+  {
+    "bybit_symbol": "RUNEUSDT",
+    "name": "THORChain",
+    "market_cap": 145713923,
+    "price": 0.415179,
+    "cg_id": "thorchain"
+  },
+  {
+    "bybit_symbol": "BUSDT",
+    "name": "BUILDon",
+    "market_cap": 138889312,
+    "price": 0.138863,
+    "cg_id": "build-on"
+  },
+  {
+    "bybit_symbol": "AUSDT",
+    "name": "Vaulta",
+    "market_cap": 138080073,
+    "price": 0.085124,
+    "cg_id": "vaulta"
+  },
+  {
+    "bybit_symbol": "SFPUSDT",
+    "name": "SafePal",
+    "market_cap": 137048552,
+    "price": 0.274001,
+    "cg_id": "safepal"
+  },
+  {
+    "bybit_symbol": "WHITEWHALEUSDT",
+    "name": "The White Whale",
+    "market_cap": 136543996,
+    "price": 0.13666,
+    "cg_id": "the-white-whale"
+  },
+  {
+    "bybit_symbol": "IMXUSDT",
+    "name": "Immutable",
+    "market_cap": 136365868,
+    "price": 0.162586,
+    "cg_id": "immutable-x"
+  },
+  {
+    "bybit_symbol": "WALUSDT",
+    "name": "Walrus",
+    "market_cap": 135946172,
+    "price": 0.084354,
+    "cg_id": "walrus-2"
+  },
+  {
+    "bybit_symbol": "SOSOUSDT",
+    "name": "SoSoValue",
+    "market_cap": 133870093,
+    "price": 0.487137,
+    "cg_id": "sosovalue"
+  },
+  {
+    "bybit_symbol": "EGLDUSDT",
+    "name": "MultiversX",
+    "market_cap": 133321343,
+    "price": 4.55,
+    "cg_id": "elrond-erd-2"
+  },
+  {
+    "bybit_symbol": "ARUSDT",
+    "name": "Arweave",
+    "market_cap": 132534787,
+    "price": 2.02,
+    "cg_id": "arweave"
+  },
+  {
+    "bybit_symbol": "EIGENUSDT",
+    "name": "EigenCloud (prev. EigenLayer)",
+    "market_cap": 129776717,
+    "price": 0.218945,
+    "cg_id": "eigenlayer"
+  },
+  {
+    "bybit_symbol": "SKRUSDT",
+    "name": "Seeker",
+    "market_cap": 126075480,
+    "price": 0.02212082,
+    "cg_id": "seeker"
+  },
+  {
+    "bybit_symbol": "BEAMUSDT",
+    "name": "Beam",
+    "market_cap": 124856634,
+    "price": 0.00243327,
+    "cg_id": "beam-2"
+  },
+  {
+    "bybit_symbol": "LPTUSDT",
+    "name": "Livepeer",
+    "market_cap": 121110556,
+    "price": 2.44,
+    "cg_id": "livepeer"
+  },
+  {
+    "bybit_symbol": "MELANIAUSDT",
+    "name": "Melania Meme",
+    "market_cap": 120991549,
+    "price": 0.127022,
+    "cg_id": "melania-meme"
+  },
+  {
+    "bybit_symbol": "APEUSDT",
+    "name": "ApeCoin",
+    "market_cap": 119801668,
+    "price": 0.13184,
+    "cg_id": "apecoin"
+  },
+  {
+    "bybit_symbol": "EDUUSDT",
+    "name": "Open Campus",
+    "market_cap": 116979383,
+    "price": 0.14066,
+    "cg_id": "edu-coin"
+  },
+  {
+    "bybit_symbol": "KMNOUSDT",
+    "name": "Kamino",
+    "market_cap": 116966350,
+    "price": 0.03009809,
+    "cg_id": "kamino"
+  },
+  {
+    "bybit_symbol": "JTOUSDT",
+    "name": "Jito",
+    "market_cap": 111983812,
+    "price": 0.258342,
+    "cg_id": "jito-governance-token"
+  },
+  {
+    "bybit_symbol": "GASUSDT",
+    "name": "Gas",
+    "market_cap": 109989212,
+    "price": 1.7,
+    "cg_id": "gas"
+  },
+  {
+    "bybit_symbol": "WUSDT",
+    "name": "Wormhole",
+    "market_cap": 109552729,
+    "price": 0.02035012,
+    "cg_id": "wormhole"
+  },
+  {
+    "bybit_symbol": "ZENUSDT",
+    "name": "Horizen",
+    "market_cap": 107718962,
+    "price": 6.05,
+    "cg_id": "zencash"
+  },
+  {
+    "bybit_symbol": "METUSDT",
+    "name": "Meteora",
+    "market_cap": 106495276,
+    "price": 0.213166,
+    "cg_id": "meteora"
+  },
+  {
+    "bybit_symbol": "1000000CHEEMSUSDT",
+    "name": "Cheems Token",
+    "market_cap": 106101048,
+    "price": 5.21367e-07,
+    "cg_id": "cheems-token"
+  },
+  {
+    "bybit_symbol": "DOGUSDT",
+    "name": "Dog (Bitcoin)",
+    "market_cap": 106072326,
+    "price": 0.00105897,
+    "cg_id": "dog-go-to-the-moon-rune"
+  },
+  {
+    "bybit_symbol": "RSRUSDT",
+    "name": "Reserve Rights",
+    "market_cap": 104127956,
+    "price": 0.00166436,
+    "cg_id": "reserve-rights-token"
+  },
+  {
+    "bybit_symbol": "YFIUSDT",
+    "name": "yearn.finance",
+    "market_cap": 103460562,
+    "price": 2949.53,
+    "cg_id": "yearn-finance"
+  },
+  {
+    "bybit_symbol": "SNXUSDT",
+    "name": "Synthetix",
+    "market_cap": 102579739,
+    "price": 0.298273,
+    "cg_id": "havven"
+  },
+  {
+    "bybit_symbol": "DEXEUSDT",
+    "name": "DeXe",
+    "market_cap": 102031589,
+    "price": 2.18,
+    "cg_id": "dexe"
+  },
+  {
+    "bybit_symbol": "ICNTUSDT",
+    "name": "Impossible Cloud Network Token",
+    "market_cap": 101162461,
+    "price": 0.399927,
+    "cg_id": "impossible-cloud-network-token"
+  },
+  {
+    "bybit_symbol": "ROSEUSDT",
+    "name": "Oasis",
+    "market_cap": 100741453,
+    "price": 0.01336049,
+    "cg_id": "oasis-network"
+  },
+  {
+    "bybit_symbol": "ZORAUSDT",
+    "name": "Zora",
+    "market_cap": 99707154,
+    "price": 0.02232042,
+    "cg_id": "zora"
+  },
+  {
+    "bybit_symbol": "IRYSUSDT",
+    "name": "Irys",
+    "market_cap": 99592752,
+    "price": 0.04983023,
+    "cg_id": "irys"
+  },
+  {
+    "bybit_symbol": "ATHUSDT",
+    "name": "Aethir",
+    "market_cap": 99306831,
+    "price": 0.00597957,
+    "cg_id": "aethir"
+  },
+  {
+    "bybit_symbol": "QTUMUSDT",
+    "name": "Qtum",
+    "market_cap": 98619724,
+    "price": 0.930021,
+    "cg_id": "qtum"
+  },
+  {
+    "bybit_symbol": "BERAUSDT",
+    "name": "Berachain",
+    "market_cap": 96309760,
+    "price": 0.453662,
+    "cg_id": "berachain-bera"
+  },
+  {
+    "bybit_symbol": "COREUSDT",
+    "name": "Core",
+    "market_cap": 96225273,
+    "price": 0.089725,
+    "cg_id": "coredaoorg"
+  },
+  {
+    "bybit_symbol": "XVGUSDT",
+    "name": "Verge",
+    "market_cap": 96197558,
+    "price": 0.00582252,
+    "cg_id": "verge"
+  },
+  {
+    "bybit_symbol": "RVNUSDT",
+    "name": "Ravencoin",
+    "market_cap": 95150115,
+    "price": 0.00592046,
+    "cg_id": "ravencoin"
+  },
+  {
+    "bybit_symbol": "COWUSDT",
+    "name": "CoW Protocol",
+    "market_cap": 93564071,
+    "price": 0.166109,
+    "cg_id": "cow-protocol"
+  },
+  {
+    "bybit_symbol": "AKTUSDT",
+    "name": "Akash Network",
+    "market_cap": 93378604,
+    "price": 0.325477,
+    "cg_id": "akash-network"
+  },
+  {
+    "bybit_symbol": "DYDXUSDT",
+    "name": "dYdX",
+    "market_cap": 92458530,
+    "price": 0.112269,
+    "cg_id": "dydx-chain"
+  },
+  {
+    "bybit_symbol": "FOGOUSDT",
+    "name": "Fogo",
+    "market_cap": 90736535,
+    "price": 0.02400801,
+    "cg_id": "fogo"
+  },
+  {
+    "bybit_symbol": "HOMEUSDT",
+    "name": "HOME",
+    "market_cap": 90531171,
+    "price": 0.02732763,
+    "cg_id": "home"
+  },
+  {
+    "bybit_symbol": "ZRXUSDT",
+    "name": "0x Protocol",
+    "market_cap": 89226321,
+    "price": 0.105178,
+    "cg_id": "0x"
+  },
+  {
+    "bybit_symbol": "GRASSUSDT",
+    "name": "Grass",
+    "market_cap": 86919568,
+    "price": 0.184116,
+    "cg_id": "grass"
+  },
+  {
+    "bybit_symbol": "PIEVERSEUSDT",
+    "name": "Pieverse",
+    "market_cap": 85604375,
+    "price": 0.439555,
+    "cg_id": "pieverse"
+  },
+  {
+    "bybit_symbol": "UBUSDT",
+    "name": "Unibase",
+    "market_cap": 84719795,
+    "price": 0.03389405,
+    "cg_id": "unibase"
+  },
+  {
+    "bybit_symbol": "ZILUSDT",
+    "name": "Zilliqa",
+    "market_cap": 84642948,
+    "price": 0.00424779,
+    "cg_id": "zilliqa"
+  },
+  {
+    "bybit_symbol": "RAVEUSDT",
+    "name": "RaveDAO",
+    "market_cap": 84434034,
+    "price": 0.359689,
+    "cg_id": "ravedao"
+  },
+  {
+    "bybit_symbol": "MINAUSDT",
+    "name": "Mina Protocol",
+    "market_cap": 84144814,
+    "price": 0.066076,
+    "cg_id": "mina-protocol"
+  },
+  {
+    "bybit_symbol": "CKBUSDT",
+    "name": "Nervos Network",
+    "market_cap": 83522835,
+    "price": 0.0017345,
+    "cg_id": "nervos-network"
+  },
+  {
+    "bybit_symbol": "VVVUSDT",
+    "name": "Venice Token",
+    "market_cap": 83395372,
+    "price": 1.92,
+    "cg_id": "venice-token"
+  },
+  {
+    "bybit_symbol": "FORMUSDT",
+    "name": "Four",
+    "market_cap": 83372975,
+    "price": 0.2181,
+    "cg_id": "four"
+  },
+  {
+    "bybit_symbol": "FLOWUSDT",
+    "name": "Flow",
+    "market_cap": 83125031,
+    "price": 0.050613,
+    "cg_id": "flow"
+  },
+  {
+    "bybit_symbol": "SUPERUSDT",
+    "name": "SuperVerse",
+    "market_cap": 81475605,
+    "price": 0.127798,
+    "cg_id": "superfarm"
+  },
+  {
+    "bybit_symbol": "1000TOSHIUSDT",
+    "name": "Toshi",
+    "market_cap": 81261814,
+    "price": 0.00019308,
+    "cg_id": "toshi"
+  },
+  {
+    "bybit_symbol": "KSMUSDT",
+    "name": "Kusama",
+    "market_cap": 80426288,
+    "price": 4.53,
+    "cg_id": "kusama"
+  },
+  {
+    "bybit_symbol": "KAITOUSDT",
+    "name": "KAITO",
+    "market_cap": 79538904,
+    "price": 0.329169,
+    "cg_id": "kaito"
+  },
+  {
+    "bybit_symbol": "TUSDT",
+    "name": "Threshold Network",
+    "market_cap": 78800671,
+    "price": 0.00706393,
+    "cg_id": "threshold-network-token"
+  },
+  {
+    "bybit_symbol": "DGBUSDT",
+    "name": "DigiByte",
+    "market_cap": 77679265,
+    "price": 0.0042831,
+    "cg_id": "digibyte"
+  },
+  {
+    "bybit_symbol": "CTCUSDT",
+    "name": "Creditcoin",
+    "market_cap": 77001891,
+    "price": 0.149324,
+    "cg_id": "creditcoin-2"
+  },
+  {
+    "bybit_symbol": "BRETTUSDT",
+    "name": "Brett",
+    "market_cap": 76731200,
+    "price": 0.00773525,
+    "cg_id": "based-brett"
+  },
+  {
+    "bybit_symbol": "AIOZUSDT",
+    "name": "AIOZ Network",
+    "market_cap": 76436149,
+    "price": 0.06221,
+    "cg_id": "aioz-network"
+  },
+  {
+    "bybit_symbol": "1000TURBOUSDT",
+    "name": "Turbo",
+    "market_cap": 75903087,
+    "price": 0.00109928,
+    "cg_id": "turbo"
+  },
+  {
+    "bybit_symbol": "MOVEUSDT",
+    "name": "Movement",
+    "market_cap": 74709987,
+    "price": 0.02344925,
+    "cg_id": "movement"
+  },
+  {
+    "bybit_symbol": "DBRUSDT",
+    "name": "deBridge",
+    "market_cap": 73803199,
+    "price": 0.01562289,
+    "cg_id": "debridge"
+  },
+  {
+    "bybit_symbol": "SAFEUSDT",
+    "name": "Safe",
+    "market_cap": 73249030,
+    "price": 0.104315,
+    "cg_id": "safe"
+  },
+  {
+    "bybit_symbol": "1000000BABYDOGEUSDT",
+    "name": "Baby Doge Coin",
+    "market_cap": 72505462,
+    "price": 4.03995e-10,
+    "cg_id": "baby-doge-coin"
+  },
+  {
+    "bybit_symbol": "ARKMUSDT",
+    "name": "Arkham",
+    "market_cap": 72080309,
+    "price": 0.126742,
+    "cg_id": "arkham"
+  },
+  {
+    "bybit_symbol": "SOONUSDT",
+    "name": "SOON",
+    "market_cap": 71636214,
+    "price": 0.174752,
+    "cg_id": "soon-2"
+  },
+  {
+    "bybit_symbol": "NXPCUSDT",
+    "name": "Nexpace",
+    "market_cap": 71222972,
+    "price": 0.296481,
+    "cg_id": "nexpace"
+  },
+  {
+    "bybit_symbol": "ALCHUSDT",
+    "name": "Alchemist AI",
+    "market_cap": 70809140,
+    "price": 0.083305,
+    "cg_id": "alchemist-ai"
+  },
+  {
+    "bybit_symbol": "NMRUSDT",
+    "name": "Numeraire",
+    "market_cap": 70556105,
+    "price": 8.81,
+    "cg_id": "numeraire"
+  },
+  {
+    "bybit_symbol": "BIRBUSDT",
+    "name": "Moonbirds",
+    "market_cap": 69833587,
+    "price": 0.245022,
+    "cg_id": "moonbirds"
+  },
+  {
+    "bybit_symbol": "10000QUBICUSDT",
+    "name": "Qubic",
+    "market_cap": 69723648,
+    "price": 5.17656e-07,
+    "cg_id": "qubic-network"
+  },
+  {
+    "bybit_symbol": "BANUSDT",
+    "name": "Comedian",
+    "market_cap": 69534743,
+    "price": 0.069547,
+    "cg_id": "comedian"
+  },
+  {
+    "bybit_symbol": "SCUSDT",
+    "name": "Siacoin",
+    "market_cap": 68122571,
+    "price": 0.00121559,
+    "cg_id": "siacoin"
+  },
+  {
+    "bybit_symbol": "ZETAUSDT",
+    "name": "ZetaChain",
+    "market_cap": 68097967,
+    "price": 0.053734,
+    "cg_id": "zetachain"
+  },
+  {
+    "bybit_symbol": "1000000MOGUSDT",
+    "name": "Mog Coin",
+    "market_cap": 67577863,
+    "price": 1.72831e-07,
+    "cg_id": "mog-coin"
+  },
+  {
+    "bybit_symbol": "ASTRUSDT",
+    "name": "Astar",
+    "market_cap": 66318023,
+    "price": 0.00776728,
+    "cg_id": "astar"
+  },
+  {
+    "bybit_symbol": "ESPORTSUSDT",
+    "name": "Yooldo Games",
+    "market_cap": 66195793,
+    "price": 0.434078,
+    "cg_id": "yooldo-games"
+  },
+  {
+    "bybit_symbol": "VELOUSDT",
+    "name": "Velo",
+    "market_cap": 66068266,
+    "price": 0.00376346,
+    "cg_id": "velo"
+  },
+  {
+    "bybit_symbol": "SXTUSDT",
+    "name": "Space and Time",
+    "market_cap": 65991825,
+    "price": 0.02331576,
+    "cg_id": "space-and-time"
+  },
+  {
+    "bybit_symbol": "ZAMAUSDT",
+    "name": "Zama",
+    "market_cap": 65990638,
+    "price": 0.0299891,
+    "cg_id": "zama"
+  },
+  {
+    "bybit_symbol": "AXLUSDT",
+    "name": "Axelar",
+    "market_cap": 65111524,
+    "price": 0.058326,
+    "cg_id": "axelar"
+  },
+  {
+    "bybit_symbol": "PROVEUSDT",
+    "name": "Succinct",
+    "market_cap": 65084658,
+    "price": 0.333739,
+    "cg_id": "succinct"
+  },
+  {
+    "bybit_symbol": "DEEPUSDT",
+    "name": "DeepBook",
+    "market_cap": 64724469,
+    "price": 0.02586537,
+    "cg_id": "deep"
+  },
+  {
+    "bybit_symbol": "GMXUSDT",
+    "name": "GMX",
+    "market_cap": 64255215,
+    "price": 6.18,
+    "cg_id": "gmx"
+  },
+  {
+    "bybit_symbol": "LINEAUSDT",
+    "name": "Linea",
+    "market_cap": 63971469,
+    "price": 0.00331936,
+    "cg_id": "linea"
+  },
+  {
+    "bybit_symbol": "KAVAUSDT",
+    "name": "Kava",
+    "market_cap": 62794716,
+    "price": 0.057987,
+    "cg_id": "kava"
+  },
+  {
+    "bybit_symbol": "REQUSDT",
+    "name": "Request",
+    "market_cap": 61999850,
+    "price": 0.083128,
+    "cg_id": "request-network"
+  },
+  {
+    "bybit_symbol": "CYSUSDT",
+    "name": "Cysic",
+    "market_cap": 60797556,
+    "price": 0.377057,
+    "cg_id": "cysic"
+  },
+  {
+    "bybit_symbol": "MEUSDT",
+    "name": "Magic Eden",
+    "market_cap": 60636528,
+    "price": 0.141406,
+    "cg_id": "magic-eden"
+  },
+  {
+    "bybit_symbol": "ORDIUSDT",
+    "name": "ORDI",
+    "market_cap": 60345174,
+    "price": 2.87,
+    "cg_id": "ordinals"
+  },
+  {
+    "bybit_symbol": "COAIUSDT",
+    "name": "ChainOpera AI",
+    "market_cap": 60115448,
+    "price": 0.305963,
+    "cg_id": "chainopera-ai"
+  },
+  {
+    "bybit_symbol": "MOCAUSDT",
+    "name": "Moca Network",
+    "market_cap": 59681597,
+    "price": 0.0150754,
+    "cg_id": "mocaverse"
+  },
+  {
+    "bybit_symbol": "REDUSDT",
+    "name": "RedStone",
+    "market_cap": 58952751,
+    "price": 0.190302,
+    "cg_id": "redstone-oracles"
+  },
+  {
+    "bybit_symbol": "BICOUSDT",
+    "name": "Biconomy",
+    "market_cap": 58604830,
+    "price": 0.0260426,
+    "cg_id": "biconomy"
+  },
+  {
+    "bybit_symbol": "XCHUSDT",
+    "name": "Chia",
+    "market_cap": 58481004,
+    "price": 3.26,
+    "cg_id": "chia"
+  },
+  {
+    "bybit_symbol": "ARCUSDT",
+    "name": "AI Rig Complex",
+    "market_cap": 58366206,
+    "price": 0.058206,
+    "cg_id": "ai-rig-complex"
+  },
+  {
+    "bybit_symbol": "JELLYJELLYUSDT",
+    "name": "Jelly-My-Jelly",
+    "market_cap": 57940316,
+    "price": 0.057911,
+    "cg_id": "jelly-my-jelly"
+  },
+  {
+    "bybit_symbol": "SUSHIUSDT",
+    "name": "Sushi",
+    "market_cap": 57501329,
+    "price": 0.210548,
+    "cg_id": "sushi"
+  },
+  {
+    "bybit_symbol": "IOTXUSDT",
+    "name": "IoTeX",
+    "market_cap": 57134209,
+    "price": 0.00604895,
+    "cg_id": "iotex"
+  },
+  {
+    "bybit_symbol": "LAUSDT",
+    "name": "Lagrange",
+    "market_cap": 56855740,
+    "price": 0.294539,
+    "cg_id": "lagrange"
+  },
+  {
+    "bybit_symbol": "BLURUSDT",
+    "name": "Blur",
+    "market_cap": 56764507,
+    "price": 0.02082108,
+    "cg_id": "blur"
+  },
+  {
+    "bybit_symbol": "POLYXUSDT",
+    "name": "Polymesh",
+    "market_cap": 55419223,
+    "price": 0.04453388,
+    "cg_id": "polymesh"
+  },
+  {
+    "bybit_symbol": "MERLUSDT",
+    "name": "Merlin Chain",
+    "market_cap": 55283968,
+    "price": 0.04913438,
+    "cg_id": "merlin-chain"
+  },
+  {
+    "bybit_symbol": "XVSUSDT",
+    "name": "Venus",
+    "market_cap": 55272198,
+    "price": 3.3,
+    "cg_id": "venus"
+  },
+  {
+    "bybit_symbol": "PLUMEUSDT",
+    "name": "Plume",
+    "market_cap": 55073183,
+    "price": 0.01145921,
+    "cg_id": "plume"
+  },
+  {
+    "bybit_symbol": "MEWUSDT",
+    "name": "cat in a dogs world",
+    "market_cap": 54599704,
+    "price": 0.00061298,
+    "cg_id": "cat-in-a-dogs-world"
+  },
+  {
+    "bybit_symbol": "OMUSDT",
+    "name": "MANTRA",
+    "market_cap": 53737349,
+    "price": 0.04543147,
+    "cg_id": "mantra-dao"
+  },
+  {
+    "bybit_symbol": "QUSDT",
+    "name": "Quack AI",
+    "market_cap": 53059288,
+    "price": 0.0167198,
+    "cg_id": "quack-ai"
+  },
+  {
+    "bybit_symbol": "UAIUSDT",
+    "name": "UnifAI Network",
+    "market_cap": 52593549,
+    "price": 0.219506,
+    "cg_id": "unifai-network"
+  },
+  {
+    "bybit_symbol": "AVNTUSDT",
+    "name": "Avantis",
+    "market_cap": 52022856,
+    "price": 0.201571,
+    "cg_id": "avantis"
+  },
+  {
+    "bybit_symbol": "POPCATUSDT",
+    "name": "Popcat",
+    "market_cap": 51059227,
+    "price": 0.052001,
+    "cg_id": "popcat"
+  },
+  {
+    "bybit_symbol": "STGUSDT",
+    "name": "Stargate Finance",
+    "market_cap": 51051701,
+    "price": 0.140094,
+    "cg_id": "stargate-finance"
+  },
+  {
+    "bybit_symbol": "WAVESUSDT",
+    "name": "Waves",
+    "market_cap": 50739861,
+    "price": 0.505663,
+    "cg_id": "waves"
+  },
+  {
+    "bybit_symbol": "DRIFTUSDT",
+    "name": "Drift Protocol",
+    "market_cap": 50738564,
+    "price": 0.091166,
+    "cg_id": "drift-protocol"
+  },
+  {
+    "bybit_symbol": "SPKUSDT",
+    "name": "Spark",
+    "market_cap": 50224589,
+    "price": 0.02130361,
+    "cg_id": "spark-2"
+  },
+  {
+    "bybit_symbol": "PNUTUSDT",
+    "name": "Peanut the Squirrel",
+    "market_cap": 49970961,
+    "price": 0.04996023,
+    "cg_id": "peanut-the-squirrel"
+  },
+  {
+    "bybit_symbol": "CELOUSDT",
+    "name": "Celo",
+    "market_cap": 49717319,
+    "price": 0.083568,
+    "cg_id": "celo"
+  },
+  {
+    "bybit_symbol": "SIGNUSDT",
+    "name": "Sign",
+    "market_cap": 49291735,
+    "price": 0.03005478,
+    "cg_id": "sign-global"
+  },
+  {
+    "bybit_symbol": "LRCUSDT",
+    "name": "Loopring",
+    "market_cap": 48963385,
+    "price": 0.03928224,
+    "cg_id": "loopring"
+  },
+  {
+    "bybit_symbol": "SSVUSDT",
+    "name": "SSV Network",
+    "market_cap": 48576759,
+    "price": 3.3,
+    "cg_id": "ssv-network"
+  },
+  {
+    "bybit_symbol": "BIOUSDT",
+    "name": "Bio Protocol",
+    "market_cap": 47868162,
+    "price": 0.02699865,
+    "cg_id": "bio-protocol"
+  },
+  {
+    "bybit_symbol": "ORCAUSDT",
+    "name": "Orca",
+    "market_cap": 47564353,
+    "price": 0.789778,
+    "cg_id": "orca"
+  },
+  {
+    "bybit_symbol": "API3USDT",
+    "name": "Api3",
+    "market_cap": 47548723,
+    "price": 0.337858,
+    "cg_id": "api3"
+  },
+  {
+    "bybit_symbol": "MASKUSDT",
+    "name": "Mask Network",
+    "market_cap": 47512436,
+    "price": 0.474385,
+    "cg_id": "mask-network"
+  },
+  {
+    "bybit_symbol": "UMAUSDT",
+    "name": "UMA",
+    "market_cap": 47143788,
+    "price": 0.524335,
+    "cg_id": "uma"
+  },
+  {
+    "bybit_symbol": "VANAUSDT",
+    "name": "Vana",
+    "market_cap": 47069556,
+    "price": 1.53,
+    "cg_id": "vana"
+  },
+  {
+    "bybit_symbol": "ANKRUSDT",
+    "name": "Ankr Network",
+    "market_cap": 46886545,
+    "price": 0.00468264,
+    "cg_id": "ankr"
+  },
+  {
+    "bybit_symbol": "MOODENGUSDT",
+    "name": "Moo Deng",
+    "market_cap": 46597134,
+    "price": 0.04711049,
+    "cg_id": "moo-deng"
+  },
+  {
+    "bybit_symbol": "ALTUSDT",
+    "name": "AltLayer",
+    "market_cap": 45611043,
+    "price": 0.00838338,
+    "cg_id": "altlayer"
+  },
+  {
+    "bybit_symbol": "MEMEUSDT",
+    "name": "Memecoin",
+    "market_cap": 45574814,
+    "price": 0.00073548,
+    "cg_id": "memecoin-2"
+  },
+  {
+    "bybit_symbol": "ICXUSDT",
+    "name": "ICON",
+    "market_cap": 44214372,
+    "price": 0.04060792,
+    "cg_id": "icon"
+  },
+  {
+    "bybit_symbol": "ENJUSDT",
+    "name": "Enjin Coin",
+    "market_cap": 44011650,
+    "price": 0.02273835,
+    "cg_id": "enjincoin"
+  },
+  {
+    "bybit_symbol": "ONTUSDT",
+    "name": "Ontology",
+    "market_cap": 43730326,
+    "price": 0.04669911,
+    "cg_id": "ontology"
+  },
+  {
+    "bybit_symbol": "SIRENUSDT",
+    "name": "Siren",
+    "market_cap": 43697628,
+    "price": 0.058845,
+    "cg_id": "siren-2"
+  },
+  {
+    "bybit_symbol": "YZYUSDT",
+    "name": "YZY",
+    "market_cap": 43673135,
+    "price": 0.335875,
+    "cg_id": "yzy"
+  },
+  {
+    "bybit_symbol": "SNTUSDT",
+    "name": "Status",
+    "market_cap": 43570856,
+    "price": 0.01098049,
+    "cg_id": "status"
+  },
+  {
+    "bybit_symbol": "POWERUSDT",
+    "name": "Power Protocol",
+    "market_cap": 43356799,
+    "price": 0.206765,
+    "cg_id": "power-protocol"
+  },
+  {
+    "bybit_symbol": "GUNUSDT",
+    "name": "Gunz",
+    "market_cap": 43317642,
+    "price": 0.02785873,
+    "cg_id": "gunz"
+  },
+  {
+    "bybit_symbol": "SQDUSDT",
+    "name": "SQD",
+    "market_cap": 43273451,
+    "price": 0.04408952,
+    "cg_id": "subsquid"
+  },
+  {
+    "bybit_symbol": "PUNDIXUSDT",
+    "name": "Pundi X",
+    "market_cap": 43123273,
+    "price": 0.167016,
+    "cg_id": "pundi-x-2"
+  },
+  {
+    "bybit_symbol": "SAHARAUSDT",
+    "name": "Sahara AI",
+    "market_cap": 42513764,
+    "price": 0.01530817,
+    "cg_id": "sahara-ai"
+  },
+  {
+    "bybit_symbol": "BANDUSDT",
+    "name": "Band",
+    "market_cap": 42046167,
+    "price": 0.245287,
+    "cg_id": "band-protocol"
+  },
+  {
+    "bybit_symbol": "BABYUSDT",
+    "name": "Babylon",
+    "market_cap": 41844853,
+    "price": 0.01387804,
+    "cg_id": "babylon"
+  },
+  {
+    "bybit_symbol": "GPSUSDT",
+    "name": "GoPlus Security",
+    "market_cap": 41397907,
+    "price": 0.00937055,
+    "cg_id": "goplus-security"
+  },
+  {
+    "bybit_symbol": "DUSKUSDT",
+    "name": "DUSK",
+    "market_cap": 41187652,
+    "price": 0.082336,
+    "cg_id": "dusk-network"
+  },
+  {
+    "bybit_symbol": "TRIAUSDT",
+    "name": "TRIA",
+    "market_cap": 41069763,
+    "price": 0.01899961,
+    "cg_id": "tria"
+  },
+  {
+    "bybit_symbol": "SKLUSDT",
+    "name": "SKALE",
+    "market_cap": 41014306,
+    "price": 0.00676146,
+    "cg_id": "skale"
+  },
+  {
+    "bybit_symbol": "TRBUSDT",
+    "name": "Tellor Tributes",
+    "market_cap": 40831082,
+    "price": 14.81,
+    "cg_id": "tellor"
+  },
+  {
+    "bybit_symbol": "NOTUSDT",
+    "name": "Notcoin",
+    "market_cap": 40519969,
+    "price": 0.00040753,
+    "cg_id": "notcoin"
+  },
+  {
+    "bybit_symbol": "APEXUSDT",
+    "name": "APEX",
+    "market_cap": 40188676,
+    "price": 0.293291,
+    "cg_id": "apex-token-2"
+  },
+  {
+    "bybit_symbol": "GMTUSDT",
+    "name": "GMT",
+    "market_cap": 39750295,
+    "price": 0.01277585,
+    "cg_id": "stepn"
+  },
+  {
+    "bybit_symbol": "HIVEUSDT",
+    "name": "Hive",
+    "market_cap": 39253304,
+    "price": 0.076178,
+    "cg_id": "hive"
+  },
+  {
+    "bybit_symbol": "ONEUSDT",
+    "name": "Harmony",
+    "market_cap": 39131959,
+    "price": 0.00263059,
+    "cg_id": "harmony"
+  },
+  {
+    "bybit_symbol": "IOSTUSDT",
+    "name": "IOST",
+    "market_cap": 38564659,
+    "price": 0.00124863,
+    "cg_id": "iostoken"
+  },
+  {
+    "bybit_symbol": "BREVUSDT",
+    "name": "Brevis",
+    "market_cap": 38431925,
+    "price": 0.153454,
+    "cg_id": "brevis"
+  },
+  {
+    "bybit_symbol": "ILVUSDT",
+    "name": "Illuvium",
+    "market_cap": 37950074,
+    "price": 4.0,
+    "cg_id": "illuvium"
+  },
+  {
+    "bybit_symbol": "ORBSUSDT",
+    "name": "Orbs",
+    "market_cap": 37340819,
+    "price": 0.00763243,
+    "cg_id": "orbs"
+  },
+  {
+    "bybit_symbol": "ATUSDT",
+    "name": "Apro",
+    "market_cap": 36660978,
+    "price": 0.1594,
+    "cg_id": "apro"
+  },
+  {
+    "bybit_symbol": "ARKUSDT",
+    "name": "ARK",
+    "market_cap": 36528954,
+    "price": 0.19134,
+    "cg_id": "ark"
+  },
+  {
+    "bybit_symbol": "ACHUSDT",
+    "name": "Alchemy Pay",
+    "market_cap": 36495978,
+    "price": 0.00738138,
+    "cg_id": "alchemy-pay"
+  },
+  {
+    "bybit_symbol": "POWRUSDT",
+    "name": "Powerledger",
+    "market_cap": 36339815,
+    "price": 0.068515,
+    "cg_id": "power-ledger"
+  },
+  {
+    "bybit_symbol": "BANANAS31USDT",
+    "name": "Banana For Scale",
+    "market_cap": 36013574,
+    "price": 0.00360136,
+    "cg_id": "banana-for-scale-2"
+  },
+  {
+    "bybit_symbol": "RPLUSDT",
+    "name": "Rocket Pool",
+    "market_cap": 35703178,
+    "price": 1.62,
+    "cg_id": "rocket-pool"
+  },
+  {
+    "bybit_symbol": "CROSSUSDT",
+    "name": "CROSS",
+    "market_cap": 35043243,
+    "price": 0.104539,
+    "cg_id": "cross-2"
+  },
+  {
+    "bybit_symbol": "PEOPLEUSDT",
+    "name": "ConstitutionDAO",
+    "market_cap": 34627708,
+    "price": 0.00683394,
+    "cg_id": "constitutiondao"
+  },
+  {
+    "bybit_symbol": "OPENUSDT",
+    "name": "OpenLedger",
+    "market_cap": 34504990,
+    "price": 0.159887,
+    "cg_id": "openledger-2"
+  },
+  {
+    "bybit_symbol": "KGENUSDT",
+    "name": "KGeN",
+    "market_cap": 34454472,
+    "price": 0.173442,
+    "cg_id": "kgen"
+  },
+  {
+    "bybit_symbol": "THEUSDT",
+    "name": "Thena",
+    "market_cap": 34372040,
+    "price": 0.278499,
+    "cg_id": "thena"
+  },
+  {
+    "bybit_symbol": "LQTYUSDT",
+    "name": "Liquity",
+    "market_cap": 34252695,
+    "price": 0.349158,
+    "cg_id": "liquity"
+  },
+  {
+    "bybit_symbol": "AUCTIONUSDT",
+    "name": "Bounce",
+    "market_cap": 34099739,
+    "price": 4.81,
+    "cg_id": "auction"
+  },
+  {
+    "bybit_symbol": "MANTAUSDT",
+    "name": "Manta Network",
+    "market_cap": 33911469,
+    "price": 0.073099,
+    "cg_id": "manta-network"
+  },
+  {
+    "bybit_symbol": "1000TAGUSDT",
+    "name": "TAGGER",
+    "market_cap": 33557975,
+    "price": 0.00030825,
+    "cg_id": "tagger"
+  },
+  {
+    "bybit_symbol": "WOOUSDT",
+    "name": "WOO",
+    "market_cap": 33492749,
+    "price": 0.01773067,
+    "cg_id": "woo-network"
+  },
+  {
+    "bybit_symbol": "RLCUSDT",
+    "name": "iExec RLC",
+    "market_cap": 33368508,
+    "price": 0.460715,
+    "cg_id": "iexec-rlc"
+  },
+  {
+    "bybit_symbol": "SPELLUSDT",
+    "name": "Spell",
+    "market_cap": 33287331,
+    "price": 0.00019387,
+    "cg_id": "spell-token"
+  },
+  {
+    "bybit_symbol": "USELESSUSDT",
+    "name": "Useless Coin",
+    "market_cap": 33113657,
+    "price": 0.03310659,
+    "cg_id": "useless-3"
+  },
+  {
+    "bybit_symbol": "COTIUSDT",
+    "name": "COTI",
+    "market_cap": 32925462,
+    "price": 0.01245444,
+    "cg_id": "coti"
+  },
+  {
+    "bybit_symbol": "CARVUSDT",
+    "name": "CARV",
+    "market_cap": 32906516,
+    "price": 0.064859,
+    "cg_id": "carv"
+  },
+  {
+    "bybit_symbol": "XPINUSDT",
+    "name": "XPIN Network",
+    "market_cap": 32653898,
+    "price": 0.00211288,
+    "cg_id": "xpin-network"
+  },
+  {
+    "bybit_symbol": "CTKUSDT",
+    "name": "Shentu",
+    "market_cap": 32630938,
+    "price": 0.211049,
+    "cg_id": "certik"
+  },
+  {
+    "bybit_symbol": "BNTUSDT",
+    "name": "Bancor Network",
+    "market_cap": 32506242,
+    "price": 0.296893,
+    "cg_id": "bancor"
+  },
+  {
+    "bybit_symbol": "SCRTUSDT",
+    "name": "Secret",
+    "market_cap": 32130459,
+    "price": 0.096854,
+    "cg_id": "secret"
+  },
+  {
+    "bybit_symbol": "SKYAIUSDT",
+    "name": "SkyAI",
+    "market_cap": 32046214,
+    "price": 0.03206283,
+    "cg_id": "skyai"
+  },
+  {
+    "bybit_symbol": "PEAQUSDT",
+    "name": "peaq",
+    "market_cap": 31934496,
+    "price": 0.01775547,
+    "cg_id": "peaq-2"
+  },
+  {
+    "bybit_symbol": "GIGGLEUSDT",
+    "name": "Giggle Fund",
+    "market_cap": 31861382,
+    "price": 31.83,
+    "cg_id": "giggle-fund"
+  },
+  {
+    "bybit_symbol": "BLASTUSDT",
+    "name": "Blast",
+    "market_cap": 31150263,
+    "price": 0.00056536,
+    "cg_id": "blast"
+  },
+  {
+    "bybit_symbol": "IOUSDT",
+    "name": "io.net",
+    "market_cap": 31021487,
+    "price": 0.109891,
+    "cg_id": "io"
+  },
+  {
+    "bybit_symbol": "WAXPUSDT",
+    "name": "WAX",
+    "market_cap": 30908444,
+    "price": 0.00680681,
+    "cg_id": "wax"
+  },
+  {
+    "bybit_symbol": "ANIMEUSDT",
+    "name": "Animecoin",
+    "market_cap": 30344685,
+    "price": 0.00546722,
+    "cg_id": "anime"
+  },
+  {
+    "bybit_symbol": "LSKUSDT",
+    "name": "Lisk",
+    "market_cap": 30061607,
+    "price": 0.132522,
+    "cg_id": "lisk"
+  },
+  {
+    "bybit_symbol": "DOODUSDT",
+    "name": "Doodles",
+    "market_cap": 29945490,
+    "price": 0.00383305,
+    "cg_id": "doodles"
+  },
+  {
+    "bybit_symbol": "YGGUSDT",
+    "name": "Yield Guild Games",
+    "market_cap": 29825230,
+    "price": 0.04184608,
+    "cg_id": "yield-guild-games"
+  },
+  {
+    "bybit_symbol": "CYBERUSDT",
+    "name": "CYBER",
+    "market_cap": 29808595,
+    "price": 0.536063,
+    "cg_id": "cyberconnect"
+  },
+  {
+    "bybit_symbol": "ONGUSDT",
+    "name": "Ontology Gas",
+    "market_cap": 29256503,
+    "price": 0.065952,
+    "cg_id": "ong"
+  },
+  {
+    "bybit_symbol": "FLUXUSDT",
+    "name": "Flux",
+    "market_cap": 29141936,
+    "price": 0.072631,
+    "cg_id": "zelcash"
+  },
+  {
+    "bybit_symbol": "BOMEUSDT",
+    "name": "BOOK OF MEME",
+    "market_cap": 29027054,
+    "price": 0.00042068,
+    "cg_id": "book-of-meme"
+  },
+  {
+    "bybit_symbol": "ENSOUSDT",
+    "name": "Enso",
+    "market_cap": 28659891,
+    "price": 1.39,
+    "cg_id": "enso"
+  },
+  {
+    "bybit_symbol": "BIGTIMEUSDT",
+    "name": "Big Time",
+    "market_cap": 28652023,
+    "price": 0.01501281,
+    "cg_id": "big-time"
+  },
+  {
+    "bybit_symbol": "CLANKERUSDT",
+    "name": "tokenbot",
+    "market_cap": 28576951,
+    "price": 28.97,
+    "cg_id": "tokenbot-2"
+  },
+  {
+    "bybit_symbol": "B2USDT",
+    "name": "BSquared Network",
+    "market_cap": 28539127,
+    "price": 0.686529,
+    "cg_id": "bsquared-network"
+  },
+  {
+    "bybit_symbol": "AGIUSDT",
+    "name": "Delysium",
+    "market_cap": 28525566,
+    "price": 0.01223804,
+    "cg_id": "delysium"
+  },
+  {
+    "bybit_symbol": "LYNUSDT",
+    "name": "Everlyn",
+    "market_cap": 28488164,
+    "price": 0.136103,
+    "cg_id": "everlyn"
+  },
+  {
+    "bybit_symbol": "SOMIUSDT",
+    "name": "Somnia",
+    "market_cap": 28467735,
+    "price": 0.177472,
+    "cg_id": "somnia"
+  },
+  {
+    "bybit_symbol": "LISTAUSDT",
+    "name": "Lista DAO",
+    "market_cap": 28243659,
+    "price": 0.09855,
+    "cg_id": "lista"
+  },
+  {
+    "bybit_symbol": "TRUTHUSDT",
+    "name": "Swarm Network",
+    "market_cap": 28192084,
+    "price": 0.01351981,
+    "cg_id": "swarm-network"
+  },
+  {
+    "bybit_symbol": "STEEMUSDT",
+    "name": "Steem",
+    "market_cap": 28061232,
+    "price": 0.051999,
+    "cg_id": "steem"
+  },
+  {
+    "bybit_symbol": "C98USDT",
+    "name": "Coin98",
+    "market_cap": 27932601,
+    "price": 0.02784576,
+    "cg_id": "coin98"
+  },
+  {
+    "bybit_symbol": "RESOLVUSDT",
+    "name": "Resolv",
+    "market_cap": 27711398,
+    "price": 0.076163,
+    "cg_id": "resolv"
+  },
+  {
+    "bybit_symbol": "METISUSDT",
+    "name": "Metis",
+    "market_cap": 27563871,
+    "price": 3.77,
+    "cg_id": "metis-token"
+  },
+  {
+    "bybit_symbol": "MMTUSDT",
+    "name": "Momentum",
+    "market_cap": 27526991,
+    "price": 0.134747,
+    "cg_id": "momentum-3"
+  },
+  {
+    "bybit_symbol": "ERAUSDT",
+    "name": "Caldera",
+    "market_cap": 27287978,
+    "price": 0.155964,
+    "cg_id": "caldera"
+  },
+  {
+    "bybit_symbol": "DEGENUSDT",
+    "name": "Degen",
+    "market_cap": 27074306,
+    "price": 0.00073242,
+    "cg_id": "degen-base"
+  },
+  {
+    "bybit_symbol": "CVCUSDT",
+    "name": "Civic",
+    "market_cap": 27020037,
+    "price": 0.03367764,
+    "cg_id": "civic"
+  },
+  {
+    "bybit_symbol": "AEVOUSDT",
+    "name": "Aevo",
+    "market_cap": 26725639,
+    "price": 0.02916928,
+    "cg_id": "aevo-exchange"
+  },
+  {
+    "bybit_symbol": "ACXUSDT",
+    "name": "Across Protocol",
+    "market_cap": 26723285,
+    "price": 0.03886373,
+    "cg_id": "across-protocol"
+  },
+  {
+    "bybit_symbol": "0GUSDT",
+    "name": "Gravity (by Galxe)",
+    "market_cap": 26674540,
+    "price": 0.00368427,
+    "cg_id": "g-token"
+  },
+  {
+    "bybit_symbol": "KNCUSDT",
+    "name": "Kyber Network Crystal",
+    "market_cap": 26333949,
+    "price": 0.154724,
+    "cg_id": "kyber-network-crystal"
+  },
+  {
+    "bybit_symbol": "USTCUSDT",
+    "name": "TerraClassicUSD",
+    "market_cap": 26103954,
+    "price": 0.00467333,
+    "cg_id": "terrausd"
+  },
+  {
+    "bybit_symbol": "BEATUSDT",
+    "name": "Audiera",
+    "market_cap": 26009007,
+    "price": 0.186194,
+    "cg_id": "audiera"
+  },
+  {
+    "bybit_symbol": "AERGOUSDT",
+    "name": "Aergo",
+    "market_cap": 25873154,
+    "price": 0.054764,
+    "cg_id": "aergo"
+  },
+  {
+    "bybit_symbol": "USUALUSDT",
+    "name": "Usual",
+    "market_cap": 25521045,
+    "price": 0.01558824,
+    "cg_id": "usual"
+  },
+  {
+    "bybit_symbol": "MTLUSDT",
+    "name": "Metal DAO",
+    "market_cap": 25120865,
+    "price": 0.281298,
+    "cg_id": "metal"
+  },
+  {
+    "bybit_symbol": "10000SATSUSDT",
+    "name": "SATS (Ordinals)",
+    "market_cap": 24993126,
+    "price": 1.1876e-08,
+    "cg_id": "sats-ordinals"
+  },
+  {
+    "bybit_symbol": "CTSIUSDT",
+    "name": "Cartesi",
+    "market_cap": 24739768,
+    "price": 0.02737381,
+    "cg_id": "cartesi"
+  },
+  {
+    "bybit_symbol": "CLOUDUSDT",
+    "name": "Cloud",
+    "market_cap": 24540426,
+    "price": 0.0459755,
+    "cg_id": "sanctum-2"
+  },
+  {
+    "bybit_symbol": "HUMAUSDT",
+    "name": "Huma Finance",
+    "market_cap": 24506852,
+    "price": 0.01407613,
+    "cg_id": "huma-finance"
+  },
+  {
+    "bybit_symbol": "DIAUSDT",
+    "name": "DIA",
+    "market_cap": 24364077,
+    "price": 0.20352,
+    "cg_id": "dia-data"
+  },
+  {
+    "bybit_symbol": "CHRUSDT",
+    "name": "Chromia",
+    "market_cap": 23866013,
+    "price": 0.02796486,
+    "cg_id": "chromaway"
+  },
+  {
+    "bybit_symbol": "INXUSDT",
+    "name": "Infinex",
+    "market_cap": 23773681,
+    "price": 0.01195229,
+    "cg_id": "infinex-2"
+  },
+  {
+    "bybit_symbol": "SLPUSDT",
+    "name": "Smooth Love Potion",
+    "market_cap": 23527381,
+    "price": 0.00064552,
+    "cg_id": "smooth-love-potion"
+  },
+  {
+    "bybit_symbol": "ACUUSDT",
+    "name": "Acurast",
+    "market_cap": 23442967,
+    "price": 0.105785,
+    "cg_id": "acurast"
+  },
+  {
+    "bybit_symbol": "BTRUSDT",
+    "name": "Bitlayer",
+    "market_cap": 23337489,
+    "price": 0.089184,
+    "cg_id": "bitlayer-bitvm"
+  },
+  {
+    "bybit_symbol": "TAIKOUSDT",
+    "name": "Taiko",
+    "market_cap": 23278547,
+    "price": 0.12122,
+    "cg_id": "taiko"
+  },
+  {
+    "bybit_symbol": "PHAUSDT",
+    "name": "PHALA",
+    "market_cap": 23238513,
+    "price": 0.02809073,
+    "cg_id": "pha"
+  },
+  {
+    "bybit_symbol": "GOATUSDT",
+    "name": "Goatseus Maximus",
+    "market_cap": 22787743,
+    "price": 0.02277133,
+    "cg_id": "goatseus-maximus"
+  },
+  {
+    "bybit_symbol": "GIGAUSDT",
+    "name": "Gigachad",
+    "market_cap": 22724989,
+    "price": 0.00236617,
+    "cg_id": "gigachad-2"
+  },
+  {
+    "bybit_symbol": "FHEUSDT",
+    "name": "Mind Network",
+    "market_cap": 22643658,
+    "price": 0.090166,
+    "cg_id": "mind-network"
+  },
+  {
+    "bybit_symbol": "IDUSDT",
+    "name": "SPACE ID",
+    "market_cap": 22574174,
+    "price": 0.052392,
+    "cg_id": "space-id"
+  },
+  {
+    "bybit_symbol": "PARTIUSDT",
+    "name": "Particle Network",
+    "market_cap": 22472718,
+    "price": 0.096463,
+    "cg_id": "particle-network"
+  },
+  {
+    "bybit_symbol": "HYPERUSDT",
+    "name": "Hyperlane",
+    "market_cap": 22420491,
+    "price": 0.098656,
+    "cg_id": "hyperlane"
+  },
+  {
+    "bybit_symbol": "PROMUSDT",
+    "name": "Prom",
+    "market_cap": 21988468,
+    "price": 1.2,
+    "cg_id": "prometeus"
+  },
+  {
+    "bybit_symbol": "BSUUSDT",
+    "name": "Baby Shark Universe",
+    "market_cap": 21822010,
+    "price": 0.130048,
+    "cg_id": "baby-shark-universe"
+  },
+  {
+    "bybit_symbol": "TREEUSDT",
+    "name": "Tree",
+    "market_cap": 21406623,
+    "price": 0.210788,
+    "cg_id": "tree-capital"
+  },
+  {
+    "bybit_symbol": "ORDERUSDT",
+    "name": "Orderly",
+    "market_cap": 21288378,
+    "price": 0.057692,
+    "cg_id": "orderly-network"
+  },
+  {
+    "bybit_symbol": "HOLOUSDT",
+    "name": "Holoworld",
+    "market_cap": 21214977,
+    "price": 0.061073,
+    "cg_id": "holoworld"
+  },
+  {
+    "bybit_symbol": "AIXBTUSDT",
+    "name": "aixbt",
+    "market_cap": 21204172,
+    "price": 0.02130747,
+    "cg_id": "aixbt"
+  },
+  {
+    "bybit_symbol": "XAIUSDT",
+    "name": "Xai",
+    "market_cap": 20981377,
+    "price": 0.01062048,
+    "cg_id": "xai-blockchain"
+  },
+  {
+    "bybit_symbol": "MAGICUSDT",
+    "name": "Treasure",
+    "market_cap": 20711607,
+    "price": 0.06518,
+    "cg_id": "magic"
+  },
+  {
+    "bybit_symbol": "SAPIENUSDT",
+    "name": "Sapien",
+    "market_cap": 20658427,
+    "price": 0.082541,
+    "cg_id": "sapien-2"
+  },
+  {
+    "bybit_symbol": "ZKCUSDT",
+    "name": "Boundless",
+    "market_cap": 20410819,
+    "price": 0.088392,
+    "cg_id": "boundless"
+  },
+  {
+    "bybit_symbol": "STBLUSDT",
+    "name": "STBL",
+    "market_cap": 20092238,
+    "price": 0.04017854,
+    "cg_id": "stbl"
+  },
+  {
+    "bybit_symbol": "FIDAUSDT",
+    "name": "Bonfida",
+    "market_cap": 19979488,
+    "price": 0.02016275,
+    "cg_id": "bonfida"
+  },
+  {
+    "bybit_symbol": "SOPHUSDT",
+    "name": "Sophon",
+    "market_cap": 19772467,
+    "price": 0.00988161,
+    "cg_id": "sophon"
+  },
+  {
+    "bybit_symbol": "PONKEUSDT",
+    "name": "PONKE",
+    "market_cap": 19579821,
+    "price": 0.03519126,
+    "cg_id": "ponke"
+  },
+  {
+    "bybit_symbol": "DYMUSDT",
+    "name": "Dymension",
+    "market_cap": 19514917,
+    "price": 0.04253584,
+    "cg_id": "dymension"
+  },
+  {
+    "bybit_symbol": "FUSDT",
+    "name": "SynFutures",
+    "market_cap": 19454515,
+    "price": 0.00556179,
+    "cg_id": "synfutures"
+  },
+  {
+    "bybit_symbol": "VINEUSDT",
+    "name": "Vine",
+    "market_cap": 19215418,
+    "price": 0.0191997,
+    "cg_id": "vine"
+  },
+  {
+    "bybit_symbol": "MAGMAUSDT",
+    "name": "Magma Finance",
+    "market_cap": 19151040,
+    "price": 0.100825,
+    "cg_id": "magma-finance"
+  },
+  {
+    "bybit_symbol": "AGLDUSDT",
+    "name": "Adventure Gold",
+    "market_cap": 19125170,
+    "price": 0.218875,
+    "cg_id": "adventure-gold"
+  },
+  {
+    "bybit_symbol": "XANUSDT",
+    "name": "Anoma",
+    "market_cap": 18938885,
+    "price": 0.00758575,
+    "cg_id": "anoma"
+  },
+  {
+    "bybit_symbol": "BANANAUSDT",
+    "name": "Banana Gun",
+    "market_cap": 18822110,
+    "price": 4.68,
+    "cg_id": "banana-gun"
+  },
+  {
+    "bybit_symbol": "CGPTUSDT",
+    "name": "ChainGPT",
+    "market_cap": 18628684,
+    "price": 0.02125365,
+    "cg_id": "chaingpt"
+  },
+  {
+    "bybit_symbol": "MIRAUSDT",
+    "name": "Mira",
+    "market_cap": 18500952,
+    "price": 0.090812,
+    "cg_id": "mira-3"
+  },
+  {
+    "bybit_symbol": "VELVETUSDT",
+    "name": "Velvet",
+    "market_cap": 18280710,
+    "price": 0.116473,
+    "cg_id": "velvet"
+  },
+  {
+    "bybit_symbol": "SXPUSDT",
+    "name": "Solar",
+    "market_cap": 18187606,
+    "price": 0.02719768,
+    "cg_id": "swipe"
+  },
+  {
+    "bybit_symbol": "FOLKSUSDT",
+    "name": "FOLKS",
+    "market_cap": 17705453,
+    "price": 1.39,
+    "cg_id": "folks"
+  },
+  {
+    "bybit_symbol": "APRUSDT",
+    "name": "aPriori",
+    "market_cap": 17668344,
+    "price": 0.081701,
+    "cg_id": "apriori"
+  },
+  {
+    "bybit_symbol": "CATIUSDT",
+    "name": "Catizen",
+    "market_cap": 17648037,
+    "price": 0.04432671,
+    "cg_id": "catizen"
+  },
+  {
+    "bybit_symbol": "NOMUSDT",
+    "name": "Nomina",
+    "market_cap": 17573709,
+    "price": 0.00605286,
+    "cg_id": "nomina"
+  },
+  {
+    "bybit_symbol": "ESUSDT",
+    "name": "Eclipse",
+    "market_cap": 17546206,
+    "price": 0.116865,
+    "cg_id": "eclipse-3"
+  },
+  {
+    "bybit_symbol": "ELSAUSDT",
+    "name": "Elsa",
+    "market_cap": 17545435,
+    "price": 0.076842,
+    "cg_id": "elsa"
+  },
+  {
+    "bybit_symbol": "INUSDT",
+    "name": "INFINIT",
+    "market_cap": 17360188,
+    "price": 0.058702,
+    "cg_id": "infinit"
+  },
+  {
+    "bybit_symbol": "WETUSDT",
+    "name": "HumidiFi",
+    "market_cap": 17340480,
+    "price": 0.075221,
+    "cg_id": "humidifi"
+  },
+  {
+    "bybit_symbol": "FLOCKUSDT",
+    "name": "FLOCK",
+    "market_cap": 17233309,
+    "price": 0.059251,
+    "cg_id": "flock-2"
+  },
+  {
+    "bybit_symbol": "MOVRUSDT",
+    "name": "Moonriver",
+    "market_cap": 17177709,
+    "price": 1.55,
+    "cg_id": "moonriver"
+  },
+  {
+    "bybit_symbol": "AIOUSDT",
+    "name": "OlaXBT",
+    "market_cap": 17001483,
+    "price": 0.073302,
+    "cg_id": "olaxbt"
+  },
+  {
+    "bybit_symbol": "B3USDT",
+    "name": "B3 (Base)",
+    "market_cap": 16841661,
+    "price": 0.00052681,
+    "cg_id": "b3"
+  },
+  {
+    "bybit_symbol": "AVAUSDT",
+    "name": "AVA (Travala)",
+    "market_cap": 16586193,
+    "price": 0.229769,
+    "cg_id": "concierge-io"
+  },
+  {
+    "bybit_symbol": "ACEUSDT",
+    "name": "Fusionist",
+    "market_cap": 16566386,
+    "price": 0.184065,
+    "cg_id": "endurance"
+  },
+  {
+    "bybit_symbol": "OGUSDT",
+    "name": "OG Fan Token",
+    "market_cap": 16531451,
+    "price": 3.61,
+    "cg_id": "og-fan-token"
+  },
+  {
+    "bybit_symbol": "EULUSDT",
+    "name": "Euler",
+    "market_cap": 16399044,
+    "price": 0.877543,
+    "cg_id": "euler"
+  },
+  {
+    "bybit_symbol": "ZBTUSDT",
+    "name": "ZEROBASE",
+    "market_cap": 16265803,
+    "price": 0.06636,
+    "cg_id": "zerobase"
+  },
+  {
+    "bybit_symbol": "RAREUSDT",
+    "name": "SuperRare",
+    "market_cap": 16074840,
+    "price": 0.01959534,
+    "cg_id": "superrare"
+  },
+  {
+    "bybit_symbol": "KERNELUSDT",
+    "name": "KernelDAO",
+    "market_cap": 15952311,
+    "price": 0.055668,
+    "cg_id": "kernel-2"
+  },
+  {
+    "bybit_symbol": "DOLOUSDT",
+    "name": "Dolomite",
+    "market_cap": 15645168,
+    "price": 0.03404498,
+    "cg_id": "dolomite"
+  },
+  {
+    "bybit_symbol": "ZKPUSDT",
+    "name": "zkPass",
+    "market_cap": 15584387,
+    "price": 0.077196,
+    "cg_id": "zkpass"
+  },
+  {
+    "bybit_symbol": "STORJUSDT",
+    "name": "Storj",
+    "market_cap": 15348624,
+    "price": 0.106981,
+    "cg_id": "storj"
+  },
+  {
+    "bybit_symbol": "NEWTUSDT",
+    "name": "Newton Protocol",
+    "market_cap": 15185572,
+    "price": 0.070607,
+    "cg_id": "newton-protocol"
+  },
+  {
+    "bybit_symbol": "TNSRUSDT",
+    "name": "Tensor",
+    "market_cap": 15131072,
+    "price": 0.04519913,
+    "cg_id": "tensor"
+  },
+  {
+    "bybit_symbol": "MAVUSDT",
+    "name": "Maverick Protocol",
+    "market_cap": 15073359,
+    "price": 0.01788796,
+    "cg_id": "maverick-protocol"
+  },
+  {
+    "bybit_symbol": "DODOUSDT",
+    "name": "DODO",
+    "market_cap": 15066441,
+    "price": 0.01506318,
+    "cg_id": "dodo"
+  },
+  {
+    "bybit_symbol": "GODSUSDT",
+    "name": "Gods Unchained",
+    "market_cap": 14960984,
+    "price": 0.03796798,
+    "cg_id": "gods-unchained"
+  },
+  {
+    "bybit_symbol": "CETUSUSDT",
+    "name": "Cetus Protocol",
+    "market_cap": 14859007,
+    "price": 0.01654769,
+    "cg_id": "cetus-protocol"
+  },
+  {
+    "bybit_symbol": "OGNUSDT",
+    "name": "Origin Token",
+    "market_cap": 14762101,
+    "price": 0.02242293,
+    "cg_id": "origin-protocol"
+  },
+  {
+    "bybit_symbol": "SONICUSDT",
+    "name": "Sonic SVM",
+    "market_cap": 14741519,
+    "price": 0.0409503,
+    "cg_id": "sonic-svm"
+  },
+  {
+    "bybit_symbol": "JCTUSDT",
+    "name": "Janction",
+    "market_cap": 14708234,
+    "price": 0.00128216,
+    "cg_id": "janction"
+  },
+  {
+    "bybit_symbol": "REZUSDT",
+    "name": "Renzo",
+    "market_cap": 14517527,
+    "price": 0.00322822,
+    "cg_id": "renzo"
+  },
+  {
+    "bybit_symbol": "ACTUSDT",
+    "name": "Act I The AI Prophecy",
+    "market_cap": 14436545,
+    "price": 0.01523382,
+    "cg_id": "act-i-the-ai-prophecy"
+  },
+  {
+    "bybit_symbol": "YBUSDT",
+    "name": "Yield Basis",
+    "market_cap": 14292609,
+    "price": 0.161922,
+    "cg_id": "yield-basis"
+  },
+  {
+    "bybit_symbol": "NAORISUSDT",
+    "name": "Naoris Protocol",
+    "market_cap": 14225828,
+    "price": 0.02386558,
+    "cg_id": "naoris"
+  },
+  {
+    "bybit_symbol": "NILUSDT",
+    "name": "Nillion",
+    "market_cap": 14185733,
+    "price": 0.04662571,
+    "cg_id": "nillion"
+  },
+  {
+    "bybit_symbol": "BBUSDT",
+    "name": "BounceBit",
+    "market_cap": 13756200,
+    "price": 0.03359477,
+    "cg_id": "bouncebit"
+  },
+  {
+    "bybit_symbol": "FIGHTUSDT",
+    "name": "FIGHT",
+    "market_cap": 13618642,
+    "price": 0.00670505,
+    "cg_id": "fight-2"
+  },
+  {
+    "bybit_symbol": "MUBARAKUSDT",
+    "name": "Mubarak",
+    "market_cap": 13447021,
+    "price": 0.01343366,
+    "cg_id": "mubarak"
+  },
+  {
+    "bybit_symbol": "BANKUSDT",
+    "name": "Lorenzo Protocol",
+    "market_cap": 13435884,
+    "price": 0.03159683,
+    "cg_id": "lorenzo-protocol"
+  },
+  {
+    "bybit_symbol": "COOKIEUSDT",
+    "name": "Cookie DAO",
+    "market_cap": 13434865,
+    "price": 0.02069288,
+    "cg_id": "cookie"
+  }
+]

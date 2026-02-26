@@ -1,0 +1,60 @@
+{
+  "books": {
+    "Hilpisch, Yves J - Derivatives analytics with Python _ data analysis, models, simulation, calibration and hedging.epub": {
+      "rating": 9,
+      "chapters": 20,
+      "analyzed": "2026-02-09T15:36:05.619251"
+    },
+    "López de Prado, Marcos Mailoc - Advances in Financial Machine Learnin.epub": {
+      "rating": 10,
+      "chapters": 27,
+      "analyzed": "2026-02-09T15:36:06.141523"
+    },
+    "Stefan mschine learning.epub": {
+      "rating": 10,
+      "chapters": 29,
+      "analyzed": "2026-02-09T15:36:07.837371"
+    },
+    "Van Tharp - Trade Your Way to Financial Freedom.epub": {
+      "rating": 10,
+      "chapters": 30,
+      "analyzed": "2026-02-09T15:36:08.194443"
+    },
+    "volatility.epub": {
+      "rating": 6,
+      "chapters": 20,
+      "analyzed": "2026-02-09T15:36:08.627408"
+    },
+    "Yves J. Hilpisch - Reinforcement Learning for Finance_ A Python-Based Introduction.epub": {
+      "rating": 9,
+      "chapters": 19,
+      "analyzed": "2026-02-09T15:36:09.810934"
+    },
+    "John Sweeney - Maximum Adverse Excursion.pdf": {
+      "rating": 3,
+      "chapters": 2,
+      "analyzed": "2026-02-09T15:36:25.308031"
+    },
+    "pysample.pdf": {
+      "rating": 1,
+      "chapters": 13,
+      "analyzed": "2026-02-09T15:36:25.612303"
+    },
+    "Yves Hilpisch - Artificial Intelligence in Finance_ A Python-Based Guide.pdf": {
+      "rating": 9,
+      "chapters": 55,
+      "analyzed": "2026-02-09T15:37:52.347959"
+    },
+    "Yves Hilpisch - Python for Algorithmic Trading_ From Idea to Cloud Deployment complete.pdf": {
+      "rating": 9,
+      "chapters": 141,
+      "analyzed": "2026-02-09T15:39:00.370000"
+    },
+    "Yves Hilpisch - Python for Algorithmic Trading_ From Idea to Cloud Deployment.pdf": {
+      "rating": 3,
+      "chapters": 71,
+      "analyzed": "2026-02-09T15:39:14.827333"
+    }
+  },
+  "last_updated": "2026-02-09T15:39:14.828427"
+}

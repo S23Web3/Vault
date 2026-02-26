@@ -1,0 +1,263 @@
+//@version=6
+//
+// BBWP v2 - Bollinger Band Width Percentile
+// Based on The_Caretaker's BBWP
+// Modified for Four Pillars integration
+//
+// Purpose: Volatility state detection (FILTER, not signal)
+// Output: 6 states - BLUE DOUBLE, BLUE, MA CROSS UP, MA CROSS DOWN, NORMAL, RED, RED DOUBLE
+//
+
+indicator('BBWP v2', 'BBWP', overlay=false, format=format.percent, precision=2)
+
+// ═══════════════════════════════════════════════════════════════
+// INPUTS
+// ═══════════════════════════════════════════════════════════════
+
+grpMain = "═══ BBWP SETTINGS ═══"
+i_src = input.source(close, "Price Source", group=grpMain)
+i_basisLen = input.int(13, "BB Basis Length", minval=5, maxval=50, group=grpMain,
+             tooltip="Standard BB = 20. Scalping = 13 for faster response.")
+i_basisType = input.string("SMA", "Basis MA Type",
+              options=["SMA", "EMA", "WMA", "RMA", "HMA", "VWMA"], group=grpMain)
+i_lookback = input.int(100, "BBWP Lookback", minval=20, maxval=500, group=grpMain,
+             tooltip="Percentile lookback period")
+i_bbwpMALen = input.int(5, "BBWP MA Length", minval=1, maxval=20, group=grpMain)
+i_bbwpMAType = input.string("SMA", "BBWP MA Type",
+               options=["SMA", "EMA", "WMA"], group=grpMain)
+
+grpThresh = "═══ THRESHOLDS ═══"
+i_extremeLow = input.int(10, "Extreme Low (Blue Bar)", minval=1, maxval=30, group=grpThresh)
+i_extremeHigh = input.int(90, "Extreme High (Red Bar)", minval=70, maxval=99, group=grpThresh)
+i_spectrumLow = input.int(25, "Spectrum Low Threshold", minval=10, maxval=40, group=grpThresh,
+                tooltip="Below this = BLUE spectrum")
+i_spectrumHigh = input.int(75, "Spectrum High Threshold", minval=60, maxval=90, group=grpThresh,
+                 tooltip="Above this = RED spectrum")
+i_maCrossTimeout = input.int(10, "MA Cross Display Bars", minval=1, maxval=50, group=grpThresh,
+                   tooltip="How many bars to show MA CROSS state before auto-reset")
+
+grpVisual = "═══ VISUALS ═══"
+i_showBG = input.bool(true, "Show Background Alerts", group=grpVisual)
+i_bgTransp = input.int(85, "Background Transparency", minval=50, maxval=95, group=grpVisual)
+i_lineWidth = input.int(2, "BBWP Line Width", minval=1, maxval=4, group=grpVisual)
+i_showTable = input.bool(true, "Show State Table", group=grpVisual)
+i_tablePos = input.string("Top Right", "Table Position",
+             options=["Top Right", "Top Left", "Bottom Right", "Bottom Left"], group=grpVisual)
+
+grpColors = "═══ COLORS ═══"
+i_bluColor = input.color(color.blue, "Blue", group=grpColors)
+i_greenColor = input.color(color.green, "Green", group=grpColors)
+i_yellowColor = input.color(color.yellow, "Yellow", group=grpColors)
+i_redColor = input.color(color.red, "Red", group=grpColors)
+i_maColor = input.color(color.white, "MA Line", group=grpColors)
+
+// ═══════════════════════════════════════════════════════════════
+// FUNCTIONS
+// ═══════════════════════════════════════════════════════════════
+
+// Basis MA calculation
+f_basisMA(float src, int len) =>
+    switch i_basisType
+        "SMA" => ta.sma(src, len)
+        "EMA" => ta.ema(src, len)
+        "WMA" => ta.wma(src, len)
+        "RMA" => ta.rma(src, len)
+        "HMA" => ta.hma(src, len)
+        "VWMA" => ta.vwma(src, len)
+        => ta.sma(src, len)
+
+// BBWP MA calculation
+f_bbwpMA(float src, int len) =>
+    switch i_bbwpMAType
+        "SMA" => ta.sma(src, len)
+        "EMA" => ta.ema(src, len)
+        "WMA" => ta.wma(src, len)
+        => ta.sma(src, len)
+
+// Spectrum color (4-point gradient)
+f_spectrumColor(float val) =>
+    val <= 25 ? color.from_gradient(val, 0, 25, i_bluColor, i_greenColor) :
+    val <= 50 ? color.from_gradient(val, 25, 50, i_greenColor, i_yellowColor) :
+    val <= 75 ? color.from_gradient(val, 50, 75, i_yellowColor, color.orange) :
+    color.from_gradient(val, 75, 100, color.orange, i_redColor)
+
+// ═══════════════════════════════════════════════════════════════
+// CALCULATIONS
+// ═══════════════════════════════════════════════════════════════
+
+// Calculate BB Width
+float basis = f_basisMA(i_src, i_basisLen)
+float stdev = ta.stdev(i_src, i_basisLen)
+float bbw = basis > 0 ? (2 * stdev) / basis : 0
+
+// Calculate BBWP (percentile rank)
+float bbwp = ta.percentrank(bbw, i_lookback)
+
+// Calculate BBWP MA
+float bbwpMA = f_bbwpMA(bbwp, i_bbwpMALen)
+
+// ═══════════════════════════════════════════════════════════════
+// STATE DETECTION
+// ═══════════════════════════════════════════════════════════════
+
+// Bar conditions (background alerts at extremes)
+bool bluBar = bbwp <= i_extremeLow
+bool redBar = bbwp >= i_extremeHigh
+
+// Spectrum conditions
+bool bluSpectrum = bbwp < i_spectrumLow
+bool redSpectrum = bbwp > i_spectrumHigh
+
+// MA cross conditions (only in normal range)
+bool inNormalRange = not bluSpectrum and not redSpectrum
+bool maCrossUp = inNormalRange and ta.crossover(bbwp, bbwpMA)
+bool maCrossDown = inNormalRange and ta.crossunder(bbwp, bbwpMA)
+
+// Persist MA cross state with timeout and timestamp
+var bool showMaCrossUp = false
+var bool showMaCrossDown = false
+var int maCrossBar = na
+var int maCrossTime = na
+
+// Check timeout condition
+bool maCrossTimedOut = not na(maCrossBar) and (bar_index - maCrossBar) >= i_maCrossTimeout
+
+if maCrossUp
+    showMaCrossUp := true
+    showMaCrossDown := false
+    maCrossBar := bar_index
+    maCrossTime := time
+else if maCrossDown
+    showMaCrossDown := true
+    showMaCrossUp := false
+    maCrossBar := bar_index
+    maCrossTime := time
+else if bluSpectrum or redSpectrum or maCrossTimedOut
+    // Auto-end when spectrum hits blue/red OR timeout reached
+    showMaCrossUp := false
+    showMaCrossDown := false
+    maCrossBar := na
+    maCrossTime := na
+
+// Format timestamp for display (hh:mm)
+string maCrossTimeStr = not na(maCrossTime) ? str.format("{0,time,HH:mm}", maCrossTime) : ""
+
+// State determination (priority order)
+string state = "NORMAL"
+int statePoints = 0
+
+if bluBar and bluSpectrum
+    state := "BLUE DOUBLE"
+    statePoints := 2
+else if bluSpectrum
+    state := "BLUE"
+    statePoints := 1
+else if redBar and redSpectrum
+    state := "RED DOUBLE"
+    statePoints := 1
+else if redSpectrum
+    state := "RED"
+    statePoints := 1
+else if showMaCrossUp
+    state := "MA CROSS UP"
+    statePoints := 1
+else if showMaCrossDown
+    state := "MA CROSS DOWN"
+    statePoints := 0
+else
+    state := "NORMAL"
+    statePoints := 0
+
+// State color
+color stateColor = state == "BLUE DOUBLE" ? i_bluColor :
+                   state == "BLUE" ? i_bluColor :
+                   state == "RED DOUBLE" ? i_redColor :
+                   state == "RED" ? i_redColor :
+                   state == "MA CROSS UP" ? i_greenColor :
+                   state == "MA CROSS DOWN" ? i_yellowColor :
+                   color.gray
+
+// ═══════════════════════════════════════════════════════════════
+// PLOTS
+// ═══════════════════════════════════════════════════════════════
+
+// Scale lines
+hline(100, "100%", color.new(i_redColor, 50), hline.style_solid, 1)
+hline(i_extremeHigh, "Extreme High", color.new(i_redColor, 70), hline.style_dashed, 1)
+hline(50, "50%", color.new(color.gray, 50), hline.style_dotted, 1)
+hline(i_extremeLow, "Extreme Low", color.new(i_bluColor, 70), hline.style_dashed, 1)
+hline(0, "0%", color.new(i_bluColor, 50), hline.style_solid, 1)
+
+// Background alerts
+bgcolor(i_showBG and bluBar ? color.new(i_bluColor, i_bgTransp) : na)
+bgcolor(i_showBG and redBar ? color.new(i_redColor, i_bgTransp) : na)
+
+// BBWP line with spectrum color
+color bbwpColor = f_spectrumColor(bbwp)
+plot(bbwp, "BBWP", bbwpColor, i_lineWidth)
+
+// BBWP MA line
+plot(bbwpMA, "BBWP MA", i_maColor, 1)
+
+// MA cross markers
+plotshape(maCrossUp, "MA Cross Up", shape.triangleup, location.bottom, i_greenColor, size=size.tiny)
+plotshape(maCrossDown, "MA Cross Down", shape.triangledown, location.top, i_yellowColor, size=size.tiny)
+
+// ═══════════════════════════════════════════════════════════════
+// TABLE
+// ═══════════════════════════════════════════════════════════════
+
+var table stateTable = table.new(
+    i_tablePos == "Top Right" ? position.top_right :
+    i_tablePos == "Top Left" ? position.top_left :
+    i_tablePos == "Bottom Right" ? position.bottom_right :
+    position.bottom_left,
+    2, 4, bgcolor=color.new(color.black, 80), border_width=1)
+
+if barstate.islast and i_showTable
+    // Header
+    table.cell(stateTable, 0, 0, "BBWP", text_color=color.white, text_size=size.small)
+    table.cell(stateTable, 1, 0, str.tostring(bbwp, "#.0") + "%", text_color=bbwpColor, text_size=size.small)
+
+    // State
+    table.cell(stateTable, 0, 1, "STATE", text_color=color.gray, text_size=size.small)
+    table.cell(stateTable, 1, 1, state, text_color=stateColor, text_size=size.small)
+
+    // Points
+    table.cell(stateTable, 0, 2, "PTS", text_color=color.gray, text_size=size.small)
+    table.cell(stateTable, 1, 2, str.tostring(statePoints), text_color=stateColor, text_size=size.small)
+
+    // Timestamp row (only show when MA cross is active)
+    bool showTimestamp = (showMaCrossUp or showMaCrossDown) and not na(maCrossTime)
+    table.cell(stateTable, 0, 3, showTimestamp ? "CROSS@" : "", text_color=color.gray, text_size=size.small)
+    table.cell(stateTable, 1, 3, showTimestamp ? maCrossTimeStr : "", text_color=stateColor, text_size=size.small)
+
+// ═══════════════════════════════════════════════════════════════
+// INTEGRATION EXPORTS
+// ═══════════════════════════════════════════════════════════════
+
+// Hidden plots for Four Pillars dashboard
+plot(bbwp, "bbwp_value", display=display.none)
+plot(statePoints, "bbwp_points", display=display.none)
+plot(bluBar ? 1 : 0, "is_blue_bar", display=display.none)
+plot(redBar ? 1 : 0, "is_red_bar", display=display.none)
+plot(bluSpectrum ? 1 : 0, "is_blue_spectrum", display=display.none)
+plot(redSpectrum ? 1 : 0, "is_red_spectrum", display=display.none)
+plot(maCrossUp ? 1 : 0, "ma_cross_up", display=display.none)
+plot(maCrossDown ? 1 : 0, "ma_cross_down", display=display.none)
+plot(showMaCrossUp ? 1 : 0, "ma_cross_up_state", display=display.none)
+plot(showMaCrossDown ? 1 : 0, "ma_cross_down_state", display=display.none)
+
+// ═══════════════════════════════════════════════════════════════
+// ALERTS
+// ═══════════════════════════════════════════════════════════════
+
+alertcondition(state == "BLUE DOUBLE" and state[1] != "BLUE DOUBLE",
+               "Blue Double", "BBWP: Blue Double (extreme low)")
+
+alertcondition(state == "RED DOUBLE" and state[1] != "RED DOUBLE",
+               "Red Double", "BBWP: Red Double (extreme high)")
+
+alertcondition(maCrossUp, "MA Cross Up", "BBWP: MA Cross Up (volatility expanding)")
+
+alertcondition(maCrossDown, "MA Cross Down", "BBWP: MA Cross Down (volatility contracting)")

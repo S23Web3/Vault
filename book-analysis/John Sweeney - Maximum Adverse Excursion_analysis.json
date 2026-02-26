@@ -1,0 +1,31 @@
+{
+  "file": "C:\\Users\\User\\Downloads\\John Sweeney - Maximum Adverse Excursion.pdf",
+  "name": "John Sweeney - Maximum Adverse Excursion.pdf",
+  "size_mb": 1.4257631301879883,
+  "chapters": 2,
+  "rating": 3,
+  "stats": {
+    "trading_concepts": 5,
+    "ml_concepts": 0,
+    "code_chapters": 1,
+    "formula_chapters": 1
+  },
+  "top_concepts": {
+    "trading": [
+      [
+        "entries",
+        3
+      ],
+      [
+        "risk",
+        3
+      ],
+      [
+        "metrics",
+        2
+      ]
+    ],
+    "ml": []
+  },
+  "analyzed": "2026-02-09T15:36:25.308031"
+}

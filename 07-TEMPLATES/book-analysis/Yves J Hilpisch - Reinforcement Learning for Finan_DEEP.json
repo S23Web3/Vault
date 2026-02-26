@@ -1,0 +1,733 @@
+{
+  "file_path": "C:\\Users\\User\\Downloads\\Yves J. Hilpisch - Reinforcement Learning for Finance_ A Python-Based Introduction.epub",
+  "file_name": "Yves J. Hilpisch - Reinforcement Learning for Finance_ A Python-Based Introduction.epub",
+  "file_size_mb": 9.584641456604004,
+  "total_chapters": 19,
+  "rating": 9,
+  "aggregate_stats": {
+    "total_trading_concepts": 31,
+    "total_ml_concepts": 23,
+    "chapters_with_code": 13,
+    "chapters_with_formulas": 7
+  },
+  "top_concepts": {
+    "trading": [
+      {
+        "topic": "psychology",
+        "mentions": 23
+      },
+      {
+        "topic": "backtesting",
+        "mentions": 15
+      },
+      {
+        "topic": "metrics",
+        "mentions": 8
+      },
+      {
+        "topic": "entries",
+        "mentions": 6
+      },
+      {
+        "topic": "risk",
+        "mentions": 4
+      }
+    ],
+    "ml": [
+      {
+        "topic": "models",
+        "mentions": 18
+      },
+      {
+        "topic": "metrics",
+        "mentions": 11
+      },
+      {
+        "topic": "supervised",
+        "mentions": 10
+      }
+    ]
+  },
+  "chapter_analyses": [
+    {
+      "title": "copyright-page01.html",
+      "file": "copyright-page01.html",
+      "analysis": {
+        "trading_concepts": {
+          "risk": {
+            "count": 1,
+            "examples": [
+              "production editor: beth kelly"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 1980
+      }
+    },
+    {
+      "title": "toc01.html",
+      "file": "toc01.html",
+      "analysis": {
+        "trading_concepts": {
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "tossing a biased coin",
+              "rolling a biased die"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 1,
+            "examples": [
+              "q-learning versus supervised learning"
+            ]
+          }
+        },
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 1670
+      }
+    },
+    {
+      "title": "preface01.html",
+      "file": "preface01.html",
+      "analysis": {
+        "trading_concepts": {
+          "exits": {
+            "count": 1,
+            "examples": [
+              "ocate funds to the available assets to maximize a profit target or a risk-adjusted return (sharpe ratio)."
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "ximize a profit target or a risk-adjusted return (sharpe ratio)."
+            ]
+          },
+          "psychology": {
+            "count": 3,
+            "examples": [
+              "finance is a discipline with a strong connection between theory and pract",
+              "supplemental material (code examples, exercises, etc.) is avai",
+              "the book as a whole. her contributions were instrumental in refining the content. i am also grateful to th"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "One of the key algorithms in RL is deep Q-learning (DQL) that can be applied to a large number of dynamic decision problems",
+          "This book closes the gap in that it provides the required background in a concise fashion and otherwise focuses on the implementation of the algorithms in the form of self-contained Python code and the application to important financial problems",
+          "Although the environment formally replicates the API of the CartPole game, it misses some important characteristics that are needed to apply RL successfully",
+          "Constant width\n\nUsed for program listings, as well as within paragraphs to refer to program elements such as variable or function names, databases, data types, environment variables, statements, and keywords"
+        ],
+        "length": 9849
+      }
+    },
+    {
+      "title": "Part I. The Basics",
+      "file": "part01.html",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {},
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "Although the environment formally replicates the API of the CartPole, it misses some important characteristics that are needed to apply RL successfully"
+        ],
+        "length": 1019
+      }
+    },
+    {
+      "title": "Chapter 1. Learning Through Interaction",
+      "file": "ch01.html",
+      "analysis": {
+        "trading_concepts": {
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "ght sound counterintuitive. however, the expected win rate is given by ",
+              ". in words, when betting on heads, the win rate is 80%, and when betting on tails, it is 20%. tog"
+            ]
+          },
+          "psychology": {
+            "count": 8,
+            "examples": [
+              "d available alternatives.2 modern psychology is a discipline focused on university students in particular, rat",
+              "ing by interacting with an environment: tossing a biased coin and rolling a biased die. the examples are",
+              "t an agent betting repeatedly on the outcome of a biased gamble (and remembering all outcomes) can learn"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              "most books on ml focus on supervised and unsupervised learning algorithms, but rl is the learning approach that ",
+              "l networks. these neural networks were trained by supervised learning from human expert moves, and by reinforcement lea"
+            ]
+          },
+          "models": {
+            "count": 2,
+            "examples": [
+              "seen a meteoric rise over the last 10 years: deep neural networks (dnns) and reinforcement learning.4 while dnns h",
+              "evaluated positions and selected moves using deep neural networks. these neural networks were trained by supervise"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "Sutton and Barto (2018)\n\nFor human beings and animals alike, learning is almost as fundamental as breathing",
+          "The one most important to the topics covered in this book is based on interacting with an environment",
+          "“Deep Q-Learning” explains the two major characteristics of DQL, which is the most important algorithm in the remainder of the book",
+          "The examples are based on the idea that an agent betting repeatedly on the outcome of a biased gamble (and remembering all outcomes) can learn bet-by-bet about a gamble’s bias and thereby about the optimal policy for betting",
+          "78\n\n\nThe initial action space\n\nThe update of the action space with the observed outcome\n\nWith remembering and learning, the agent achieves an average total reward of about $66"
+        ],
+        "length": 31052
+      }
+    },
+    {
+      "title": "Chapter 2. Deep Q-Learning",
+      "file": "ch02.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              "nally, “cartpole as an example” illustrates a dql setup by the use of the cartpole game api and a dql age"
+            ]
+          },
+          "backtesting": {
+            "count": 2,
+            "examples": [
+              "in economics and finance, optimization and associated techniques play a central role. on",
+              "ance is nothing but the systematic application of optimization techniques to problems arising in a financial con"
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "in chapter 1, betting on the outcome of tossing a biased coin is a static problem with a discrete action",
+              "vised learning, the two approaches differ in fundamental ways in terms of their objectives, the data they "
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 3,
+            "examples": [
+              " generally given up front in the form of (expert-)labeled data sets, and the sequence often does not matter at a",
+              "q-learning versus supervised learning",
+              "a dnn that resembles those often used and seen in supervised learning. against this background, what are the major diff"
+            ]
+          },
+          "models": {
+            "count": 2,
+            "examples": [
+              "ments of q-learning and explains the role of deep neural networks in this context. finally, “cartpole as an exampl",
+              "if a deep neural network (dnn) is used for the representation, one usually"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "Dynamic Programming\nAn important type of dynamic optimization problem is the finite horizon Markovian dynamic programming problem (FHMDP)",
+          "For replay, the agent must store passed experiences (states, actions, rewards, next states, etc",
+          "In summary, while DNNs may be at the core of both DQL and supervised learning, the two approaches differ in fundamental ways in terms of their objectives, the data they use, and the feedback their learning is based on",
+          "One of the most important types is dynamic programming",
+          "This chapter classifies decision problems along the lines of different binary characteristics (such as discrete or continuous action space) and introduces dynamic programming as an important algorithm to solve dynamic decision problems in discrete time"
+        ],
+        "length": 31950
+      }
+    },
+    {
+      "title": "Chapter 3. Financial Q-Learning",
+      "file": "ch03.html",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {
+          "models": {
+            "count": 1,
+            "examples": [
+              "which is known to improve the performance of deep neural networks (dnns). from the implementation, it is obvious t"
+            ]
+          },
+          "metrics": {
+            "count": 3,
+            "examples": [
+              "ments with a significant margin over the baseline accuracy of 50%. “where the analogy fails” finally discuss",
+              "                         min_accuracy=0.485, n_features=4):\r",
+              "going one level higher and recalling what rl is about at its core, it should also b"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "This chapter is brief, but it illustrates an important point: with the appropriate environment, DQL can be applied to financial problems basically in the same way as it is applied to games and in other domains",
+          "It starts with the definition of important parameters and objects:\nIn [6]: import numpy as np\r\n        import pandas as pd\r\n\r\nIn [7]: class Finance:\r\n            url = 'https://certificate",
+          "VIX   | VIX Volatility Index\r\nEUR=   | EUR/USD Exchange Rate\r\nXAU=   | Gold Price\r\nGDX    | VanEck Vectors Gold Miners ETF\r\nGLD    | SPDR Gold Trust\nA key method of the Finance class is the one for preparing the data for both the state description (features) and the prediction itself (labels)",
+          "When the environment is reset to the initial state, it is always the same initial state:\nIn [8]: class Finance(Finance):\r\n            def _prepare_data(self):\r\n                self",
+          "One key idea is to check for the current prediction accuracy of the agent and to compare it to a minimum required accuracy"
+        ],
+        "length": 24731
+      }
+    },
+    {
+      "title": "Part II. Data Augmentation",
+      "file": "part02.html",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 885
+      }
+    },
+    {
+      "title": "Chapter 4. Simulated Data",
+      "file": "ch04.html",
+      "analysis": {
+        "trading_concepts": {
+          "backtesting": {
+            "count": 1,
+            "examples": [
+              " be chosen arbitrarily but rather derived—through optimization methods—from market-observed data. this procedure"
+            ]
+          },
+          "psychology": {
+            "count": 1,
+            "examples": [
+              "he idea is that a dql agent learns about the fundamental price and/or return trends embodied by the histor"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "models": {
+            "count": 1,
+            "examples": [
+              "e creation of synthetic time series data based on neural networks."
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "                         min_accuracy=0.485, noise=true,\r",
+              "                self.min_accuracy = min_accuracy\r"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "Oil is a finite resource that must be extracted and refined, whereas data is an infinite resource that is constantly being generated and refined",
+          "The following part of the Python class code is the most important one",
+          "The idea is that a DQL agent learns about the fundamental price and/or return trends embodied by the historical data set"
+        ],
+        "length": 28516
+      }
+    },
+    {
+      "title": "Chapter 5. Generated Data",
+      "file": "ch05.html",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {
+          "supervised": {
+            "count": 1,
+            "examples": [
+              "n a simple, standard dnn—but this time for binary classification:"
+            ]
+          },
+          "models": {
+            "count": 2,
+            "examples": [
+              "gan: the generator. it is a simple, standard deep neural network (dnn) for estimation:",
+              "neural networks can be trained to generate data that is similar "
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "                           metrics=['accuracy'])\r"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "The Python code is essentially the same"
+        ],
+        "length": 21343
+      }
+    },
+    {
+      "title": "Part III. Financial Applications",
+      "file": "part03.html",
+      "analysis": {
+        "trading_concepts": {
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "nvestingagent developed in this chapter generates sharpe ratios that consistently surpass those of individ"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 2187
+      }
+    },
+    {
+      "title": "Chapter 6. Algorithmic Trading",
+      "file": "ch06.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              "this completes the setup for algorithmic trading. to create a benchmark wi",
+              "sses deep q-learning for algorithmic trading. the setup is close to that of the financial prediction game"
+            ]
+          },
+          "backtesting": {
+            "count": 2,
+            "examples": [
+              "rading. among other things, the book shows how to backtest the performance of a dql agent with vectorized an",
+              "d event-based backtesting. it also shows how to deploy a trained dql age"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "models": {
+            "count": 2,
+            "examples": [
+              "xploits its acquired knowledge as embodied in its neural network:",
+              "s the tradingagent and updates the weights in the neural network accordingly. the agent learns that the simulated "
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "in [4]: finance = finance('gld', 'r', min_accuracy=47.5,\r",
+              "r of tests. during the tests, a minimum threshold accuracy of 0 is assumed so that the agent will always rea"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "Therefore, to assess the financial performance of the algorithmically trading DQL agent, its positions must be linked to the returns on those positions, specifically evaluating the agent’s accumulated profit and loss (P&L)",
+          "During the tests, a minimum threshold accuracy of 0 is assumed so that the agent will always reach the end of the data"
+        ],
+        "length": 35373
+      }
+    },
+    {
+      "title": "Chapter 7. Dynamic Hedging",
+      "file": "ch07.html",
+      "analysis": {
+        "trading_concepts": {
+          "risk": {
+            "count": 1,
+            "examples": [
+              "thods in mathematical finance for the pricing and risk management of options and other derivative instruments. gene"
+            ]
+          },
+          "backtesting": {
+            "count": 2,
+            "examples": [
+              "n optimal action. this is accomplished through an optimization procedure. simply speaking, the agent chooses the",
+              "the optimization happens over the possible actions (the values for"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "models": {
+            "count": 2,
+            "examples": [
+              "he discounted total rewards according to the deep neural network (dnn), given the state of the environment and a p",
+              "the neural network predicts the total reward for taking a certain ac"
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              ". the major parameter influencing the replication accuracy is the number of steps used for the discretizatio"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "In option pricing—or more generally, derivatives pricing—one generally takes the viewpoint that the market is always right and that one can leverage what is observed in the markets to value derivative instruments whose prices might not be directly observable",
+          "A portfolio of, say, a stock and a bond position that pays off the same in the future as a European call option on the stock—so the argument goes—therefore must have the same market price",
+          "This is advantageous whenever \n\nS T \n>\nK\n\n holds at maturity",
+          "In equilibrium, the portfolio of the option and the hedge position must yield the risk-free rate because it is risk free by construction",
+          "By arbitrage reasoning, the value of the option and the value of the replication portfolio at any time must be equal"
+        ],
+        "length": 39584
+      }
+    },
+    {
+      "title": "Chapter 8. Dynamic Asset Allocation",
+      "file": "ch08.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              "adjusts the .testing() methods to reflect the new setup. the major change is the call of the .opt_action(",
+              " is, with two points in time only. as before, the setup in this section is a dynamic one based on histori"
+            ]
+          },
+          "backtesting": {
+            "count": 1,
+            "examples": [
+              ", the optimal action is derived through numerical optimization. the .opt_action() method gives the allocation fo"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              " the risk-free and the risky asset, the resulting sharpe ratio of the agent’s 60/40 strategy is higher tha",
+              "derives the sharpe ratios"
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "omposing portfolios as compared to, say, the fundamental analysis of companies and their stocks.",
+              "tal. all in all, the cml embodies one of the fundamental concepts in finance: an investor who is willing t"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "models": {
+            "count": 2,
+            "examples": [
+              "agent class as presented in “dqlagent class”. the neural network takes as input the four values that represent the",
+              "predicts the expected reward from the neural network"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "” This refers to the tricky and all-important issue of how to achieve the greatest profit from a favorable betting opportunity",
+          "The Economist (2023)\n\nThe challenge of asset allocation is a major problem in the financial domain, underscored by the vast amounts of money that individuals and institutions must invest",
+          "” In this paper, Markowitz proposes a purely statistical approach for composing portfolios as compared to, say, the fundamental analysis of companies and their stocks",
+          "All in all, the CML embodies one of the fundamental concepts in finance: an investor who is willing to bear more risk can expect—everything else being equal—a higher return on their investment:\nIn [3]: r = 0",
+          "However, the investment cases presented are canonical and important examples in the financial literature about portfolio theory"
+        ],
+        "length": 62499
+      }
+    },
+    {
+      "title": "Chapter 9. Optimal Execution",
+      "file": "ch09.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              "the basic setup for optimal execution seems similar to the one fo"
+            ]
+          },
+          "risk": {
+            "count": 1,
+            "examples": [
+              "of derivatives pricing, portfolio management, and risk management, a swath of new subfields has emerged, and a new "
+            ]
+          },
+          "backtesting": {
+            "count": 3,
+            "examples": [
+              "o estimate the risk aversion factor. one can also backtest and calibrate the ac99 model to find a value for ",
+              "the dynamic optimization problem in the ac99 model therefore becomes:",
+              "the action changes the value, which allows for an optimization procedure to find the action that maximizes the v"
+            ]
+          },
+          "psychology": {
+            "count": 1,
+            "examples": [
+              "extent, to betting on the outcomes of a repeated, biased coin-tossing game. the problem is about taking "
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 1,
+            "examples": [
+              "arket impact parameter can be estimated through a regression of stock price changes against the volume of trad"
+            ]
+          },
+          "models": {
+            "count": 1,
+            "examples": [
+              "action policy, which in turn is modeled as a deep neural network (dnn)―chooses an action given a state of the \r"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "However, the optimal execution problem is different in that every action is bound above by the remaining shares and in that all actions over the trading period must add up to one",
+          "In this context, it is important that the feedback is primarily based on whether the actor’s action is better than expected or worse",
+          "Optimal and learned trading trajectories for high and low \nλ\n\n\n\n\nConclusions\nThe optimal execution of large trades is an important problem both in theoretical and (even more so) in practical finance",
+          "However, it is important to a risk-averse agent"
+        ],
+        "length": 40500
+      }
+    },
+    {
+      "title": "Chapter 10. Concluding Remarks",
+      "file": "ch10.html",
+      "analysis": {
+        "trading_concepts": {
+          "risk": {
+            "count": 1,
+            "examples": [
+              "ins of finance, such as derivatives analytics and risk management, have benefited from this flexible and powerful n"
+            ]
+          },
+          "backtesting": {
+            "count": 2,
+            "examples": [
+              "part iii applies dql to important dynamic optimization problems in finance: algorithmic trading, dynamic",
+              "e actions during each step. therefore, additional optimization procedures are generally required to come up with"
+            ]
+          },
+          "psychology": {
+            "count": 1,
+            "examples": [
+              "marily focuses on deep q-learning (dql). the fundamental idea of dql is that the agent learns an optimal a"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "models": {
+            "count": 1,
+            "examples": [
+              "unction. at the core of these algorithms are deep neural networks (dnns) that are used to approximate optimal acti"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "Merton (1990)\n\nReinforcement learning (RL) has undoubtedly become a central and important algorithm and approach in machine learning (ML) and AI in general",
+          "The fundamental idea of DQL is that the agent learns an optimal action policy that assigns a value to each feasible state-action combination",
+          "Part III applies DQL to important dynamic optimization problems in finance: algorithmic trading, dynamic hedging of options, dynamic asset allocation, and optimal execution",
+          "This also means that the implementations are kept concise and simple to help readers focus on the key issues and algorithmic aspects",
+          "Dynamic optimization problems have a long history in finance and play an important role in many areas"
+        ],
+        "length": 7043
+      }
+    },
+    {
+      "title": "ix01.html",
+      "file": "ix01.html",
+      "analysis": {
+        "trading_concepts": {
+          "backtesting": {
+            "count": 2,
+            "examples": [
+              "dynamic optimization, concluding remarks",
+              "optimization, decision problems, concluding remarks"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "risk-adjusted return (sharpe ratio), two-fund separation, two-asset case-two-a",
+              "sharpe ratio (risk-adjusted return), two-fund separation"
+            ]
+          },
+          "psychology": {
+            "count": 3,
+            "examples": [
+              "ging agentlearning versus non-learning, tossing a biased coinmore powerful implementation of, concluding",
+              "biased coin toss, tossing a biased coin-tossing a biased coin, decision problems",
+              "fundamental idea of, concluding remarks"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              "q-learning versus supervised learning, q-learning versus supervised learning",
+              "q-learning versus supervised learning, q-learning versus supervised learning"
+            ]
+          },
+          "models": {
+            "count": 2,
+            "examples": [
+              "deep neural networks (dnns)",
+              "dnns (see deep neural networks)"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "accuracy",
+              "prediction accuracy"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 19335
+      }
+    },
+    {
+      "title": "colophon01.html",
+      "file": "colophon01.html",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [
+          "His thought leadership has been recognized through keynote speeches at major technology conferences across the United States, Europe, and Asia"
+        ],
+        "length": 1171
+      }
+    },
+    {
+      "title": "colophon02.html",
+      "file": "colophon02.html",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [
+          "Colophon\nThe animal on the cover of Reinforcement Learning for Finance is a variegated spider monkey (Ateles hybridus)",
+          "These critically endangered monkeys live in the forests of northern Colombia and northern Venezuela",
+          "The variegated spider monkey is mostly brown with a white patch on its belly and forehead",
+          "Like all spider monkeys, they have a prehensile tail capable of grasping objects",
+          "The tail is about 30 inches long and highly flexible—a spider monkey can suspend its entire body weight by its tail"
+        ],
+        "length": 1513
+      }
+    }
+  ],
+  "analyzed_date": "2026-02-09T15:15:11.154910"
+}

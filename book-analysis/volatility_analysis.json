@@ -1,0 +1,40 @@
+{
+  "file": "C:\\Users\\User\\Downloads\\volatility.epub",
+  "name": "volatility.epub",
+  "size_mb": 53.626787185668945,
+  "chapters": 20,
+  "rating": 6,
+  "stats": {
+    "trading_concepts": 13,
+    "ml_concepts": 8,
+    "code_chapters": 14,
+    "formula_chapters": 0
+  },
+  "top_concepts": {
+    "trading": [
+      [
+        "risk",
+        15
+      ],
+      [
+        "psychology",
+        7
+      ],
+      [
+        "backtesting",
+        5
+      ]
+    ],
+    "ml": [
+      [
+        "supervised",
+        11
+      ],
+      [
+        "metrics",
+        9
+      ]
+    ]
+  },
+  "analyzed": "2026-02-09T15:36:08.627408"
+}

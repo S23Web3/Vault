@@ -1,0 +1,21 @@
+{
+  "name": "test to save portfolio ",
+  "safe_name": "test_to_save_portfolio",
+  "created": "2026-02-16T15:40:55.768370",
+  "coins": [
+    "SOPHUSDT",
+    "XVSUSDT",
+    "SQDUSDT",
+    "CROSSUSDT",
+    "FIDAUSDT",
+    "DGBUSDT",
+    "DOGUSDT",
+    "BERAUSDT",
+    "PNUTUSDT",
+    "TWTUSDT"
+  ],
+  "coin_count": 10,
+  "selection_method": "random_n",
+  "params_hash": "",
+  "notes": ""
+}

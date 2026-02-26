@@ -1,0 +1,35 @@
+{
+  "books": {
+    "Hilpisch, Yves J - Derivatives analytics with Python _ data analysis, models, simulation, calibration and hedging.epub": {
+      "rating": 9,
+      "chapters": 20,
+      "analyzed": "2026-02-09T15:16:33.868708"
+    },
+    "López de Prado, Marcos Mailoc - Advances in Financial Machine Learnin.epub": {
+      "rating": 10,
+      "chapters": 27,
+      "analyzed": "2026-02-09T15:16:34.402686"
+    },
+    "Stefan mschine learning.epub": {
+      "rating": 10,
+      "chapters": 29,
+      "analyzed": "2026-02-09T15:16:36.008466"
+    },
+    "Van Tharp - Trade Your Way to Financial Freedom.epub": {
+      "rating": 10,
+      "chapters": 30,
+      "analyzed": "2026-02-09T15:16:36.363780"
+    },
+    "volatility.epub": {
+      "rating": 6,
+      "chapters": 20,
+      "analyzed": "2026-02-09T15:16:36.797049"
+    },
+    "Yves J. Hilpisch - Reinforcement Learning for Finance_ A Python-Based Introduction.epub": {
+      "rating": 9,
+      "chapters": 19,
+      "analyzed": "2026-02-09T15:16:38.016332"
+    }
+  },
+  "last_updated": "2026-02-09T15:16:38.025548"
+}

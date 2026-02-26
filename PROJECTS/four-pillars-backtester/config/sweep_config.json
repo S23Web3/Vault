@@ -1,0 +1,39 @@
+{
+  "_comment": "Edit this file to change ALL sweep parameters. No code changes needed.",
+  "_run": "python scripts/sweep_all_coins.py --config config/sweep_config.json",
+
+  "timeframes": ["1m", "5m"],
+
+  "signal_params": {
+    "cross_level": 25,
+    "zone_level": 30,
+    "stage_lookback": 10,
+    "allow_b_trades": true,
+    "allow_c_trades": true,
+    "b_open_fresh": true,
+    "cloud2_reentry": true,
+    "reentry_lookback": 10,
+    "use_ripster": false,
+    "use_60d": false,
+    "atr_length": 14
+  },
+
+  "backtest_params": {
+    "sl_mult": 1.0,
+    "tp_mult": 1.5,
+    "use_tp": true,
+    "cooldown": 3,
+    "notional": 10000.0,
+    "commission_rate": 0.0008,
+    "rebate_pct": 0.70,
+    "initial_equity": 10000.0,
+    "be_raise_amount": 2.0,
+    "be_trigger_atr": 0.0,
+    "be_lock_atr": 0.0
+  },
+
+  "filters": {
+    "min_1m_bars": 500,
+    "min_5m_bars": 200
+  }
+}

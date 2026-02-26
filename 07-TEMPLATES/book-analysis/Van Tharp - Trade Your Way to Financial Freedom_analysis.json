@@ -1,0 +1,52 @@
+{
+  "file": "C:\\Users\\User\\Downloads\\Van Tharp - Trade Your Way to Financial Freedom.epub",
+  "name": "Van Tharp - Trade Your Way to Financial Freedom.epub",
+  "size_mb": 8.632406234741211,
+  "chapters": 30,
+  "rating": 10,
+  "stats": {
+    "trading_concepts": 109,
+    "ml_concepts": 15,
+    "code_chapters": 15,
+    "formula_chapters": 17
+  },
+  "top_concepts": {
+    "trading": [
+      [
+        "psychology",
+        422
+      ],
+      [
+        "entries",
+        326
+      ],
+      [
+        "metrics",
+        261
+      ],
+      [
+        "risk",
+        198
+      ],
+      [
+        "exits",
+        103
+      ]
+    ],
+    "ml": [
+      [
+        "metrics",
+        31
+      ],
+      [
+        "models",
+        4
+      ],
+      [
+        "supervised",
+        1
+      ]
+    ]
+  },
+  "analyzed": "2026-02-09T15:16:36.363780"
+}

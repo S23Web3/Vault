@@ -1,0 +1,47 @@
+# BUILD v3.8.2 - AVWAP Trailing Strategy
+**Date:** 2026-02-11
+**For:** Claude Code
+**Output:** C:\Users\User\Documents\Obsidian Vault\02-STRATEGY\Indicators\
+
+---
+
+## FILES TO CREATE
+
+1. **V3.8.2-COMPLETE-LOGIC.md** - Full documentation
+2. **four_pillars_v3_8_2.pine** - Indicator  
+3. **four_pillars_v3_8_2_strategy.pine** - Strategy
+4. **CHANGELOG-v3.8.2.md** - Changes
+
+---
+
+## STRATEGY SUMMARY
+
+**Entry:**
+- SHORT: LIMIT at AVWAP +1σ when price hits +2σ
+- LONG: LIMIT at AVWAP -1σ when price hits -2σ
+- Cancel after 3 bars
+
+**SL Stage 1:** AVWAP ±2σ (1σ risk)
+**SL Stage 2:** AVWAP ± ATR for 5 bars (when opposite 2σ hit)
+**SL Stage 3:** Cloud 3 ± ATR (after timeout)
+
+**Management:** Independent positions, pyramiding, no TP
+
+---
+
+## CRITICAL FIX
+
+**v3.8 bug:** Checks exits BEFORE updating stops
+**v3.8.2 fix:** Updates stops FIRST, then checks exits
+
+---
+
+## FOR CLAUDE CODE
+
+1. Create 4 files
+2. Comment all functions
+3. Test syntax
+4. Git push to: https://github.com/S23Web3/ni9htw4lker
+5. Report done
+
+**Time:** 60-75 min

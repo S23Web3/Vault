@@ -1,0 +1,1490 @@
+{
+  "file_path": "C:\\Users\\User\\Downloads\\Van Tharp - Trade Your Way to Financial Freedom.epub",
+  "file_name": "Van Tharp - Trade Your Way to Financial Freedom.epub",
+  "file_size_mb": 8.632406234741211,
+  "total_chapters": 30,
+  "rating": 10,
+  "aggregate_stats": {
+    "total_trading_concepts": 108,
+    "total_ml_concepts": 15,
+    "chapters_with_code": 15,
+    "chapters_with_formulas": 17
+  },
+  "top_concepts": {
+    "trading": [
+      {
+        "topic": "psychology",
+        "mentions": 106
+      },
+      {
+        "topic": "entries",
+        "mentions": 92
+      },
+      {
+        "topic": "risk",
+        "mentions": 62
+      },
+      {
+        "topic": "metrics",
+        "mentions": 48
+      },
+      {
+        "topic": "exits",
+        "mentions": 44
+      }
+    ],
+    "ml": [
+      {
+        "topic": "metrics",
+        "mentions": 22
+      },
+      {
+        "topic": "models",
+        "mentions": 3
+      },
+      {
+        "topic": "supervised",
+        "mentions": 1
+      }
+    ]
+  },
+  "chapter_analyses": [
+    {
+      "title": "copyright.html",
+      "file": "copyright.html",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "ensors make no guarantees or warranties as to the accuracy, adequacy or completeness of or results to be obt",
+              "s shall be liable to you or anyone else for any inaccuracy, error or omission, regardless of cause, in the w"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 3464
+      }
+    },
+    {
+      "title": "PART ONETHE MOST IMPORTANT FACTOR IN YOUR SUCCESS: YOU!",
+      "file": "contents.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 3,
+            "examples": [
+              "designing your own entry signal",
+              "chapter 8using setups to jumpstart your system",
+              "setups for stalking the market"
+            ]
+          },
+          "exits": {
+            "count": 1,
+            "examples": [
+              "chapter 11how to take profits"
+            ]
+          },
+          "risk": {
+            "count": 2,
+            "examples": [
+              "peak drawdowns",
+              "model 3: the percent risk model"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "he r-multiple distribution of your system and its expectancy",
+              "looking at expectancy under a magnifying glass"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "chapter 2judgmental biases: why mastering the markets is so difficult for ",
+              "biases that affect trading system development",
+              "chapter 2judgmental biases: why mastering the markets is so difficult"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "10. determine the accuracy of your r-multiple distribution"
+            ]
+          }
+        },
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [
+          "CONTENTS\nForeword by Chuck Whitman\nPreface to the Second Edition\nPreface to the First Edition\nAcknowledgments\nPART ONETHE MOST IMPORTANT FACTOR IN YOUR SUCCESS: YOU"
+        ],
+        "length": 3926
+      }
+    },
+    {
+      "title": "1. Psychology. You could have the best opportunities and resources in the world but if your psychology is flawed, you won’t make it. We operate on the belief that we create and manifest our own realities. If we think the world has problems, then we manifest those beliefs in what we see. But if we think the world is abundant, then we find lots of evidence to show that it is. We place the most amount of focus in this area from how we hire new employees to how we teach them and how we grow. And in this new edition of Trade Your Way to Financial Freedom, you’ll find that principle throughout the book. You are responsible for the results you get, which means that you are in charge of your trading. When you get results that you don’t like, you made a mistake in some way, and you can fix that mistake.",
+      "file": "foreword.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              "ses by knowing when you are wrong and pulling the trigger on your bad trades. this is discussed extensively"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              " long term, so that you can achieve the long-term expectancy of the system. this is one of the real keys to tr",
+              " that allows you to trade without ego; a positive expectancy system, which is produced by making sure that you"
+            ]
+          },
+          "psychology": {
+            "count": 5,
+            "examples": [
+              ". furthermore, as i battled the loss, i responded emotionally and did everything i could to prevent it. it’",
+              "elusive to so many people—it’s because of all the biases they have in their decision making. dr. tharp c",
+              "their decision making. dr. tharp calls these “judgmental heuristics.” and, ironically, the people who know"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [
+          "The moment I was out of the trade, I made a vow that I was going to learn from what I had been through and make sure I would never repeat it",
+          "I took several more of Van’s workshops, and I adopted five key principles around which I built my firm",
+          "This is one of the real keys to trading success, and you should read this book, several times, just to make sure that you understand this point",
+          "You are going to have losses, and it’s important to limit the damage of those losses to achieve optimal compounded returns",
+          "Position sizing is one of the most important aspects of trading yet so few people teach it"
+        ],
+        "length": 12017
+      }
+    },
+    {
+      "title": "preface1.html",
+      "file": "preface1.html",
+      "analysis": {
+        "trading_concepts": {
+          "risk": {
+            "count": 1,
+            "examples": [
+              "mportantly, such simulations will tell you how to position size your system to meet your objectives. i’ve placed "
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "• my explanation of expectancy in the first edition of this book was slightly mi"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": true,
+        "key_sentences": [
+          "My understanding has always been that you cannot trade the markets",
+          "And even more importantly, such simulations will tell you how to position size your system to meet your objectives"
+        ],
+        "length": 6785
+      }
+    },
+    {
+      "title": "preface2.html",
+      "file": "preface2.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              "futures markets talked about his high-probability entry signals. the room was packed as he carefully explained w",
+              "everyone will flock to a talk on high-probability entry signals or the software that they believe will tell them"
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "e programs dealing with the markets have the same biases built into them. these products typically are l",
+              "money, those on position sizing and your personal psychology, will have few people in attendance."
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [
+          "Every available tool is important in attempting to do that because so much misinformation exists in the literature that the average person will constantly be led astray",
+          "Although I believe that working on yourself is the most important thing you can do, they voted to ask questions",
+          "” This was despite my best efforts over the past two days to explain to them why such questions were unimportant",
+          "”\nAt another conference about a year later, the keynote speaker gave an hour talk before 600 people on high-probability entry techniques",
+          "At the same conference, I spoke about position sizing—the key factor in determining one’s profits"
+        ],
+        "length": 5076
+      }
+    },
+    {
+      "title": "acknowledgments.html",
+      "file": "acknowledgments.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              "em, when he really had no system at all—just some entry signals. over the years, i watched him evolve into a ver"
+            ]
+          },
+          "risk": {
+            "count": 1,
+            "examples": [
+              "ray kelly was one of my earliest clients. i watched him evo"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [
+          "And if this new edition helps thousands more, even those I have never met, it will have been worth the effort",
+          "Melita spearheaded the project and played the most critical role in handling details with my publisher, McGraw-Hill, which made this second edition possible",
+          "In addition, I’d like to thank Marci Nugent who caught many of the errors that always creep into the manuscript",
+          "To the best of my knowledge, position sizing was never used as a trading term prior to the first edition of this book",
+          "Since the publication of the first edition, it has virtually replaced money management as the word that best describes the most critical aspect of your trading system—the topic of “how much"
+        ],
+        "length": 5949
+      }
+    },
+    {
+      "title": "PART ONEThe Most Important Factor in Your Success: You!",
+      "file": "part01.html",
+      "analysis": {
+        "trading_concepts": {
+          "psychology": {
+            "count": 1,
+            "examples": [
+              "holy grail is really all about), a chapter on judgmental heuristics, and a chapter on setting your persona"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [
+          "PART ONEThe Most Important Factor in Your Success: You",
+          "There is a critical assumption in both of these objectives: that you are the most important factor in your performance",
+          "Jack Schwager, after writing two books for which he interviewed some of the world’s top traders, concluded that the most important factor in their success was that they each had a trading system that was right for them"
+        ],
+        "length": 1110
+      }
+    },
+    {
+      "title": "CHAPTER 1The Legend of the Holy Grail",
+      "file": "ch01.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 4,
+            "examples": [
+              "ing price by that amount. the upper value is your buy signal, and the lower value is your sell signal (that is",
+              "vers the various parts of a system. these include setups, entry or timing techniques, stop-loss exits, pr",
+              "now this is my chair pattern. it consists of at least six bars in a congestion"
+            ]
+          },
+          "risk": {
+            "count": 3,
+            "examples": [
+              "developed is on how great traders determine their position size throughout a trade. the topic of money management",
+              "lly that part of your system that determines your position size—that answers the question “how much?” throughout ",
+              "oes it fit your personality? can you tolerate the drawdowns or the losing streaks it might generate? does th"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "s for only $1,000.” as you’ll learn from both the expectancy chapter and the position sizing chapter, one coul",
+              "now nothing about his or her downside or even the expectancy of his or her system."
+            ]
+          },
+          "psychology": {
+            "count": 6,
+            "examples": [
+              " your criteria for comfort. most people have many biases against doing it well. to overcome those biases",
+              "terms of position sizing because of psychological biases that they have. for example, as i was writing t",
+              "ur thinking in the same manner as the expert. his mental structure, the way he thinks, is one of the keys "
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "Nevertheless, people fork out the $1,000 for the guru’s advice because the pitch suggests a 400 percent return rather than a 4R return",
+          "In fact, Jack Schwager, after interviewing enough “market wizards” to write two books, concluded that the most important characteristic of all good traders was that they had found a system or methodology that was right for them",
+          "And if you cannot accept the negative consequences, you’ll never succeed as a trader",
+          "More importantly, if you cannot accept that losses will occur, then you cannot accept a good trading system that will make a lot of money in the long run but might lose money 60 percent of the time",
+          "WHAT’S REALLY IMPORTANT TO TRADING\nAlmost every successful investor that I have encountered has realized the lesson of the Holy Grail metaphor—that success in the markets comes from internal control"
+        ],
+        "length": 31551
+      }
+    },
+    {
+      "title": "CHAPTER 2Judgmental Biases: Why Mastering the Markets Is So Difficult for Most People",
+      "file": "ch02.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 6,
+            "examples": [
+              "heir own. consequently, they become fascinated by entry signals that they perceive to be synonymous with a compl",
+              "e trading system. you get a sense of control with entry signals because the point at which you choose to enter t",
+              "see that the market had now rallied well above my entry point. i had feelings of frustration running through me"
+            ]
+          },
+          "exits": {
+            "count": 2,
+            "examples": [
+              "trades tend to become even bigger. second, people take profits prematurely in order to make sure those profits ",
+              "people want to take profits quickly and give their losses some room. this gi"
+            ]
+          },
+          "risk": {
+            "count": 4,
+            "examples": [
+              "investors holding long positions, and the average position size is 200 units. during the day, long positions incr",
+              "investors holding short positions with an average position size of 450 units. short positions increased by 5 unit",
+              "ent in his account in 1994 with only a 10 percent drawdown. yet what he talked about were mostly signals for"
+            ]
+          },
+          "backtesting": {
+            "count": 4,
+            "examples": [
+              "ept you are trading, the less need you have to do historical testing.",
+              "be. for example, market data that you use in your historical testing or that come to you live are often filled with",
+              "sult, let me give you several precautions in such optimization. first, understand the concept you are using so w"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              " people don’t even test their systems or know the expectancy of their systems (see chapter 7).",
+              "a methodology with a long-term positive expectancy and a reward (overall return) to risk (maximum pe"
+            ]
+          },
+          "psychology": {
+            "count": 5,
+            "examples": [
+              "d for me to create a procedure that would force a disciplined checking of daily data for each futures contract",
+              "chapter 2judgmental biases: why mastering the markets is so difficult for ",
+              "r is to explore how such judgmental heuristics or biases affect the process of trading or investing. fir"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "metrics": {
+            "count": 2,
+            "examples": [
+              " really a day’s worth of data? and what about the accuracy of the data?",
+              "k data, 5-minute bars, 30-minute bars, and so on, accuracy goes out the window. thus, if you are testing a s"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "Overall, a basic source of problems for all of us is the vast amount of information we must process regularly",
+          "French economist George Anderla has measured changes in the rate of information flow with which we human beings must cope",
+          "For example, read the following list of numbers, close the book, and then try to write them all down:\n6, 38, 57, 19, 121, 212, 83, 41, 917, 64, 817, 24\nCould you remember all the numbers",
+          "We could never make market decisions without them, but they are also very dangerous to people who are not aware that they exist and who are also unaware that they use them",
+          "For example, one gentleman, when exposed to some of the information contained in this book, claimed that it is full of controversy and that key elements were left out"
+        ],
+        "length": 57212
+      }
+    },
+    {
+      "title": "CHAPTER 3Setting Your Objectives",
+      "file": "ch03.html",
+      "analysis": {
+        "trading_concepts": {
+          "exits": {
+            "count": 5,
+            "examples": [
+              "iss a move? [in other words, discuss what kind of stop loss you plan to have.]",
+              "how do you plan to take profits? reversal stops? trailing stops? technical stops",
+              "how do you plan to take profits? reversal stops? trailing stops? technical stops"
+            ]
+          },
+          "risk": {
+            "count": 4,
+            "examples": [
+              "nd of returns did they want to make? what kind of drawdowns were they willing to tolerate in order to make t",
+              "they can. but if they start out with a 30 percent drawdown—which is quite possible—their situation becomes v",
+              "hree months, and you’re only willing to take a 10 percent risk in the process?"
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              ", i’ve usually planned for it and have a range of expectancy. if the results fall within that range, then i kn"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "our strengths and weaknesses in terms of personal discipline?",
+              "i am fairly good at discipline. i have no problems following a system.",
+              "ring past trading experience), or do you have any emotional issues that constantly crop up, such as fear or"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "” He said that objectives were a critical part of any system, and yet few people bother to spend time working on them",
+          "Your objectives are a critical part of your system",
+          "This is one of the real keys in our search for the Holy Grail",
+          "How much of that must come out of your trading profits",
+          "This is important just to determine if it’s reasonable"
+        ],
+        "length": 29557
+      }
+    },
+    {
+      "title": "PART TWOConceptualizing Your System",
+      "file": "part02.html",
+      "analysis": {
+        "trading_concepts": {
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "chapter 7 presents the concept of expectancy. expectancy refers to how much you will make with your tradin",
+              "isked. few traders or investors really understand expectancy, and yet it is one of the most important topics i"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [
+          "Chapter 4 presents the critical steps that are necessary for developing a system that fits you",
+          "I believe that whatever system you develop must take the big picture into account and be adaptable as the big picture changes",
+          "Few traders or investors really understand expectancy, and yet it is one of the most important topics in this entire book"
+        ],
+        "length": 1455
+      }
+    },
+    {
+      "title": "CHAPTER 4Steps to Developing a System",
+      "file": "ch04.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 4,
+            "examples": [
+              "ions that you might want to use and the timing or entry signal. these topics are discussed extensively later in ",
+              "ime at which the market is supposed to move. your entry signal should be a price confirmation that the market is",
+              "on will give you two elements of your system: the setup conditions that you might want to use and the tim"
+            ]
+          },
+          "risk": {
+            "count": 2,
+            "examples": [
+              "nding markets. this will lessen the impact of any drawdowns produced by the trending system during these per",
+              "y finding good arbitrage situations. the late ray kelly does an excellent job of discussing arbitrage in "
+            ]
+          },
+          "backtesting": {
+            "count": 3,
+            "examples": [
+              "understand the real nature of your edge, the less historical testing you will have to do.",
+              "understand the real nature of your edge, the less historical testing you will have to do.",
+              "eglected an important step in system development: optimization. however, optimization really amounts to fitting "
+            ]
+          },
+          "metrics": {
+            "count": 4,
+            "examples": [
+              "• there are a lot of flaws in expectancy because of judgmental heuristics such as “curve f",
+              "their losses—sometimes even leading to a negative expectancy.6 sometimes one big loss can ruin the whole syste",
+              "• i don’t believe that reliability (win rate) has anything to do with your entry. instead, it "
+            ]
+          },
+          "psychology": {
+            "count": 6,
+            "examples": [
+              "ular bear market, you will create a psychological bias for your readers. you don’t have a crystal ball.",
+              "you might have a lot of biases that influence your initial determination of yo",
+              " and investing. two other books by schwager, fundamental analysis and technical analysis, are also excelle"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "metrics": {
+            "count": 3,
+            "examples": [
+              "10. determine the accuracy of your r-multiple distribution",
+              "tancy. as a result, you now need to determine the accuracy of your r-multiple distribution by trading it in ",
+              "ttention on determining your objectives, start by recalling how much time you spent working on the exercis"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "CHAPTER 4Steps to Developing a System\n\nThere must be a map or model of the data, which shows the zone to be navigated and upon which is marked the best route",
+          "These are the key tasks involved in making the model",
+          "1 It’s very important to find out what they do in common",
+          "If you don’t, you’ll simply discover the idiosyncrasies of the people involved, which usually are not that important",
+          "TAKE AN INVENTORY\nThe first key step is to take an inventory of yourself—your strengths and weaknesses"
+        ],
+        "length": 49579
+      }
+    },
+    {
+      "title": "CHAPTER 5Selecting a Concept That Works",
+      "file": "ch05.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 8,
+            "examples": [
+              "most people try to find a high-probability entry signal as their system. they typically have no concept o",
+              " variance of one day, then you should look for an entry signal between july 22 and july 24.",
+              "our trading strategies and enable you to pull the trigger at the right time without self-doubt or hesitatio"
+            ]
+          },
+          "exits": {
+            "count": 1,
+            "examples": [
+              "to avoid delivery can offer opportunities both to take profits and then to enter or reestablish positions."
+            ]
+          },
+          "risk": {
+            "count": 2,
+            "examples": [
+              "ray kelly was a close personal friend and one of my earlies",
+              "ray kelly: arbitrage—what it is and how it’s implemented"
+            ]
+          },
+          "backtesting": {
+            "count": 2,
+            "examples": [
+              " can be identified only through experience and/or backtesting.",
+              "ve under all sorts of market conditions, the less historical testing you need to do."
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              " one had to develop a methodology with a positive expectancy1 through stops and exits in order to make psychol",
+              "ly leads to a trading methodology with a negative expectancy. in contrast, people who understand the role that"
+            ]
+          },
+          "psychology": {
+            "count": 10,
+            "examples": [
+              "ders, fundamental or technical, lack the nerve or discipline to get into a market once it has started running.",
+              "ew trading days can give you added confidence and discipline to adhere to your trading strategies and enable y",
+              "e. it simply is . . . economics is neutral to the emotions of the players. it says, “if there is money on t"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "models": {
+            "count": 2,
+            "examples": [
+              "reedom, i included a section by lou mendelsohn on neural networks. however, neural networks is really not a tradin",
+              "t might be considered a concept, however, is what neural networks can do, and that is to show the relationships be"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "ajor long-term price objective. as limited as the accuracy of fundamental price targeting might be, having e",
+              "ervals of radio propagation quality at 88 percent accuracy. he did so by using planetary alignments. several"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "But you must understand your concept thoroughly before you develop a system using it",
+          "There must be a trend up after you buy in order to sell at higher prices",
+          "Conversely, if you sell first, then there must be a subsequent trend down for you to buy back at lower prices",
+          "We use this word because trend followers always wait for the trend to shift first, then they “follow” it",
+          "I’ve never had one get there yet, but maybe some day"
+        ],
+        "length": 110137
+      }
+    },
+    {
+      "title": "CHAPTER 6Trading Strategies That Fit the Big Picture",
+      "file": "ch06.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              " trade two or three systems that develop from the patterns that seem to emerge. for example, here are a few",
+              "or more day trades in five consecutive days was a pattern day trader. the rule itself is ridiculous because"
+            ]
+          },
+          "psychology": {
+            "count": 6,
+            "examples": [
+              "on that is conveyed to you through that source is biased to support the “bread and butter” of the media.",
+              "l failure. the average person is just too full of biases that lead to financial disaster. my solution to",
+              "ok, i left out one style of trading that i called mental scenario trading. my experience of it was that it"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": true,
+        "key_sentences": [
+          "It is all part of a big, three-dimensional puzzle that is always changing",
+          "”1\nI’ve never modeled a mental scenario trader, so I haven’t talked much about it in my books and courses",
+          "• I also believe that the United States is in the beginnings of a secular bear market during which such issues as our massive debt and the retirement problems of the baby boomers must play out",
+          "• Given that scenario, I believe that the United States must endure at minimum a general devaluation of the dollar (best-case scenario) and perhaps a fairly strong inflation, which will really erode the purchasing power of the dollar",
+          "In that plan you must ask yourself, “What do you think the big picture will be over the next 5 to 20 years"
+        ],
+        "length": 66334
+      }
+    },
+    {
+      "title": "CHAPTER 7Six Keys to a Great Trading System",
+      "file": "ch07.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              "rategy and exits the market when that strategy is triggered, and (3) he or she makes full use of other oppo"
+            ]
+          },
+          "exits": {
+            "count": 1,
+            "examples": [
+              " are opportunities to trade, (2) he or she has an exit strategy and exits the market when that strategy is trigge"
+            ]
+          },
+          "risk": {
+            "count": 6,
+            "examples": [
+              "have lost your entire stake. in other words, your position size (that is, bet size) was too large relative to you",
+              "your position size on any given trade must be low enough that you ca",
+              "0 percent was 40.1 percent and the peak-to-trough drawdown was 12.3 percent. there were three significant lo"
+            ]
+          },
+          "backtesting": {
+            "count": 1,
+            "examples": [
+              "you are going to win or lose. however, you can do historical testing and get some idea (that is, a sample) of what "
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "first four variables are part of the topic i call expectancy. they are the primary focus of this chapter. the ",
+              "owball is our snowball equivalent of what i call “expectancy” in the trading world."
+            ]
+          },
+          "psychology": {
+            "count": 5,
+            "examples": [
+              "money trading it. there is a strong psychological bias to be right about what we do with our investments",
+              ". for most people, this bias greatly overrides the desire to make a profit ove",
+              "• fundamentals move prices."
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "CHAPTER 7Six Keys to a Great Trading System\n\nHe who thinks he knows, doesn’t know",
+          "Lao Tse\n\nThis chapter is the key to understanding how great traders think in terms of systems",
+          "The material is critically important if you want real success as a trader or investor",
+          "In my opinion, there are six key variables that you must understand to develop a successful trading system",
+          "This is the destructive force on your account size whenever you trade"
+        ],
+        "length": 46670
+      }
+    },
+    {
+      "title": "PART THREEUnderstanding the Key Parts of Your System",
+      "file": "part03.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 3,
+            "examples": [
+              " entry and exit systems consist of a setup plus a trigger for action. in chapter 8, you’ll learn about the ",
+              "chapter 8 talks about setups. setups are conditions that are necessary in order for s",
+              "omething else to occur. i’ve put the setups chapter first because most entry and exit system"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "at reliability is not nearly as important as your expectancy in evaluating a system because reliability can be",
+              " high while expectancy can be negative. in chapter 9, you’ll learn why e"
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "d people tend to accept that because of the lotto bias. however, when you understand the material in thi",
+              "ystem and to help you overcome your psychological biases so that you can develop a system that’s right f"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [
+          "PART THREEUnderstanding the Key Parts of Your System\nThis part is designed to help you construct your system",
+          "Note that before you begin this section, you should thoroughly understand Parts One and Two of the book",
+          "They form the necessary groundwork that you must have before you begin the actual construction",
+          "However, when you understand the material in this book, you’ll be able to combine these setups with other critical parts of a system to create something that really is worthwhile",
+          "Your entry technique essentially controls the reliability of your system—how often it makes money"
+        ],
+        "length": 3614
+      }
+    },
+    {
+      "title": "CHAPTER 8Using Setups to Jumpstart Your System",
+      "file": "ch08.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 11,
+            "examples": [
+              "ng more than a time setup. it certainly is not an entry signal or a trading system.",
+              "sts can work is because they are commonly used as entry signals. these entry signals might set up trades that re",
+              "des. he typically had a very tight stop below his entry point to preserve his capital. quite frequently, the ma"
+            ]
+          },
+          "backtesting": {
+            "count": 1,
+            "examples": [
+              "d then (2) to develop some systems that, based on historical testing, would return 100 percent per year or more wit"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "st people would do this through developing a high-expectancy trading system using great exits and then combini",
+              "rt of setup can easily add 10 to 15 cents to your expectancy per dollar risked in a long-term trend-following "
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "ny publicly offered systems, because of the lotto bias described in chapter 2, consist of nothing but se",
+              "ny publicly offered systems, because of the lotto bias described in chapter 2, consist of nothing but se",
+              "let’s look at a concept—fundamental analysis—to help you understand how setups come o"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": true,
+        "key_sentences": [
+          "Wyckoff\nSetups refer to conditions that must occur before other action is taken",
+          "They are an essential aspect of most entry and exit portions of any system",
+          "One of the key uses of setups could be to tell you when conditions are right to use your system",
+          "Essentially, this trader’s problem was confusing a setup (that is, gauging market conditions with respect to Elliott Wave analysis) with an entire trading system",
+          "However, the critical issue was a problem that most investors and traders have—they confuse setups with a complete trading system"
+        ],
+        "length": 66777
+      }
+    },
+    {
+      "title": "CHAPTER 9Entry or Market Timing",
+      "file": "ch09.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 8,
+            "examples": [
+              "the basic purpose of using entry signals, most people assume, is to improve your timing i",
+              "ading systems are simply trying to find a “great” entry signal. in fact, traders are always telling me about the",
+              " both an exit point for a current position and an entry point for a new position. in essence, the exit is almos"
+            ]
+          },
+          "exits": {
+            "count": 3,
+            "examples": [
+              "of trailing stop (to reduce your initial risk and take profits), you are going to further reduce the reliabilit",
+              "sisting of random entry, a three-times-volatility trailing stop, and a simple money management system involving 1",
+              "ll there was to the system—a random entry, plus a trailing stop that was three times the volatility, plus a 1 per"
+            ]
+          },
+          "risk": {
+            "count": 4,
+            "examples": [
+              "eakout systems. first, they tend to produce large drawdowns. this, of course, is a function of the size of t",
+              "nd, most of the problems that are associated with drawdowns or require large accounts in breakout systems ca",
+              " and a simple money management system involving 1 percent risk—made money on 100 percent of the runs."
+            ]
+          },
+          "backtesting": {
+            "count": 1,
+            "examples": [
+              "s of entry signals to enter the market when doing historical testing. the only exit they used was at the close of b"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "high percentage of wins can still have a negative expectancy. the key to money making is having a system with ",
+              "a high positive expectancy and using a position-sizing model that will take "
+            ]
+          },
+          "psychology": {
+            "count": 5,
+            "examples": [
+              "ntry has some real advantages for people with the discipline to follow it. for example, price information is m",
+              "his strategy would appeal to some of your natural biases and psychological weaknesses. however, i consid",
+              "bservation that people write books to fulfill the biases of people who want to buy them. i suggest that "
+            ]
+          }
+        },
+        "ml_concepts": {
+          "metrics": {
+            "count": 4,
+            "examples": [
+              "one of the reasons his trading accuracy was so dismal, and this is true for most market p",
+              "one of the reasons his trading accuracy was so dismal, and this is true for most market p",
+              "arts after the baseline is completed with day 21. recall that both a 20-day channel break-out and a 40-day"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "In fact, traders are always telling me about their short-term systems that have reliability rates of 60 percent or better",
+          "The key to money making is having a system with a high positive expectancy and using a position-sizing model that will take advantage of that expectancy while still allowing you to stay in the game",
+          "Nevertheless, some energy should be devoted to finding entries that fit your objectives",
+          "2 We will also make the assumption in this chapter that reliability can be an important criterion for entry signals and talk about some potentially good signals",
+          "This approach is totally different from the first approach because it makes a different assumption about what is important to make big profits"
+        ],
+        "length": 65323
+      }
+    },
+    {
+      "title": "CHAPTER 10Knowing When to Fold ’Em: How to Protect your Capital",
+      "file": "ch10.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 8,
+            "examples": [
+              "our favor. you could get right back in on another entry signal, but many such trades would give you very large t",
+              "t you out of your current position and a reversal entry signal to go the other way (long or short, depending on ",
+              "you start thinking about price movement from your entry point, it introduces you to several more interesting co"
+            ]
+          },
+          "exits": {
+            "count": 3,
+            "examples": [
+              "when you set a stop loss in the market, you are doing two important things",
+              "u take a position in corn and you decide to use a stop loss that is three times the daily volatility. the dai",
+              " should also have some idea about how you plan to take profits and a strategy for letting your profits run. tha"
+            ]
+          },
+          "risk": {
+            "count": 1,
+            "examples": [
+              "y. thus, a wide stop is not a lot of risk if your position size is small or minimal. and if a minimal unit with t"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "ing your r multiples as discussed in chapter 7 on expectancy. every trader or investor, in my opinion, should ",
+              "i’ve talked about r multiples before in the expectancy chapter. but this topic is so important for your "
+            ]
+          },
+          "psychology": {
+            "count": 3,
+            "examples": [
+              "ries, they can also be used as stops. my personal bias is that these sorts of stops are not nearly as go",
+              "william gallacher’s fundamental trading",
+              "if you recall, gallacher is a fundamental trader. he uses fundamentals to trade commodities"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "if you recall, gallacher is a fundamental trader. he uses funda"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "Exits, whether aborting a losing position or taking profits, are the keys to making money in the market",
+          ")1\n\nThe important point here is that getting out of a losing trade is critical if you want to be a successful trader",
+          "”\nWHAT YOUR STOP DOES\nWhen you set a stop loss in the market, you are doing two important things",
+          "Remember, R is the amount that you would expect to lose on a trade when you need to get out to preserve your capital",
+          "Remember, R is the amount that you would expect to lose on a trade when you need to get out to preserve your capital"
+        ],
+        "length": 39924
+      }
+    },
+    {
+      "title": "CHAPTER 11How to Take Profits",
+      "file": "ch11.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 8,
+            "examples": [
+              "fter entry. as a result, if you have a meaningful entry signal, then a potentially useful exit is one that will ",
+              " believe that there is nothing magical about your entry signal, so you want to give your position plenty of room",
+              " you have a 20-point profit (2r). that might be a trigger to allow only a 30 percent retracement of your pr"
+            ]
+          },
+          "exits": {
+            "count": 9,
+            "examples": [
+              " classifications of exits other than your initial stop loss. these include exits that produce a loss but redu",
+              "your initial stop loss, discussed in chapter 10, was designed to be your",
+              "chapter 11how to take profits"
+            ]
+          },
+          "risk": {
+            "count": 4,
+            "examples": [
+              "arch into what exits to use or how to control his position size. when i suggested to him that he now needed to sp",
+              "is one in which you enter the market with a large position size and then scale out with various exits. for exampl",
+              "et back to breakeven when there was a substantial drawdown. think about it. if you are down 49 percent, you "
+            ]
+          },
+          "backtesting": {
+            "count": 3,
+            "examples": [
+              " target objectives. you might determine, based on historical testing, that your method produces the kind of reward-",
+              "it tends to be based on understanding rather than optimization. it works because one can generalize simple conce",
+              "easy to conceptualize and don’t require extensive optimization (if any). multiple exits are recommended because "
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "000 when they were stopped out of everything. the expectancy of their trades was an excellent 2.5r during that",
+              ". look at table 13.5 and you’ll notice that their expectancy is still excellent."
+            ]
+          },
+          "psychology": {
+            "count": 5,
+            "examples": [
+              "at trade. i agree with that philosophy if you are disciplined and fairly automated in your trading. however, m",
+              " it’s the perfect method for people with a strong bias to be right, but it doesn’t optimize profits or e",
+              "tead, other people, who probably have the typical bias toward emphasizing entry, have tried to decipher "
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 1,
+            "examples": [
+              "there are many different classifications of exits other than your initial stop loss. thes"
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "gallacher’s system, as you will recall from chapter 9, has you entering the market (1) w"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "” Notice that to be able to get in touch with the waves, it’s important for you to know when the wave has finished its movement",
+          "Yet for those who want control, exits do control two important variables—whether or not you’ll make a profit and how much profit you will make",
+          "They are one of the major keys to developing a successful system",
+          "The important point about trailing stops is that your exit algorithm will continually make adjustments that will move the exit in your favor",
+          "You must give careful consideration, through testing and examining your results, to whether or not you want to do this"
+        ],
+        "length": 34977
+      }
+    },
+    {
+      "title": "PART FOURPutting It All Together",
+      "file": "part04.html",
+      "analysis": {
+        "trading_concepts": {
+          "risk": {
+            "count": 1,
+            "examples": [
+              "ter 13 also discusses the impact of the potential drawdowns that a system will generate. and last, we’ll loo"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "system will generate. and last, we’ll look at the expectancy and opportunity factors that some newsletters hav",
+              "ch.” and once you have a good system with a great expectancy, then you must use position sizing as an add-on t"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [
+          "Most importantly, you’ll learn how to size your positions to meet your objectives",
+          "However, cost becomes a very important factor as you trade more",
+          "Chapter 14 on position sizing is one of the most critical chapters in the book",
+          "” And once you have a good system with a great expectancy, then you must use position sizing as an add-on to that system to help you meet your objectives",
+          "If you really want your system to be a Holy Grail trading system (meaning it’s perfect for you), then you must thoroughly understand the topic of position sizing"
+        ],
+        "length": 2632
+      }
+    },
+    {
+      "title": "CHAPTER 12There’s Money for Everyone",
+      "file": "ch12.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 7,
+            "examples": [
+              "any action yet, but he will do so when he sees an entry signal.",
+              "n’t have enough information to determine what her entry signals would be. however, if won had not penetrated the",
+              "thin the next five days, and her stop was now her entry point at $142.10."
+            ]
+          },
+          "exits": {
+            "count": 4,
+            "examples": [
+              " movers. all of them understood the importance of stop losses, and two of them even told her how big to size ",
+              "volatility, whichever is bigger. she also keeps a trailing stop equal to three times the weekly volatility. and w",
+              "hen her trailing stop is closer than her initial stop, then the trailin"
+            ]
+          },
+          "risk": {
+            "count": 2,
+            "examples": [
+              "f for her. and she was up 7.1r in six weeks. at 1 percent risk per trade, that amounts to a very nice annual gai",
+              "op was quite tight, he decided to only take a 0.5 percent risk."
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "d the fundamental concepts behind low-risk ideas, expectancy, and position sizing.",
+              "ve at least one tested, well-researched, positive expectancy system that makes money."
+            ]
+          },
+          "psychology": {
+            "count": 6,
+            "examples": [
+              "ons. she makes money from doing so because she is disciplined and understands many of the 10 traits listed. ho",
+              "t tol started trading in a channel with an upward bias. the channel showed highs on february 23, march 1",
+              "son would probably say ellen because of the lotto bias. ellen can predict so well. but what ellen does t"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "ly do that occasionally, but when it happens, her accuracy is almost uncanny.",
+              "ns are usually 10r or bigger. and even though her accuracy rate is only about 38 percent, because of these f"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "However, you can do that successfully if you understand the fundamental concepts behind low-risk ideas, expectancy, and position sizing",
+          "They all know that when they get into a trade or an investment, they must have some idea of when they are wrong about the trade—meaning that the trade is not working out—so they get out and preserve their capital",
+          "They all understand that position sizing is the key to meeting their objectives",
+          "Nevertheless, Dick’s computer generates trades each evening and recalculates all his stops",
+          "Victor might also be called a “fundamentalist” and a “value trader"
+        ],
+        "length": 85068
+      }
+    },
+    {
+      "title": "CHAPTER 13Evaluating Your System",
+      "file": "ch13.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              "you decide to use an 80-day channel breakout as a setup. you then enter after a retracement, putting your"
+            ]
+          },
+          "exits": {
+            "count": 4,
+            "examples": [
+              "k is recommended. diligence doesn’t recommend any stop loss (so we used 25 percent of the entry price to dete",
+              "ly basis) to control losses and tell them when to take profits. the newsletter has several different portfolios",
+              " average as an entry and a three-times-volatility trailing stop—both to protect initial capital and to serve as a"
+            ]
+          },
+          "risk": {
+            "count": 3,
+            "examples": [
+              "n you have a long losing streak, how big will the drawdowns be in terms of r?",
+              "ou be able to trade this system? how big will the drawdowns be in terms of r? and will you be satisfied with",
+              "total r gain of 38.84r over two years. thus, at 1 percent risk per position, you probably could have easily made"
+            ]
+          },
+          "metrics": {
+            "count": 4,
+            "examples": [
+              "or in this book, it is highly correlated with the sharpe ratio. furthermore, our research shows that the h",
+              "red to this point is really about r multiples and expectancy. what does your system look like in terms of r mu",
+              "ltiples? what’s the mean r multiple? it’s expectancy. you need to ask yourself, “how can i get the hig"
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "hose trades. he agreed, but he still didn’t think psychology was that important for their trading. several yea",
+              "one of them can tell you about the impact of your psychology on the trading. if the newsletter can produce 20r"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "But the two most important areas involving making money in the market still remain—the opportunity factor (along with the cost per opportunity) and the position-sizing factor",
+          "However, some critical questions remain: How often will you get one of the 12R profits",
+          "Again, you now have some critical questions to answer",
+          "The question you must now ask is, “Can I survive with only a 0",
+          "One of them has never had a losing year and seldom had a losing month"
+        ],
+        "length": 37352
+      }
+    },
+    {
+      "title": "CHAPTER 14Position Sizing—the Key to Meeting Your Objectives",
+      "file": "ch14.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              "percent profit i take another third. when i get a pattern to the reverse, i’ll take the rest of the profit."
+            ]
+          },
+          "exits": {
+            "count": 2,
+            "examples": [
+              "ence between your purchase price and your initial stop loss.",
+              "h the initial risk and profit taking, is a 21-day trailing stop on the other side of the market."
+            ]
+          },
+          "risk": {
+            "count": 6,
+            "examples": [
+              "o effectively use position sizing was to base the position sizes on their equity, i discovered that none of these",
+              "g systems that work call for you to increase your position size when you make money. that holds for gambling, for",
+              "ch your account has to recover from various-sized drawdowns in order to get back to even. for example, losse"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "and two of them were 10r winners. the game has an expectancy of 0.8r, even though it loses 80 percent of the t",
+              "a three-dimensional box that added opportunity to expectancy. figure 14.1 shows that with position sizing, a f"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "ot that significant to the performance, the lotto bias causes many people to continue to think that asse",
+              "gallacher’s fundamental trading",
+              "mportant aspect of system development, other than psychology, is the topic of how much to invest in any given "
+            ]
+          }
+        },
+        "ml_concepts": {
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "g the total dollar volume that you must consider. recall that figure 13.2 created a three-dimensional box "
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "CHAPTER 14Position Sizing—the Key to Meeting Your Objectives\n\nWhen I get a 30 percent profit, I take a third",
+          "Quoted from a lecture on money management at a seminar on stock trading\n\nThe most important aspect of system development, other than psychology, is the topic of how much to invest in any given position",
+          "” That says to me that the majority of “experts” on the market really don’t understand one of the most important aspects of success in the market",
+          "”\nPortfolio managers tend to talk about “asset allocation” as being important for their success",
+          "This is what it means to most portfolio managers because by charter they must be fully (at least 95 percent) invested"
+        ],
+        "length": 63081
+      }
+    },
+    {
+      "title": "CHAPTER 15Conclusion",
+      "file": "ch15.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              "f not, then review chapter 4. you should know how setups, timing, protective stops, and profitable exits ",
+              "ng that happens in your life. what are the common patterns, and how can you fix the ones that aren’t workin"
+            ]
+          },
+          "risk": {
+            "count": 5,
+            "examples": [
+              "in the markets is all about making sure that your position size is at a low enough level that you can achieve the",
+              " really work in the real world? do the people who position size adequately make good returns? well, i can answer ",
+              "ime during the year, you’ll experience an average drawdown of 30r. if you risk 0.5 percent per trade, you sh"
+            ]
+          },
+          "backtesting": {
+            "count": 1,
+            "examples": [
+              "es in the data. obviously, this affects both your historical testing and your day-to-day trading."
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "at distribution, in turn, can be described by its expectancy (that is, the mean r), the nature of its distribu",
+              "furthermore, in order to obtain a positive expectancy, you must have a way to “cut your losses short an"
+            ]
+          },
+          "psychology": {
+            "count": 8,
+            "examples": [
+              "the psychological elements that are involved with discipline and the day-to-day details of trading or investin",
+              "turn out. instead, trading is very much a game of discipline, of being in touch with the flow of the markets, ",
+              "• allowing your emotions to overrule your rules in a trade."
+            ]
+          }
+        },
+        "ml_concepts": {
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "really simple because we were just looking at the accuracy of collecting online data. however, we were using"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "You must assume total responsibility for what you do and for what happens to you",
+          "You must determine what you want from a system based on your beliefs and then detail a plan with the appropriate objectives",
+          "Furthermore, in order to obtain a positive expectancy, you must have a way to “cut your losses short and let your profits run,” which is accomplished through exits",
+          "And most importantly, you must understand position sizing well enough to be able to meet your objectives",
+          "I remember consulting with a trader, and we started working on his position sizing"
+        ],
+        "length": 34561
+      }
+    },
+    {
+      "title": "glossary.html",
+      "file": "glossary.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 5,
+            "examples": [
+              " typically have (1) some setup conditions, (2) an entry signal, (3) a worst-case disaster stop loss to preserve ",
+              "risk the difference in price between the entry point in a position and the worst-case loss that one is",
+              "has two lines, the macd line and a signal line. a buy signal is generated when the macd line rises above the s"
+            ]
+          },
+          "exits": {
+            "count": 4,
+            "examples": [
+              " in a given position, as defined by one’s initial stop loss.",
+              "stop (stop loss, stop order) an order you put with your broker th",
+              "reasing rate over time, it is sometimes used as a trailing stop that tends to keep one from giving back much prof"
+            ]
+          },
+          "risk": {
+            "count": 5,
+            "examples": [
+              "gale strategy a position-sizing strategy in which position size is increased when one wins and decreased when one",
+              " strategy a position-sizing strategy in which the position size increases after you lose money. the classic marti",
+              "drawdown a decrease in the value of your account because o"
+            ]
+          },
+          "backtesting": {
+            "count": 1,
+            "examples": [
+              "ic criteria. too many filters tend to lead to overoptimization."
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "expectancy how much you can expect to make on the average ov",
+              "er many trades. expectancy is best stated in terms of how much you can make "
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "e how to allocate their capital. due to the lotto bias, many people think of this as a decision about wh",
+              "bias the tendency to move in a particular direction. t",
+              "fundamental analysis analysis of the market to determine its "
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "Many books show you illustrations of their key points about the market (or indicator) that appear to perfectly predict the market",
+          "fundamental analysis Analysis of the market to determine its supply-and-demand characteristics",
+          "In equities markets, fundamental analysis determines the value, the earnings, the management, and the relative data of a particular stock",
+          "Holy Grail system A mythical trading system that perfectly follows the market and is always right, producing large gains and zero drawdowns",
+          "negative expectancy system A system in which you will never make money over the long term"
+        ],
+        "length": 30194
+      }
+    },
+    {
+      "title": "recommended.html",
+      "file": "recommended.html",
+      "analysis": {
+        "trading_concepts": {
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "———. the definitive guide to expectancy and position sizing. cary, n.c.: international in"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "y (iitm), 1996. good book about the psychological biases we face in all aspects of trading and investing",
+              "tegy, and the author seems to have all the normal biases that most people have—it makes it seem as if al",
+              "———. schwager on futures: fundamental analysis. new york: wiley, 1996. great book for a"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [
+          "If you want to understand the big picture, then this book is a must read",
+          "If you are interested in value investing, then this book is a must read",
+          "A must for people who really want to stretch themselves to learn position sizing",
+          "A must read for any trader or investor",
+          "Continues the tradition, and it again is a must read"
+        ],
+        "length": 8429
+      }
+    },
+    {
+      "title": "index.html",
+      "file": "index.html",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 6,
+            "examples": [
+              "acceleration, entry signals and, 276–279",
+              "deceleration, entry signals and, 276–279",
+              "business fundamentals, setups and, 237"
+            ]
+          },
+          "exits": {
+            "count": 5,
+            "examples": [
+              "noise, stop losses and, 291–294",
+              "stop losses and, 289",
+              "when to take profits and, 88–89"
+            ]
+          },
+          "risk": {
+            "count": 6,
+            "examples": [
+              "position size, determining, 14–15",
+              "peak drawdowns and, 394–397",
+              "peak drawdowns, 394–397"
+            ]
+          },
+          "metrics": {
+            "count": 3,
+            "examples": [
+              "the definitive guide to expectancy and position sizing (tharp), 15",
+              "expectancy and, 386–390",
+              "win rate, 90"
+            ]
+          },
+          "psychology": {
+            "count": 5,
+            "examples": [
+              "discipline, 448–450",
+              "representativeness bias and, 23–26",
+              "biases:"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "models": {
+            "count": 1,
+            "examples": [
+              "neural networks, 136"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "models, evaluating accuracy of, 13",
+              "r-multiple distribution, determining accuracy of, 89–90"
+            ]
+          }
+        },
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 21982
+      }
+    },
+    {
+      "title": "about.html",
+      "file": "about.html",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 626
+      }
+    },
+    {
+      "title": "backfront.html",
+      "file": "backfront.html",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 1186
+      }
+    }
+  ],
+  "analyzed_date": "2026-02-09T15:15:08.861158"
+}

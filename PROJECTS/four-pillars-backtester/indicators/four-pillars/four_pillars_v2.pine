@@ -1,0 +1,673 @@
+//@version=6
+// Four Pillars Strategy v2.0
+// Combines: Ripster EMA Clouds, AVWAP, Quad Rotation Stochastic, BBWP
+// Purpose: Grade setups, manage positions, fire alerts
+//
+// METHODOLOGY:
+// - Pillar 1: Ripster EMA Clouds (Structure/Trend)
+// - Pillar 2: AVWAP (Directional Bias)
+// - Pillar 3: Quad Rotation Stochastic (Momentum Trigger)
+// - Pillar 4: BBWP (Volatility Filter)
+
+indicator("Four Pillars v2", shorttitle="4P", overlay=true,
+          max_lines_count=100, max_labels_count=100)
+
+// ═══════════════════════════════════════════════════════════════════════════
+// INPUTS
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Pillar 1: Ripster
+grp1 = "═══ PILLAR 1: STRUCTURE (Ripster) ═══"
+i_ema5 = input.int(5, "Short EMA (5)", group=grp1)
+i_ema12 = input.int(12, "Long EMA (12)", group=grp1)
+i_ema34 = input.int(34, "Short EMA (34)", group=grp1)
+i_ema50 = input.int(50, "Long EMA (50)", group=grp1)
+
+// Pillar 2: AVWAP
+grp2 = "═══ PILLAR 2: BIAS (AVWAP) ═══"
+i_pivotLen = input.int(5, "Pivot Lookback", group=grp2)
+i_volMaPeriod = input.int(20, "Volume MA Period", group=grp2)
+
+// Pillar 3: Momentum (QRS)
+grp3 = "═══ PILLAR 3: MOMENTUM (Stochastic) ═══"
+i_oversold = input.int(20, "Oversold Level", group=grp3)
+i_overbought = input.int(80, "Overbought Level", group=grp3)
+
+// Pillar 4: BBWP
+grp4 = "═══ PILLAR 4: VOLATILITY (BBWP) ═══"
+i_bbLen = input.int(13, "BB Basis Length", group=grp4)
+i_bbwpLookback = input.int(100, "BBWP Lookback", group=grp4)
+i_bbwpExLow = input.int(10, "Extreme Low", group=grp4)
+i_bbwpExHigh = input.int(90, "Extreme High", group=grp4)
+
+// Position Management
+grp5 = "═══ POSITION MANAGEMENT ═══"
+i_atrLen = input.int(14, "ATR Length", group=grp5)
+i_slMult = input.float(2.0, "Stop Loss ATR Mult", group=grp5)
+i_trailMult = input.float(2.0, "Trail ATR Mult", group=grp5)
+
+// Grade Thresholds
+grp6 = "═══ GRADE THRESHOLDS ═══"
+i_gradeA = input.int(9, "Grade A Minimum", group=grp6)
+i_gradeB = input.int(6, "Grade B Minimum", group=grp6)
+i_gradeC = input.int(4, "Grade C Minimum", group=grp6)
+i_targetA = input.float(6.0, "Grade A Target (ATR)", group=grp6)
+i_targetB = input.float(4.0, "Grade B Target (ATR)", group=grp6)
+i_targetC = input.float(2.5, "Grade C Target (ATR)", group=grp6)
+
+// Dashboard
+grp7 = "═══ DASHBOARD ═══"
+i_showDash = input.bool(true, "Show Dashboard", group=grp7)
+i_dashPos = input.string("Top Right", "Position",
+            options=["Top Right", "Top Left", "Bottom Right", "Bottom Left"], group=grp7)
+i_showStochPanel = input.bool(true, "Show Stoch Panel", group=grp7)
+
+// Alerts
+grp8 = "═══ ALERTS ═══"
+i_webhookSecret = input.string("", "Webhook Secret", group=grp8)
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PILLAR 1: RIPSTER EMA CLOUDS
+// ═══════════════════════════════════════════════════════════════════════════
+
+float ema5 = ta.ema(close, i_ema5)
+float ema12 = ta.ema(close, i_ema12)
+float ema34 = ta.ema(close, i_ema34)
+float ema50 = ta.ema(close, i_ema50)
+
+// Cloud states
+bool cloud_5_12_bull = ema5 > ema12
+bool cloud_34_50_bull = ema34 > ema50
+
+// Price position vs 34/50 cloud
+float cloud_top = math.max(ema34, ema50)
+float cloud_bottom = math.min(ema34, ema50)
+int price_vs_cloud = close > cloud_top ? 1 : close < cloud_bottom ? -1 : 0
+
+// Cloud direction
+bool cloud_rising = ema34 > ema34[1] and ema50 > ema50[1]
+bool cloud_falling = ema34 < ema34[1] and ema50 < ema50[1]
+
+// Pillar 1 Score (-3 to +3)
+float p1_score = 0.0
+p1_score += price_vs_cloud == 1 ? 1 : price_vs_cloud == -1 ? -1 : 0
+p1_score += cloud_34_50_bull ? 1 : -1
+p1_score += cloud_5_12_bull ? 1 : -1
+
+// For grading (0-3 scale for long, convert)
+float p1_long_pts = 0.0
+p1_long_pts += price_vs_cloud == 1 ? 1 : 0
+p1_long_pts += cloud_34_50_bull ? 1 : 0
+p1_long_pts += cloud_5_12_bull ? 1 : 0
+
+float p1_short_pts = 0.0
+p1_short_pts += price_vs_cloud == -1 ? 1 : 0
+p1_short_pts += not cloud_34_50_bull ? 1 : 0
+p1_short_pts += not cloud_5_12_bull ? 1 : 0
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PILLAR 2: AVWAP (Simplified - uses swing detection)
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Swing detection
+float pivotHigh = ta.pivothigh(high, i_pivotLen, i_pivotLen)
+float pivotLow = ta.pivotlow(low, i_pivotLen, i_pivotLen)
+
+// Track swings
+var float lastSwingHigh = na
+var float lastSwingLow = na
+var int lastSwingHighBar = na
+var int lastSwingLowBar = na
+
+if not na(pivotHigh)
+    lastSwingHigh := pivotHigh
+    lastSwingHighBar := bar_index - i_pivotLen
+
+if not na(pivotLow)
+    lastSwingLow := pivotLow
+    lastSwingLowBar := bar_index - i_pivotLen
+
+// Cumulative VWAP from swing low
+var float cumPV_low = 0.0
+var float cumV_low = 0.0
+
+if not na(pivotLow)
+    cumPV_low := 0.0
+    cumV_low := 0.0
+    for i = 1 to i_pivotLen
+        cumPV_low += hlc3[i] * volume[i]
+        cumV_low += volume[i]
+
+if not na(lastSwingLowBar) and bar_index - lastSwingLowBar < 200
+    cumPV_low += hlc3 * volume
+    cumV_low += volume
+
+float vwapFromLow = cumV_low > 0 ? cumPV_low / cumV_low : na
+
+// Volume flow
+float bullVol = close > open ? volume : 0.0
+float bearVol = close < open ? volume : 0.0
+float bullVolMA = ta.ema(bullVol, i_volMaPeriod)
+float bearVolMA = ta.ema(bearVol, i_volMaPeriod)
+bool volFlowBull = bullVolMA > bearVolMA
+
+// Pillar 2 Score
+float p2_long_pts = 0.0
+p2_long_pts += not na(vwapFromLow) and close > vwapFromLow ? 1 : 0
+p2_long_pts += volFlowBull ? 1 : 0
+// Anchor quality simplified - based on recency
+p2_long_pts += not na(lastSwingLowBar) and bar_index - lastSwingLowBar < 50 ? 1 : 0
+
+float p2_short_pts = 0.0
+p2_short_pts += not na(vwapFromLow) and close < vwapFromLow ? 1 : 0
+p2_short_pts += not volFlowBull ? 1 : 0
+p2_short_pts += not na(lastSwingHighBar) and bar_index - lastSwingHighBar < 50 ? 1 : 0
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PILLAR 3: QUAD ROTATION STOCHASTIC
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Fast stochastic function (single smooth)
+stoch_fast(int k_len, int smooth_k) =>
+    float lowest = ta.lowest(low, k_len)
+    float highest = ta.highest(high, k_len)
+    float range_val = highest - lowest
+    float k_raw = range_val == 0 ? 50.0 : 100.0 * (close - lowest) / range_val
+    ta.sma(k_raw, smooth_k)
+
+// Full stochastic function (double smooth)
+stoch_full(int k_len, int smooth_k) =>
+    float lowest = ta.lowest(low, k_len)
+    float highest = ta.highest(high, k_len)
+    float range_val = highest - lowest
+    float k_raw = range_val == 0 ? 50.0 : 100.0 * (close - lowest) / range_val
+    float k_smooth1 = ta.sma(k_raw, smooth_k)
+    ta.sma(k_smooth1, smooth_k)
+
+// Calculate 4 stochastics (Kurisko HPS)
+float stoch_9_3 = stoch_fast(9, 3)
+float stoch_14_3 = stoch_fast(14, 3)
+float stoch_40_4 = stoch_fast(40, 3)   // Kurisko: K=40, Smooth=3
+float stoch_60_10 = stoch_full(60, 10)
+
+// Alignment counting
+int bull_count = 0
+bull_count += stoch_9_3 > 50 ? 1 : 0
+bull_count += stoch_14_3 > 50 ? 1 : 0
+bull_count += stoch_40_4 > 50 ? 1 : 0
+bull_count += stoch_60_10 > 50 ? 1 : 0
+
+int bear_count = 4 - bull_count
+
+// Zone detection
+bool in_oversold = stoch_40_4 < i_oversold
+bool in_overbought = stoch_40_4 > i_overbought
+
+// Turn detection
+bool stoch_40_turning_up = stoch_40_4 > nz(stoch_40_4[3], 50) and stoch_40_4 > stoch_40_4[1]
+bool stoch_40_turning_down = stoch_40_4 < nz(stoch_40_4[3], 50) and stoch_40_4 < stoch_40_4[1]
+
+// 40-4 Divergence State Machine (Simplified)
+var int bull_div_state = 0
+var float bull_div_price = na
+var float bull_div_stoch = na
+var int bull_div_bar = na
+bool bullish_divergence = false
+
+// Bull divergence detection
+if bull_div_state == 0 and stoch_40_4 < i_oversold
+    bull_div_state := 1
+    bull_div_price := low
+    bull_div_stoch := stoch_40_4
+    bull_div_bar := bar_index
+else if bull_div_state == 1 and stoch_40_4 < i_oversold
+    if low < bull_div_price
+        bull_div_price := low
+        bull_div_stoch := stoch_40_4
+else if bull_div_state == 1 and stoch_40_4 >= i_oversold
+    bull_div_state := 2
+else if bull_div_state == 2
+    if stoch_40_4 < i_oversold
+        bull_div_state := 1
+        bull_div_price := low
+        bull_div_stoch := stoch_40_4
+        bull_div_bar := bar_index
+    else if bar_index - bull_div_bar > 20
+        bull_div_state := 0
+    else
+        bool price_lower = low <= bull_div_price * 1.001
+        bool stoch_higher = stoch_40_4 > bull_div_stoch
+        if price_lower and stoch_higher and stoch_40_turning_up
+            bullish_divergence := true
+            bull_div_state := 0
+
+// Bear divergence (simplified)
+var int bear_div_state = 0
+var float bear_div_price = na
+var float bear_div_stoch = na
+var int bear_div_bar = na
+bool bearish_divergence = false
+
+if bear_div_state == 0 and stoch_40_4 > i_overbought
+    bear_div_state := 1
+    bear_div_price := high
+    bear_div_stoch := stoch_40_4
+    bear_div_bar := bar_index
+else if bear_div_state == 1 and stoch_40_4 > i_overbought
+    if high > bear_div_price
+        bear_div_price := high
+        bear_div_stoch := stoch_40_4
+else if bear_div_state == 1 and stoch_40_4 <= i_overbought
+    bear_div_state := 2
+else if bear_div_state == 2
+    if stoch_40_4 > i_overbought
+        bear_div_state := 1
+        bear_div_price := high
+        bear_div_stoch := stoch_40_4
+        bear_div_bar := bar_index
+    else if bar_index - bear_div_bar > 20
+        bear_div_state := 0
+    else
+        bool price_higher = high >= bear_div_price * 0.999
+        bool stoch_lower = stoch_40_4 < bear_div_stoch
+        if price_higher and stoch_lower and stoch_40_turning_down
+            bearish_divergence := true
+            bear_div_state := 0
+
+// Pillar 3 Score (0-4 for entry signals)
+float p3_long_pts = 0.0
+p3_long_pts += bullish_divergence ? 3 : 0
+p3_long_pts += bull_count >= 3 ? 1 : 0
+p3_long_pts += stoch_40_turning_up and stoch_40_4 < 50 ? 1 : 0
+
+float p3_short_pts = 0.0
+p3_short_pts += bearish_divergence ? 3 : 0
+p3_short_pts += bear_count >= 3 ? 1 : 0
+p3_short_pts += stoch_40_turning_down and stoch_40_4 > 50 ? 1 : 0
+
+// Cap at 4
+p3_long_pts := math.min(p3_long_pts, 4)
+p3_short_pts := math.min(p3_short_pts, 4)
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PILLAR 4: BBWP
+// ═══════════════════════════════════════════════════════════════════════════
+
+[bbMiddle, bbUpper, bbLower] = ta.bb(close, i_bbLen, 2.0)
+float bbw = bbMiddle > 0 ? (bbUpper - bbLower) / bbMiddle * 100 : 0
+float bbwp = ta.percentrank(bbw, i_bbwpLookback)
+
+bool bluBar = bbwp <= i_bbwpExLow
+bool redBar = bbwp >= i_bbwpExHigh
+bool bluSpectrum = bbwp < 25
+bool redSpectrum = bbwp > 75
+
+// BBWP points
+float p4_pts = 0.0
+p4_pts := bluBar ? 2 : bluSpectrum ? 1 : redSpectrum or redBar ? 1 : 0
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TOTAL SCORE & GRADE
+// ═══════════════════════════════════════════════════════════════════════════
+
+float total_long_pts = p1_long_pts + p2_long_pts + p3_long_pts + p4_pts
+float total_short_pts = p1_short_pts + p2_short_pts + p3_short_pts + p4_pts
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MOMENTUM TRIGGER: QUAD ROTATION
+// 9-3 is the TRIGGER (fastest) - it crosses 25/75 first
+// The REST (14-3, 40-4, 60-10) must ALL be in zone (<30 or >70)
+// After entry, they must FOLLOW (move in same direction) within 3-5 bars
+// ─────────────────────────────────────────────────────────────────────────────
+
+// 9-3 crossing the zone boundary (THE TRIGGER)
+bool cross_9_3_up_25 = ta.crossover(stoch_9_3, 25.0)    // 9-3 exiting oversold
+bool cross_9_3_down_75 = ta.crossunder(stoch_9_3, 75.0) // 9-3 exiting overbought
+
+// ALL must be in zone together (strict thresholds)
+bool all_oversold = stoch_14_3 < 30 and stoch_40_4 < 30 and stoch_60_10 < 30
+bool all_overbought = stoch_14_3 > 70 and stoch_40_4 > 70 and stoch_60_10 > 70
+
+// Ripster structure filter
+bool ripster_bullish = cloud_34_50_bull or price_vs_cloud >= 0  // Bull cloud or price not below
+bool ripster_bearish = not cloud_34_50_bull or price_vs_cloud <= 0  // Bear cloud or price not above
+
+// LONG: 9-3 crosses up through 25, all others under 30, ripster bullish
+bool has_long_trigger = cross_9_3_up_25 and all_oversold and ripster_bullish
+
+// SHORT: 9-3 crosses down through 75, all others above 70, ripster bearish
+bool has_short_trigger = cross_9_3_down_75 and all_overbought and ripster_bearish
+
+// Track if stochastics are following (for position management)
+bool stochs_following_up = stoch_14_3 > stoch_14_3[1] and stoch_40_4 > stoch_40_4[1]
+bool stochs_following_down = stoch_14_3 < stoch_14_3[1] and stoch_40_4 < stoch_40_4[1]
+
+// Divergence is a SUPERSIGNAL (highest priority)
+bool long_supersignal = bullish_divergence
+bool short_supersignal = bearish_divergence
+
+// Grade calculation
+string grade = "—"
+string direction = "FLAT"
+float target_atr = 0.0
+
+// LONG: Momentum trigger OR supersignal
+if has_long_trigger or long_supersignal
+    direction := "LONG"
+    if total_long_pts >= i_gradeA
+        grade := "A"
+        target_atr := i_targetA
+    else if total_long_pts >= i_gradeB
+        grade := "B"
+        target_atr := i_targetB
+    else if total_long_pts >= i_gradeC
+        grade := "C"
+        target_atr := i_targetC
+    else
+        // Still allow entry with minimum grade C target
+        grade := "C"
+        target_atr := i_targetC
+
+// SHORT: Momentum trigger OR supersignal
+else if has_short_trigger or short_supersignal
+    direction := "SHORT"
+    if total_short_pts >= i_gradeA
+        grade := "A"
+        target_atr := i_targetA
+    else if total_short_pts >= i_gradeB
+        grade := "B"
+        target_atr := i_targetB
+    else if total_short_pts >= i_gradeC
+        grade := "C"
+        target_atr := i_targetC
+    else
+        // Still allow entry with minimum grade C target
+        grade := "C"
+        target_atr := i_targetC
+
+// ═══════════════════════════════════════════════════════════════════════════
+// POSITION MANAGEMENT
+// ═══════════════════════════════════════════════════════════════════════════
+
+float atr = ta.atr(i_atrLen)
+
+// Position state tracking
+var bool inPosition = false
+var string posDir = "FLAT"
+var float entryPrice = na
+var float stopLoss = na
+var float target = na
+var string posGrade = "—"
+var bool beActive = false
+var bool trailActive = false
+var float trailStop = na
+var int entryBar = na
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STEP 1: CHECK EXITS FIRST (before new entries)
+// ─────────────────────────────────────────────────────────────────────────────
+bool hitStop = false
+bool hitTarget = false
+bool rotationFailed = false
+
+if inPosition
+    hitStop := posDir == "LONG" ? low <= stopLoss : high >= stopLoss
+    hitTarget := posDir == "LONG" ? high >= target : low <= target
+
+    // Rotation failed: stochastics didn't follow within 5 bars
+    int barsSinceEntry = bar_index - entryBar
+    if barsSinceEntry >= 3 and barsSinceEntry <= 5
+        if posDir == "LONG" and not stochs_following_up
+            rotationFailed := true
+        else if posDir == "SHORT" and not stochs_following_down
+            rotationFailed := true
+
+    if hitStop or hitTarget or rotationFailed
+        inPosition := false
+        posDir := "FLAT"
+        entryPrice := na
+        stopLoss := na
+        target := na
+        posGrade := "—"
+        beActive := false
+        trailActive := false
+        trailStop := na
+        entryBar := na
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STEP 2: CHECK NEW ENTRIES (only if not in position)
+// ─────────────────────────────────────────────────────────────────────────────
+bool new_long_entry = direction == "LONG" and grade != "—" and not inPosition
+bool new_short_entry = direction == "SHORT" and grade != "—" and not inPosition
+
+// Entry logic
+if new_long_entry
+    inPosition := true
+    posDir := "LONG"
+    entryPrice := close
+    entryBar := bar_index
+    stopLoss := close - (i_slMult * atr)
+    target := close + (target_atr * atr)
+    posGrade := grade
+    beActive := false
+    trailActive := false
+    trailStop := na
+
+else if new_short_entry
+    inPosition := true
+    posDir := "SHORT"
+    entryPrice := close
+    entryBar := bar_index
+    stopLoss := close + (i_slMult * atr)
+    target := close - (target_atr * atr)
+    posGrade := grade
+    beActive := false
+    trailActive := false
+    trailStop := na
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STEP 3: POSITION MANAGEMENT (breakeven, trailing)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Breakeven: 9-3 reaches opposite zone
+if inPosition and not beActive
+    if posDir == "LONG" and stoch_9_3 > i_overbought
+        stopLoss := entryPrice
+        beActive := true
+    else if posDir == "SHORT" and stoch_9_3 < i_oversold
+        stopLoss := entryPrice
+        beActive := true
+
+// Trailing: +2 ATR profit
+if inPosition and not trailActive
+    float profitATR = posDir == "LONG" ?
+                      (close - entryPrice) / atr :
+                      (entryPrice - close) / atr
+    if profitATR >= 2
+        trailActive := true
+
+if inPosition and trailActive
+    float newTrail = posDir == "LONG" ?
+                     close - (i_trailMult * atr) :
+                     close + (i_trailMult * atr)
+    if posDir == "LONG"
+        trailStop := na(trailStop) ? newTrail : math.max(trailStop, newTrail)
+        stopLoss := math.max(stopLoss, trailStop)
+    else
+        trailStop := na(trailStop) ? newTrail : math.min(trailStop, newTrail)
+        stopLoss := math.min(stopLoss, trailStop)
+
+// ═══════════════════════════════════════════════════════════════════════════
+// VISUALS
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Entry markers
+plotshape(new_long_entry, "Long Entry", shape.triangleup, location.belowbar,
+          color=color.lime, size=size.normal)
+plotshape(new_short_entry, "Short Entry", shape.triangledown, location.abovebar,
+          color=color.red, size=size.normal)
+
+// Stop loss line
+plot(inPosition ? stopLoss : na, "Stop Loss", color=color.red, linewidth=2, style=plot.style_linebr)
+
+// Target line
+plot(inPosition ? target : na, "Target", color=color.green, linewidth=1, style=plot.style_linebr)
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════════════════════
+
+tablePos = switch i_dashPos
+    "Top Right" => position.top_right
+    "Top Left" => position.top_left
+    "Bottom Right" => position.bottom_right
+    "Bottom Left" => position.bottom_left
+    => position.top_right
+
+var table dash = table.new(tablePos, 4, 10, bgcolor=color.new(#1e222d, 10), border_width=1)
+
+if i_showDash and barstate.islast
+    float pts = direction == "LONG" ? total_long_pts : direction == "SHORT" ? total_short_pts : 0
+    color gradeColor = grade == "A" ? color.lime : grade == "B" ? color.yellow : grade == "C" ? color.orange : color.gray
+    color dirColor = direction == "LONG" ? color.lime : direction == "SHORT" ? color.red : color.gray
+
+    // Header
+    table.cell(dash, 0, 0, "FOUR PILLARS v2", text_color=color.white, text_size=size.small, bgcolor=color.new(#363a45, 0))
+    table.cell(dash, 2, 0, grade, text_color=color.white, text_size=size.normal, bgcolor=gradeColor)
+    table.cell(dash, 3, 0, direction, text_color=color.white, text_size=size.small, bgcolor=dirColor)
+
+    // Column headers
+    table.cell(dash, 0, 1, "PILLAR", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 1, "STATUS", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 2, 1, "PTS", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 3, 1, "DETAIL", text_color=color.gray, text_size=size.tiny)
+
+    // Pillar 1
+    string p1_status = price_vs_cloud == 1 ? "ABOVE" : price_vs_cloud == -1 ? "BELOW" : "IN CLOUD"
+    color p1_color = price_vs_cloud == 1 ? color.lime : price_vs_cloud == -1 ? color.red : color.gray
+    float p1_display = direction == "LONG" ? p1_long_pts : p1_short_pts
+    table.cell(dash, 0, 2, "1. STRUCTURE", text_color=color.white, text_size=size.tiny)
+    table.cell(dash, 1, 2, p1_status, text_color=p1_color, text_size=size.tiny)
+    table.cell(dash, 2, 2, str.tostring(p1_display, "#") + "/3", text_color=color.white, text_size=size.tiny)
+    table.cell(dash, 3, 2, cloud_34_50_bull ? "Bull cloud" : "Bear cloud", text_color=p1_color, text_size=size.tiny)
+
+    // Pillar 2
+    string p2_status = volFlowBull ? "BULL FLOW" : "BEAR FLOW"
+    color p2_color = volFlowBull ? color.lime : color.red
+    float p2_display = direction == "LONG" ? p2_long_pts : p2_short_pts
+    table.cell(dash, 0, 3, "2. BIAS", text_color=color.white, text_size=size.tiny)
+    table.cell(dash, 1, 3, p2_status, text_color=p2_color, text_size=size.tiny)
+    table.cell(dash, 2, 3, str.tostring(p2_display, "#") + "/3", text_color=color.white, text_size=size.tiny)
+    table.cell(dash, 3, 3, not na(vwapFromLow) and close > vwapFromLow ? "Above VWAP" : "Below VWAP", text_color=p2_color, text_size=size.tiny)
+
+    // Pillar 3
+    string p3_status = bullish_divergence ? "DIVERGENCE" : bearish_divergence ? "DIVERGENCE" : bull_count >= 3 ? "ALIGNED" : bear_count >= 3 ? "ALIGNED" : "NEUTRAL"
+    color p3_color = bullish_divergence or bull_count >= 3 ? color.lime : bearish_divergence or bear_count >= 3 ? color.red : color.gray
+    float p3_display = direction == "LONG" ? p3_long_pts : p3_short_pts
+    table.cell(dash, 0, 4, "3. MOMENTUM", text_color=color.white, text_size=size.tiny)
+    table.cell(dash, 1, 4, p3_status, text_color=p3_color, text_size=size.tiny)
+    table.cell(dash, 2, 4, str.tostring(p3_display, "#") + "/4", text_color=color.white, text_size=size.tiny)
+    table.cell(dash, 3, 4, str.tostring(bull_count) + "/4 bull", text_color=p3_color, text_size=size.tiny)
+
+    // Pillar 4
+    string p4_status = bluBar ? "BLUE DBL" : bluSpectrum ? "BLUE" : redBar ? "RED DBL" : redSpectrum ? "RED" : "NORMAL"
+    color p4_color = bluBar or bluSpectrum ? color.blue : redBar or redSpectrum ? color.red : color.gray
+    table.cell(dash, 0, 5, "4. VOLATILITY", text_color=color.white, text_size=size.tiny)
+    table.cell(dash, 1, 5, p4_status, text_color=p4_color, text_size=size.tiny)
+    table.cell(dash, 2, 5, str.tostring(p4_pts, "#") + "/2", text_color=color.white, text_size=size.tiny)
+    table.cell(dash, 3, 5, "BBWP " + str.tostring(bbwp, "#.0") + "%", text_color=p4_color, text_size=size.tiny)
+
+    // Total
+    table.cell(dash, 0, 6, "TOTAL", text_color=color.yellow, text_size=size.tiny)
+    table.cell(dash, 2, 6, str.tostring(pts, "#") + "/12", text_color=color.white, text_size=size.small)
+
+    // Position Management
+    if inPosition
+        table.cell(dash, 0, 7, "─────────────", text_color=color.gray, text_size=size.tiny)
+        table.merge_cells(dash, 0, 7, 3, 7)
+
+        table.cell(dash, 0, 8, "Entry", text_color=color.gray, text_size=size.tiny)
+        table.cell(dash, 1, 8, str.tostring(entryPrice, format.mintick), text_color=color.white, text_size=size.tiny)
+        table.cell(dash, 2, 8, "Stop", text_color=color.gray, text_size=size.tiny)
+        table.cell(dash, 3, 8, str.tostring(stopLoss, format.mintick), text_color=color.red, text_size=size.tiny)
+
+        string beStr = beActive ? "ACTIVE" : "9-3: " + str.tostring(stoch_9_3, "#")
+        string trStr = trailActive ? "ACTIVE" : "Need +2 ATR"
+        table.cell(dash, 0, 9, "BE", text_color=color.gray, text_size=size.tiny)
+        table.cell(dash, 1, 9, beStr, text_color=beActive ? color.lime : color.gray, text_size=size.tiny)
+        table.cell(dash, 2, 9, "Trail", text_color=color.gray, text_size=size.tiny)
+        table.cell(dash, 3, 9, trStr, text_color=trailActive ? color.lime : color.gray, text_size=size.tiny)
+
+// Stoch panel
+if i_showStochPanel and barstate.islast
+    var table stochTable = table.new(position.bottom_right, 2, 5, bgcolor=color.new(#1e222d, 20))
+
+    table.cell(stochTable, 0, 0, "STOCHASTICS", text_color=color.white, text_size=size.tiny)
+    table.cell(stochTable, 0, 1, "9-3:", text_color=color.gray, text_size=size.tiny)
+    table.cell(stochTable, 1, 1, str.tostring(stoch_9_3, "#"), text_color=stoch_9_3 > 50 ? color.lime : color.red, text_size=size.tiny)
+    table.cell(stochTable, 0, 2, "14-3:", text_color=color.gray, text_size=size.tiny)
+    table.cell(stochTable, 1, 2, str.tostring(stoch_14_3, "#"), text_color=stoch_14_3 > 50 ? color.lime : color.red, text_size=size.tiny)
+    table.cell(stochTable, 0, 3, "40-4:", text_color=color.gray, text_size=size.tiny)
+    table.cell(stochTable, 1, 3, str.tostring(stoch_40_4, "#"), text_color=stoch_40_4 > 50 ? color.lime : color.red, text_size=size.tiny)
+    table.cell(stochTable, 0, 4, "60-10:", text_color=color.gray, text_size=size.tiny)
+    table.cell(stochTable, 1, 4, str.tostring(stoch_60_10, "#"), text_color=stoch_60_10 > 50 ? color.lime : color.red, text_size=size.tiny)
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ALERTS
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Entry alerts (edge-triggered)
+alertcondition(new_long_entry and grade == "A", "Grade A Long", "Four Pillars: Grade A LONG")
+alertcondition(new_short_entry and grade == "A", "Grade A Short", "Four Pillars: Grade A SHORT")
+alertcondition(new_long_entry and grade == "B", "Grade B Long", "Four Pillars: Grade B LONG")
+alertcondition(new_short_entry and grade == "B", "Grade B Short", "Four Pillars: Grade B SHORT")
+alertcondition(new_long_entry and grade == "C", "Grade C Long", "Four Pillars: Grade C LONG")
+alertcondition(new_short_entry and grade == "C", "Grade C Short", "Four Pillars: Grade C SHORT")
+
+// Position management alerts
+alertcondition(beActive and not beActive[1], "Breakeven Active", "Four Pillars: Moved to breakeven")
+alertcondition(trailActive and not trailActive[1], "Trailing Active", "Four Pillars: Trailing stop activated")
+alertcondition(hitStop, "Stop Hit", "Four Pillars: Stop loss hit")
+alertcondition(hitTarget, "Target Hit", "Four Pillars: Target reached")
+
+// Webhook JSON alert (build incrementally to avoid syntax issues)
+if new_long_entry or new_short_entry
+    float alertPts = direction == "LONG" ? total_long_pts : total_short_pts
+    string triggerType = bullish_divergence ? "DIVERGENCE" : bearish_divergence ? "DIVERGENCE" : "ROTATION"
+    float p1_pts_alert = direction == "LONG" ? p1_long_pts : p1_short_pts
+    float p2_pts_alert = direction == "LONG" ? p2_long_pts : p2_short_pts
+    float p3_pts_alert = direction == "LONG" ? p3_long_pts : p3_short_pts
+
+    string msg = '{"indicator":"four_pillars_v2"'
+    msg := msg + ',"ticker":"' + syminfo.ticker + '"'
+    msg := msg + ',"grade":"' + grade + '"'
+    msg := msg + ',"direction":"' + direction + '"'
+    msg := msg + ',"points":' + str.tostring(alertPts)
+    msg := msg + ',"trigger":"' + triggerType + '"'
+    msg := msg + ',"entry":' + str.tostring(close)
+    msg := msg + ',"stop_loss":' + str.tostring(stopLoss)
+    msg := msg + ',"target":' + str.tostring(target)
+    msg := msg + ',"p1_pts":' + str.tostring(p1_pts_alert)
+    msg := msg + ',"p2_pts":' + str.tostring(p2_pts_alert)
+    msg := msg + ',"p3_pts":' + str.tostring(p3_pts_alert)
+    msg := msg + ',"p4_pts":' + str.tostring(p4_pts)
+    msg := msg + ',"stoch_40_4":' + str.tostring(stoch_40_4)
+    msg := msg + ',"bbwp":' + str.tostring(bbwp)
+    msg := msg + ',"secret":"' + i_webhookSecret + '"}'
+
+    alert(msg, alert.freq_once_per_bar_close)
+
+// ═══════════════════════════════════════════════════════════════════════════
+// HIDDEN PLOTS (for integration)
+// ═══════════════════════════════════════════════════════════════════════════
+
+plot(total_long_pts, "total_long_pts", display=display.none)
+plot(total_short_pts, "total_short_pts", display=display.none)
+plot(direction == "LONG" ? 1 : direction == "SHORT" ? -1 : 0, "direction_numeric", display=display.none)
+plot(grade == "A" ? 3 : grade == "B" ? 2 : grade == "C" ? 1 : 0, "grade_numeric", display=display.none)
+plot(inPosition ? 1 : 0, "in_position", display=display.none)
+plot(beActive ? 1 : 0, "breakeven_active", display=display.none)
+plot(trailActive ? 1 : 0, "trailing_active", display=display.none)
+plot(stoch_9_3, "stoch_9_3", display=display.none)
+plot(stoch_40_4, "stoch_40_4", display=display.none)
+plot(bbwp, "bbwp_value", display=display.none)

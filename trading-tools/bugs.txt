@@ -1,0 +1,1026 @@
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:24.305 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:24.322 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:24.338 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:24.341 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:24.365 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:24.401 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:24.405 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:24.457 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:24.471 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:24.497 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:24.546 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:24.588 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:24.595 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:26.126 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:26.134 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:26.140 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:26.246 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:26.247 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\site-packages\streamlit\dataframe_util.py", line 839, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+  File "pyarrow/table.pxi", line 4796, in pyarrow.lib.Table.from_pandas
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 651, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 639, in convert_column
+    raise e
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 633, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert '32.8%' with type str: tried to convert to int64", 'Conversion failed for column No BE with type object')
+2026-02-11 15:56:26.262 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:26.284 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:26.290 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:26.308 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:26.323 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:26.326 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:26.357 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:26.394 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:26.396 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:26.436 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:26.451 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:26.524 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:26.609 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:26.670 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:26.677 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:26.677 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.    
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\site-packages\streamlit\dataframe_util.py", line 839, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+  File "pyarrow/table.pxi", line 4796, in pyarrow.lib.Table.from_pandas
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 651, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 639, in convert_column
+    raise e
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 633, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert '$8,434.55' with type str: tried to convert to int64", 'Conversion failed for column All (unfiltered) with type object')   
+2026-02-11 15:56:26.682 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:27.167 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:29.145 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:29.153 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:29.158 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:29.261 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:29.262 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\site-packages\streamlit\dataframe_util.py", line 839, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+  File "pyarrow/table.pxi", line 4796, in pyarrow.lib.Table.from_pandas
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 651, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 639, in convert_column
+    raise e
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 633, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert '33.3%' with type str: tried to convert to int64", 'Conversion failed for column No BE with type object')
+2026-02-11 15:56:29.274 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:29.295 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:29.302 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:29.321 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:29.336 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:29.340 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:29.370 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:29.405 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:29.407 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:29.445 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:29.463 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:29.538 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:29.625 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:29.721 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:29.727 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:29.728 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.    
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\site-packages\streamlit\dataframe_util.py", line 839, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+  File "pyarrow/table.pxi", line 4796, in pyarrow.lib.Table.from_pandas
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 651, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 639, in convert_column
+    raise e
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 633, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert '$8,445.03' with type str: tried to convert to int64", 'Conversion failed for column All (unfiltered) with type object')   
+2026-02-11 15:56:29.732 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:30.233 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:33.502 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:33.509 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:33.514 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:33.623 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:33.623 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\site-packages\streamlit\dataframe_util.py", line 839, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+  File "pyarrow/table.pxi", line 4796, in pyarrow.lib.Table.from_pandas
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 651, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 639, in convert_column
+    raise e
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 633, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert '33.4%' with type str: tried to convert to int64", 'Conversion failed for column No BE with type object')
+2026-02-11 15:56:33.638 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:33.660 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:33.670 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:33.691 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:33.706 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:33.709 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:33.749 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:33.799 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:33.802 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:33.843 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:33.859 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:33.972 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:34.068 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:34.142 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:34.150 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:34.151 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.    
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\site-packages\streamlit\dataframe_util.py", line 839, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+  File "pyarrow/table.pxi", line 4796, in pyarrow.lib.Table.from_pandas
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 651, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 639, in convert_column
+    raise e
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 633, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert '$11,434.97' with type str: tried to convert to int64", 'Conversion failed for column All (unfiltered) with type object')  
+2026-02-11 15:56:34.157 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:34.892 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:43.477 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:43.484 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:43.489 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:43.596 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:43.597 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\site-packages\streamlit\dataframe_util.py", line 839, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+  File "pyarrow/table.pxi", line 4796, in pyarrow.lib.Table.from_pandas
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 651, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 639, in convert_column
+    raise e
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 633, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert '35.4%' with type str: tried to convert to int64", 'Conversion failed for column No BE with type object')
+2026-02-11 15:56:43.611 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:43.630 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:43.637 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:43.654 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:43.669 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:43.673 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:43.708 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:43.752 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:43.753 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:43.796 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:43.810 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:43.904 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:43.987 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:44.053 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:44.059 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:44.060 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.    
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\site-packages\streamlit\dataframe_util.py", line 839, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+  File "pyarrow/table.pxi", line 4796, in pyarrow.lib.Table.from_pandas
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 651, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 639, in convert_column
+    raise e
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 633, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert '$9,395.90' with type str: tried to convert to int64", 'Conversion failed for column All (unfiltered) with type object')   
+2026-02-11 15:56:44.065 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:44.641 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:49.325 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:49.332 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:49.336 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:49.446 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:49.447 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\site-packages\streamlit\dataframe_util.py", line 839, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+  File "pyarrow/table.pxi", line 4796, in pyarrow.lib.Table.from_pandas
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 651, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 639, in convert_column
+    raise e
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 633, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert '36.0%' with type str: tried to convert to int64", 'Conversion failed for column No BE with type object')
+2026-02-11 15:56:49.461 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:49.483 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:49.490 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:49.505 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:49.519 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:49.522 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:49.548 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:49.588 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:49.590 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:49.629 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:49.647 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:49.731 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:49.811 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:49.870 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:49.876 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:49.876 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.    
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\site-packages\streamlit\dataframe_util.py", line 839, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+  File "pyarrow/table.pxi", line 4796, in pyarrow.lib.Table.from_pandas
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 651, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 639, in convert_column
+    raise e
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 633, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert '$4,981.69' with type str: tried to convert to int64", 'Conversion failed for column All (unfiltered) with type object')   
+2026-02-11 15:56:49.881 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:50.390 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:57.766 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:57.775 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:57.780 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:57.882 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:57.883 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\site-packages\streamlit\dataframe_util.py", line 839, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+  File "pyarrow/table.pxi", line 4796, in pyarrow.lib.Table.from_pandas
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 651, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 639, in convert_column
+    raise e
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 633, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert '36.0%' with type str: tried to convert to int64", 'Conversion failed for column No BE with type object')
+2026-02-11 15:56:57.898 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:57.919 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:57.925 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:57.939 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:57.952 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:57.956 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:57.985 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:58.026 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:58.028 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:58.063 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:58.079 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:58.158 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:58.237 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:58.296 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:58.302 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:58.303 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.    
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\site-packages\streamlit\dataframe_util.py", line 839, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+  File "pyarrow/table.pxi", line 4796, in pyarrow.lib.Table.from_pandas
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 651, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 639, in convert_column
+    raise e
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 633, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert '$4,981.69' with type str: tried to convert to int64", 'Conversion failed for column All (unfiltered) with type object')   
+2026-02-11 15:56:58.307 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:56:58.768 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:13.494 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:13.525 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:13.533 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:14.019 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:14.020 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\site-packages\streamlit\dataframe_util.py", line 839, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+  File "pyarrow/table.pxi", line 4796, in pyarrow.lib.Table.from_pandas
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 651, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 639, in convert_column
+    raise e
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 633, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert '34.7%' with type str: tried to convert to int64", 'Conversion failed for column No BE with type object')
+2026-02-11 15:57:14.035 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:14.083 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:14.089 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:14.106 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:14.122 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:14.125 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:14.230 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:14.364 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:14.367 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:14.407 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:14.423 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:14.775 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:14.878 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:15.028 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:15.037 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:15.038 Serialization of dataframe to Arrow table was unsuccessful. Applying automatic fixes for column types to make the dataframe Arrow-compatible.    
+Traceback (most recent call last):
+  File "C:\Program Files\Python313\Lib\site-packages\streamlit\dataframe_util.py", line 839, in convert_pandas_df_to_arrow_bytes
+    table = pa.Table.from_pandas(df)
+  File "pyarrow/table.pxi", line 4796, in pyarrow.lib.Table.from_pandas
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 651, in dataframe_to_arrays
+    arrays = [convert_column(c, f)
+              ~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 639, in convert_column
+    raise e
+  File "C:\Users\User\AppData\Roaming\Python\Python313\site-packages\pyarrow\pandas_compat.py", line 633, in convert_column
+    result = pa.array(col, type=type_, from_pandas=True, safe=safe)
+  File "pyarrow/array.pxi", line 365, in pyarrow.lib.array
+  File "pyarrow/array.pxi", line 91, in pyarrow.lib._ndarray_to_array
+  File "pyarrow/error.pxi", line 92, in pyarrow.lib.check_status
+pyarrow.lib.ArrowInvalid: ("Could not convert '$9,418.88' with type str: tried to convert to int64", 'Conversion failed for column All (unfiltered) with type object')   
+2026-02-11 15:57:15.048 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-02-11 15:57:17.972 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.

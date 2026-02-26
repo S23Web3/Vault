@@ -1,0 +1,52 @@
+{
+  "file": "C:\\Users\\User\\Downloads\\Yves J. Hilpisch - Reinforcement Learning for Finance_ A Python-Based Introduction.epub",
+  "name": "Yves J. Hilpisch - Reinforcement Learning for Finance_ A Python-Based Introduction.epub",
+  "size_mb": 9.584641456604004,
+  "chapters": 19,
+  "rating": 9,
+  "stats": {
+    "trading_concepts": 32,
+    "ml_concepts": 23,
+    "code_chapters": 13,
+    "formula_chapters": 7
+  },
+  "top_concepts": {
+    "trading": [
+      [
+        "psychology",
+        63
+      ],
+      [
+        "metrics",
+        47
+      ],
+      [
+        "backtesting",
+        36
+      ],
+      [
+        "entries",
+        7
+      ],
+      [
+        "risk",
+        5
+      ]
+    ],
+    "ml": [
+      [
+        "metrics",
+        120
+      ],
+      [
+        "supervised",
+        29
+      ],
+      [
+        "models",
+        24
+      ]
+    ]
+  },
+  "analyzed": "2026-02-09T15:16:38.016332"
+}

@@ -1,0 +1,1644 @@
+{
+  "file_path": "C:\\Users\\User\\Downloads\\López de Prado, Marcos Mailoc - Advances in Financial Machine Learnin.epub",
+  "file_name": "López de Prado, Marcos Mailoc - Advances in Financial Machine Learnin.epub",
+  "file_size_mb": 13.067323684692383,
+  "total_chapters": 27,
+  "rating": 10,
+  "aggregate_stats": {
+    "total_trading_concepts": 82,
+    "total_ml_concepts": 69,
+    "chapters_with_code": 23,
+    "chapters_with_formulas": 4
+  },
+  "top_concepts": {
+    "trading": [
+      {
+        "topic": "backtesting",
+        "mentions": 69
+      },
+      {
+        "topic": "psychology",
+        "mentions": 63
+      },
+      {
+        "topic": "entries",
+        "mentions": 41
+      },
+      {
+        "topic": "metrics",
+        "mentions": 19
+      },
+      {
+        "topic": "risk",
+        "mentions": 15
+      }
+    ],
+    "ml": [
+      {
+        "topic": "validation",
+        "mentions": 63
+      },
+      {
+        "topic": "metrics",
+        "mentions": 56
+      },
+      {
+        "topic": "supervised",
+        "mentions": 41
+      },
+      {
+        "topic": "models",
+        "mentions": 23
+      },
+      {
+        "topic": "features",
+        "mentions": 13
+      }
+    ]
+  },
+  "chapter_analyses": [
+    {
+      "title": "f_01.xhtml",
+      "file": "f_01.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              "rly simplistic statistical techniques to identify patterns in data. machine learning promises to change tha"
+            ]
+          },
+          "backtesting": {
+            "count": 1,
+            "examples": [
+              "tative innovation in finance was led by markowitz optimization. machine learning is the second wave, and it will"
+            ]
+          },
+          "psychology": {
+            "count": 1,
+            "examples": [
+              "l statements to a highly sophisticated scientific discipline relying on computer farms to analyze massive data"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [
+          "The book blends the latest technological developments in ML with critical life lessons learned from the author's decades of financial experience in leading academic and industrial institutions",
+          "This book is an essential read for both practitioners and technologists working on solutions for the investment community",
+          "López de Prado's Advances in Financial Machine Learning is essential for readers who want to be ahead of the technology rather than being replaced by it",
+          "In this important book, Marcos López de Prado sets out a new paradigm for investment management built on machine learning",
+          "For academics and practitioners alike, this book fills an important gap in our understanding of investment management in the machine age"
+        ],
+        "length": 7546
+      }
+    },
+    {
+      "title": "f_03.xhtml",
+      "file": "f_03.xhtml",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "representations or warranties with respect to the accuracy or completeness of the contents of this book and "
+            ]
+          }
+        },
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 2688
+      }
+    },
+    {
+      "title": "Chapter 1 Financial Machine Learning as a Distinct Subject",
+      "file": "ftoc.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "backtesting": {
+            "count": 6,
+            "examples": [
+              "part 3 backtesting",
+              "chapter 11 the dangers of backtesting",
+              "12.2 the walk-forward method"
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "3.8 the quantamental way",
+              "13.6 experimental results"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 1,
+            "examples": [
+              "14.8 classification scores"
+            ]
+          },
+          "features": {
+            "count": 2,
+            "examples": [
+              "chapter 8 feature importance",
+              "8.2 the importance of feature importance"
+            ]
+          },
+          "models": {
+            "count": 1,
+            "examples": [
+              "6.4 random forest"
+            ]
+          },
+          "validation": {
+            "count": 5,
+            "examples": [
+              "chapter 7 cross-validation in finance",
+              "7.2 the goal of cross-validation",
+              "torial purged cross-validation addresses backtest overfitting"
+            ]
+          }
+        },
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [
+          "2 Essential Types of Financial Data\n2"
+        ],
+        "length": 8946
+      }
+    },
+    {
+      "title": "f_06.xhtml",
+      "file": "f_06.xhtml",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 1357
+      }
+    },
+    {
+      "title": "CHAPTER 1 Financial Machine Learning as a Distinct Subject",
+      "file": "c01.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              "l algorithms will confuse statistical flukes with patterns. this fact, combined with the low signal-to-nois",
+              " static. now, when it comes to identifying subtle patterns in a high-dimensional world, where the rules of "
+            ]
+          },
+          "risk": {
+            "count": 1,
+            "examples": [
+              "eals with capm, apt, asset allocation techniques, risk management, etc. when the empirical results that support tho"
+            ]
+          },
+          "backtesting": {
+            "count": 6,
+            "examples": [
+              " a particularly difficult playground for ml, like backtest overfitting. financial ml is a subject in its own",
+              ") a false positive that looks great in an overfit backtest or (2) standard factor investing, which is an ove",
+              "walk-forward (historical) backtesting"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "ting, which is an overcrowded strategy with a low sharpe ratio, but at least has academic support. both ou",
+              "backtesting on synthetic data; the deflated sharpe ratio"
+            ]
+          },
+          "psychology": {
+            "count": 5,
+            "examples": [
+              "ve following rules, but making judgment calls. as emotional beings, subject to fears, hopes, and agendas, h",
+              " an agent to lose money to us. is it a behavioral bias? asymmetric information? regulatory constraints? ",
+              " are false, due to multiple testing and selection bias."
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 4,
+            "examples": [
+              "classification",
+              "classification",
+              "ntial tool of econometrics is multivariate linear regression, an 18th-century technology that was already mast"
+            ]
+          },
+          "features": {
+            "count": 3,
+            "examples": [
+              "ng, stationary transformations, cross-validation, feature selection, feature importance, overfitting, backtesting, et",
+              "ualization, labeling, weighting, classifiers, and feature importance techniques. for example, feature analysts may dis",
+              "feature importance analysis"
+            ]
+          },
+          "models": {
+            "count": 2,
+            "examples": [
+              "eincarnation of deep, recurrent, or convolutional neural networks. instead, the book answers questions that senior",
+              "f you have worked at google and have applied deep neural networks to face recognition, but things do not seem to w"
+            ]
+          },
+          "validation": {
+            "count": 5,
+            "examples": [
+              "problem: standard cross-validation methods fail in finance. most discoveries in fina",
+              "cross-validation leakage",
+              "ularly difficult playground for ml, like backtest overfitting. financial ml is a subject in its own right, rela"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "dict the position of the planets with astonishing accuracy. what if astronomers had never considered non-cir",
+              "s. for instance, bonds are routinely exchanged or recalled; stocks are subjected to splits, reverse-splits"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "In my experience, there is one critical mistake that underlies all those failures",
+          "They may rationalize those decisions based on some story, but there is always a story for every decision",
+          "Those times are long gone, and today prospectors must deploy complex industrial methods to extract microscopic bullion particles out of tons of earth",
+          "They must develop the data handlers needed to understand the context in which that data arises",
+          "; futures and options must be rolled; currencies are not traded in a centralized order book"
+        ],
+        "length": 49551
+      }
+    },
+    {
+      "title": "CHAPTER 2 Financial Data Structures",
+      "file": "c02.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              " of informed trading (asymmetric information that triggers one-side trading). in fact, we can understand ti",
+              "filters appealing is that multiple events are not triggered by graw hovering around a threshold level, whic"
+            ]
+          },
+          "backtesting": {
+            "count": 1,
+            "examples": [
+              "is mistake, and its implications, when we discuss backtesting errors in chapter 11."
+            ]
+          },
+          "psychology": {
+            "count": 3,
+            "examples": [
+              ", the methodology used in their production may be biased or opaque, and you will not be the sole consume",
+              "fundamental data",
+              "2.2.1 fundamental data"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "models": {
+            "count": 1,
+            "examples": [
+              "erhaps your competitors did not try to use it for logistic reasons, gave up midway, or processed it incorrec"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              ".g., svms). second, ml algorithms achieve highest accuracy when they attempt to learn from relevant examples",
+              "negative (a 5% sell-off). at any random time, the accuracy of such a prediction will be low. however, if we "
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "2 Essential Types of Financial Data\nFinancial data comes in many shapes and forms",
+          "1 shows the four essential types of financial data, ordered from left to right in terms of increasing diversity",
+          "1 The Four Essential Types of Financial Data\n\n\n\n\nFundamental Data\nMarket Data\nAnalytics\nAlternative Data\n\n\n\n\n\nAssets\nLiabilities\nSales\nCosts/earnings\nMacro variables",
+          "1 Fundamental Data\nFundamental data encompasses information that can be found in regulatory filings and business analytics",
+          "You must confirm exactly when each data point was released, so that your analysis uses that information only after it was publicly available"
+        ],
+        "length": 41528
+      }
+    },
+    {
+      "title": "CHAPTER 3 Labeling",
+      "file": "c03.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 5,
+            "examples": [
+              "olio manager, enforced by the risk department, or triggered by a margin call. it is simply unrealistic to b",
+              "[1,1,1]: this is the standard setup, where we define three barrier exit conditions. w",
+              "[0,1,1]: in this setup, we would like to exit after a number of bars, un"
+            ]
+          },
+          "exits": {
+            "count": 2,
+            "examples": [
+              "spective horizontal barrier (profit taking and/or stop loss) will be disabled.",
+              "ffectively discriminate between profit taking and stop loss. the horizontal barriers do not need to be symmet"
+            ]
+          },
+          "backtesting": {
+            "count": 1,
+            "examples": [
+              "l to “quantamental” firms. second, the effects of overfitting are limited when you apply meta-labeling, because"
+            ]
+          },
+          "psychology": {
+            "count": 5,
+            "examples": [
+              "and their brains operate independently from their emotional being, like cold calculating machines. my guess",
+              "f at least one large hedge fund that monitors the emotional state of their research analysts on a daily bas",
+              "ock market trading rule discovery using two-layer bias decision tree.” expert systems with applications,"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 6,
+            "examples": [
+              "binary classification problems present a trade-off between type-i error",
+              "all (aka true positive rate) is in the context of classification problems, the analogous to “power” in the context",
+              "ntegrating self-organizing map and support vector regression.” expert systems with applications, vol. 36, no. "
+            ]
+          },
+          "features": {
+            "count": 1,
+            "examples": [
+              "ort vector machines with walk forward testing and feature selection for the purpose of creating stock trading strateg"
+            ]
+          },
+          "models": {
+            "count": 6,
+            "examples": [
+              "train a random forest to decide whether to trade or not. note: the deci",
+              "train a random forest to decide whether to trade or not. use as feature",
+              "(2013): “linear and nonlinear trading models with gradient boosted random forests and application to singapore sto"
+            ]
+          },
+          "validation": {
+            "count": 1,
+            "examples": [
+              "l to “quantamental” firms. second, the effects of overfitting are limited when you apply meta-labeling, because"
+            ]
+          },
+          "metrics": {
+            "count": 8,
+            "examples": [
+              "to “power” in the context of hypothesis testing. “accuracy” is the sum of the tp and tn areas divided by the",
+              "y different primary model. fourth, achieving high accuracy on small bets and low accuracy on large bets will",
+              ": false positives (fp) and false negatives (fn). “precision” is the ratio between the tp area and the area in"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "But even these two improvements miss a key flaw of the fixed-time horizon method: the path followed by prices",
+          "In order to label an observation, we must take into account the entire path spanning [ti, 0, ti, 0 + h], where h defines the vertical barrier (the expiration limit)",
+          "Learning the side implies that either there are no horizontal barriers or that the horizontal barriers must be symmetric",
+          "Because we must learn the side of the bet, we have passed ptSl = [ptSl,ptSl] as argument, and we arbitrarily set the side to be always long (the horizontal barriers are symmetric, so the side is irrelevant to determining the time of the first touch)",
+          "Meta-labeling allows you to build an ML system on top of a white box (like a fundamental model founded on economic theory)"
+        ],
+        "length": 31329
+      }
+    },
+    {
+      "title": "CHAPTER 4 Sample Weights",
+      "file": "c04.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              "l, with the additional handicap that the spillage pattern is non-deterministic and unknown. finance is not "
+            ]
+          },
+          "psychology": {
+            "count": 3,
+            "examples": [
+              "dation accuracy? which one is more correct / less biased? what is the source of this bias?",
+              "useful in financial applications, including quantamental investment strategies. in this chapter you will l",
+              " the sequential bootstrap algorithm through experimental methods. snippet 4.7 lists the function that gene"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 3,
+            "examples": [
+              "resented labels. this is particularly critical in classification problems where the most important classes have ra",
+              " financial applications, the standard labels of a classification algorithm are { − 1, 1}, where the zero (or neutr",
+              "king, g. and l. zeng (2001): “logistic regression in rare events data.” working paper, harvard univ"
+            ]
+          },
+          "models": {
+            "count": 3,
+            "examples": [
+              "nt (see chapter 6). for example, in the case of a random forest, all trees in the forest will essentially be very",
+              "at a frequency much higher than their uniqueness. random forests do not offer that max_samples functionality, how",
+              "king, g. and l. zeng (2001): “logistic regression in rare events data.” working paper, h"
+            ]
+          },
+          "validation": {
+            "count": 3,
+            "examples": [
+              "ess this second issue in chapter 7, when we study cross-validation under non-iid observations. for the moment, let u",
+              "what is the mean accuracy of k-fold cross-validation (without shuffling) on the same dataset?",
+              "what is the mean accuracy of k-fold cross-validation (without shuffling) on the same "
+            ]
+          },
+          "metrics": {
+            "count": 3,
+            "examples": [
+              "mples very similar to the in-bag ones, out-of-bag accuracy will be grossly inflated. we will address this se",
+              "e rare labels, the ml algorithm will maximize the accuracy of the most common labels, and flash crashes will",
+              "overlaps with [t − 1, t] and 1t, i = 0 otherwise. recall that the labels’ spans {[ti, 0, ti, 1]}i = 1, …, "
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "The implication is that the series of labels, {yi}i = 1, …, I, are not IID whenever there is an overlap between any two consecutive outcomes, ∃i|ti, 1 > ti + 1, 0",
+          "We must allow ti, 1 > ti + 1, 0, which brings us back to the problem of overlapping outcomes described earlier",
+          "2 Estimating the average uniqueness of a label\n\n\n\n\nNote that we are making use again of the function mpPandasObj, which speeds up calculations via multiprocessing (see Chapter 20)",
+          "For example, in the case of a random forest, all trees in the forest will essentially be very similar copies of a single overfit decision tree",
+          "Remember, a bootstrap allows sampling with repetition, so it is still possible to draw Xi again, but we wish to reduce its likelihood, since there is an overlap (in fact, a perfect overlap) between Xi and itself"
+        ],
+        "length": 24485
+      }
+    },
+    {
+      "title": "CHAPTER 5 Fractionally Differentiated Features",
+      "file": "c05.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "psychology": {
+            "count": 1,
+            "examples": [
+              "tiation one reason why the literature has been so biased in favor of the efficient markets hypothesis?"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              "stationary. cointegration is the trick that makes regression work on non-stationary series, so that memory is ",
+              "supervised learning algorithms typically require stationary features."
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "We can always make a series more stationary through differentiation, but it will be at the cost of erasing some memory, which will defeat the forecasting purpose of the ML algorithm",
+          "Note that , for n a positive integer",
+          "At a 95% confidence level, the test's critical value is –2"
+        ],
+        "length": 21579
+      }
+    },
+    {
+      "title": "CHAPTER 6 Ensemble Methods",
+      "file": "c06.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              "nt predictions. rather than modelling the general patterns in the training set, the algorithm has mistaken "
+            ]
+          },
+          "backtesting": {
+            "count": 2,
+            "examples": [
+              "educes forecasts’ variance, hence helping address overfitting. the variance of the bagged prediction (φi[c]) is",
+              "decision trees are known to be prone to overfitting, which increases the variance of the forecasts.3 "
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "bias: this error is caused by unrealistic assumptions.",
+              " when bias is high, the ml algorithm has failed to recognize",
+              "d to be iid. redundant observations have two detrimental effects on bagging. first, the samples drawn with"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "features": {
+            "count": 1,
+            "examples": [
+              "ong as ). a second advantage is that rf evaluates feature importance, which we will discuss in depth in chapter 8. a t"
+            ]
+          },
+          "models": {
+            "count": 2,
+            "examples": [
+              "6.4 random forest",
+              "forecasts.3 in order to address this concern, the random forest (rf) method was designed to produce ensemble fore"
+            ]
+          },
+          "validation": {
+            "count": 6,
+            "examples": [
+              "f-bag. in such a case, a proper stratified k-fold cross-validation without shuffling before partitioning will show a",
+              "different from stratified k-fold (with shuffling) cross-validation accuracy?",
+              "educes forecasts’ variance, hence helping address overfitting. the variance of the bagged prediction (φi[c]) is"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "baggingclassifier class to compute the out-of-bag accuracy, you should be aware of this bug: https://github.",
+              "6.3.2 improved accuracy"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "When bias is high, the ML algorithm has failed to recognize important relations between features and outcomes",
+          "The key difference with bagging is that random forests incorporate a second level of randomness: When optimizing each node split, only a random subsample (without replacement) of the attributes will be evaluated, with the purpose of further decorrelating the estimators",
+          "Like bagging, RF reduces forecasts’ variance without overfitting (remember, as long as )",
+          "If a large number of samples are redundant (non-IID), overfitting will still take place: Sampling randomly with replacement will build a large number of essentially identical trees (), where each decision tree is overfit (a flaw for which decision trees are notorious)",
+          "Unlike bagging, RF always fixes the size of the bootstrapped samples to match the size of the training dataset"
+        ],
+        "length": 17892
+      }
+    },
+    {
+      "title": "CHAPTER 7 Cross-Validation in Finance",
+      "file": "c07.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              "bishop, c. (1995): neural networks for pattern recognition, 1st ed. oxford university press.",
+              "ripley, b. (1996): pattern recognition and neural networks, 1st ed. cambridg"
+            ]
+          },
+          "backtesting": {
+            "count": 4,
+            "examples": [
+              "del development (like hyper-parameter tuning) and backtesting. backtesting is a complex subject that we will",
+              "performance will not improve, indicating that the backtest is not profiting from leaks. figure 7.2 plots one",
+              "zation error of an ml algorithm, so as to prevent overfitting. cv is yet another instance where standard ml tec"
+            ]
+          },
+          "psychology": {
+            "count": 3,
+            "examples": [
+              " model, leading to multiple testing and selection bias. we will revisit this second cause of failure in ",
+              "tical fluke. this phenomenon is called “selection bias.”",
+              "8): “on the dangers of cross-validation: an experimental evaluation.” white paper, ikm cks siemens medical"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 1,
+            "examples": [
+              "tor (1992): “submodel selection and evaluation in regression: the x-random case.” white paper, department of s"
+            ]
+          },
+          "models": {
+            "count": 2,
+            "examples": [
+              "bishop, c. (1995): neural networks for pattern recognition, 1st ed. oxford universi",
+              "ripley, b. (1996): pattern recognition and neural networks, 1st ed. cambridge university press."
+            ]
+          },
+          "validation": {
+            "count": 8,
+            "examples": [
+              "chapter 7 cross-validation in finance",
+              "the purpose of cross-validation (cv) is to determine the generalization error of ",
+              "zation error of an ml algorithm, so as to prevent overfitting. cv is yet another instance where standard ml tec"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              " to have learned something if the cross-validated accuracy is over 1/2, since that is the accuracy we would ",
+              "): “a study of cross-validation and bootstrap for accuracy estimation and model selection.” international jo"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "For leakage to take place, it must occur that (Xi, Yi) ≈ (Xj, Yj), and it does not suffice that Xi ≈ Xj or even Yi ≈ Yj",
+          "In particular, we will determine that there is informational overlap between two observations i and j whenever Yi and Yj are concurrent (see Chapter 4, Section 4",
+          "The test set is surrounded by two train sets, generating two overlaps that must be purged to prevent leakage",
+          "In general, we need to purge and embargo overlapping training observations whenever we produce a train/test split, whether it is for hyper-parameter fitting, backtesting, or performance evaluation",
+          "5 Bugs in Sklearn's Cross-Validation\nYou would think that something as critical as cross-validation would be perfectly implemented in one of the most popular ML libraries"
+        ],
+        "length": 13443
+      }
+    },
+    {
+      "title": "CHAPTER 8 Feature Importance",
+      "file": "c08.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 3,
+            "examples": [
+              "time, or only in some specific environments? what triggers a change in importance over time? can those regi",
+              "roverbial black box. we can gain insight into the patterns identified by the classifier if we understand wh",
+              " of overfitting. ml algorithms will always find a pattern, even if that pattern is a statistical fluke. you"
+            ]
+          },
+          "backtesting": {
+            "count": 5,
+            "examples": [
+              "o take some data, run it through an ml algorithm, backtest the predictions, and repeat the sequence until a ",
+              "nice-looking backtest shows up. academic journals are filled with such ",
+              "his trap. it does not matter if the backtest is a walk-forward out-of-sample. the fact that we are repeating a t"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "obl et al. [2007] show experimentally that mdi is biased towards some predictor variables. white and liu",
+              "rgue that, in case of single decision trees, this bias is due to an unfair advantage given by popular im",
+              "strobl et al. [2007] show experimentally that mdi is biased towards some predictor varia"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 5,
+            "examples": [
+              "ed features without any possible overfitting in a classification sense. when your mdi, mda, or sfi analysis select",
+              "rg/stable/modules/generated/sklearn.datasets.make_classification.html.",
+              " is equivalent to adding an intercept in a linear regression; (2) re-scaling the data makes pca focus on expla"
+            ]
+          },
+          "features": {
+            "count": 2,
+            "examples": [
+              "chapter 8 feature importance",
+              "an approach is a waste of time and money, and how feature importance offers an alternative."
+            ]
+          },
+          "models": {
+            "count": 1,
+            "examples": [
+              "teix, a. zeileis, and t. hothorn (2007): “bias in random forest variable importance measures: illustrations, sour"
+            ]
+          },
+          "validation": {
+            "count": 5,
+            "examples": [
+              " the generalization error through a purged k-fold cross-validation (cv), as we saw in chapter 7. suppose that we ach",
+              "uitous concern throughout the book is the risk of overfitting. ml algorithms will always find a pattern, even i",
+              " is, pca has ranked features without any possible overfitting in a classification sense. when your mdi, mda, or"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "8.3.2  mean decrease accuracy",
+              "mean decrease accuracy (mda) is a slow, predictive-importance (out-of-sa"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "How to backtest properly is not the subject of this chapter; we will address that extremely important topic in Chapters 11–15",
+          "The goal of this chapter is to explain one of the analyses that must be performed before any backtest is carried out",
+          "Once we have found what features are important, we can learn more by conducting a number of experiments",
+          "Are these features important all the time, or only in some specific environments",
+          "Are those important features also relevant to other related financial instruments"
+        ],
+        "length": 24604
+      }
+    },
+    {
+      "title": "CHAPTER 9 Hyper-Parameter Tuning with Cross-Validation",
+      "file": "c09.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "risk": {
+            "count": 1,
+            "examples": [
+              "e correct label for the side, probability for the position size, and sample weight for the observation's return/o"
+            ]
+          },
+          "backtesting": {
+            "count": 2,
+            "examples": [
+              "d b. kegl (2011): “algorithms for hyper-parameter optimization.” advances in neural information processing syste",
+              "bengio (2012): “random search for hyper-parameter optimization.” journal of machine learning research, vol. 13, "
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "compute the sharpe ratio of the resulting in-sample forecasts, from ",
+              "point 1.a (see chapter 14 for a definition of sharpe ratio)."
+            ]
+          },
+          "psychology": {
+            "count": 1,
+            "examples": [
+              "ization library for nonlinear optimization, experimental design and bandits.” journal of machine learning "
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 1,
+            "examples": [
+              " lin (2010): “a practical guide to support vector classification.” technical report, national taiwan university."
+            ]
+          },
+          "models": {
+            "count": 1,
+            "examples": [
+              " m. ohlsson (1996): “design and regularization of neural networks: the optimal use of a validation set.” proceedin"
+            ]
+          },
+          "validation": {
+            "count": 4,
+            "examples": [
+              "chapter 9 hyper-parameter tuning with cross-validation",
+              "ed hyper-parameter. as we have seen in chapter 7, cross-validation (cv) in finance is an especially difficult proble",
+              "uss how to tune hyper-parameters using the purged k-fold cv method. the references section lists studies t"
+            ]
+          },
+          "metrics": {
+            "count": 6,
+            "examples": [
+              "dicts all cases to be negative will achieve high ‘accuracy’ or ‘neg_log_loss’, even though it has not learne",
+              "n-meta-labeling) applications, it is fine to use ‘accuracy’ or ‘neg_log_loss’, because we are equally intere",
+              ", such a model achieves zero recall and undefined precision (see chapter 3, section 3.7). the ‘f1’ score corr"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "1 Motivation\nHyper-parameter tuning is an essential step in fitting an ML algorithm",
+          "Note that a relabeling of cases has no impact on ‘accuracy’ or ‘neg_log_loss’, however it will have an impact on ‘f1’",
+          "Instead, it expects a fit_params keyworded argument",
+          "I call that a “log-uniform distribution,” and since I could not find it in the literature, I must define it properly",
+          "1 Result from testing the logUniform_gen class\n\n\nNote that the CDF is invariant to the base of the logarithm, since  for any base c, thus the random variable is not a function of c"
+        ],
+        "length": 13896
+      }
+    },
+    {
+      "title": "CHAPTER 10 Bet Sizing",
+      "file": "c10.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              " not reached before the last concurrent signal is triggered.",
+              " but still it is likely that small trades will be triggered with every prediction. as this jitter would cau"
+            ]
+          },
+          "risk": {
+            "count": 2,
+            "examples": [
+              "t be the current position, q the maximum absolute position size, and  the target position size associated with fo",
+              "the target position size  can be dynamically adjusted as pt changes. in pa"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              " an svc or rf, to determine the probability of misclassification, and use that probability to derive the bet size.",
+              "ng (2004): “probability estimates for multi-class classification by pairwise coupling.” journal of machine learnin"
+            ]
+          },
+          "models": {
+            "count": 1,
+            "examples": [
+              "istic approach for multiclass classification with neural networks.” proceedings of international conference on art"
+            ]
+          },
+          "metrics": {
+            "count": 3,
+            "examples": [
+              "aining ground. your ml algorithm can achieve high accuracy, but if you do not size your bets properly, your ",
+              "o how we computed label concurrency in chapter 4 (recall the t1 object, with overlapping time spans). we f",
+              "recall the triple-barrier labeling method presented in c"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "Note that for a real-valued price divergence x, − 1 < m[ω, x] < 1, the integer value  is bounded"
+        ],
+        "length": 12095
+      }
+    },
+    {
+      "title": "CHAPTER 11 The Dangers of Backtesting",
+      "file": "c11.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              " making up a story ex-post to justify some random pattern.",
+              " because it helps us understand the nature of the patterns uncovered by the ml algorithm, regardless of the"
+            ]
+          },
+          "risk": {
+            "count": 1,
+            "examples": [
+              "ing pitfalls.” citi equity derivatives. cboe 2015 risk management conference. available at https://www.cboe.com/rmc"
+            ]
+          },
+          "backtesting": {
+            "count": 8,
+            "examples": [
+              "chapter 11 the dangers of backtesting",
+              "backtesting is one of the most essential, and yet least un",
+              "scikit-learn has implemented a walk-forward timefolds method.2 under this approach, testing m"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "ktest guarantees nothing, not even achieving that sharpe ratio if we could travel back in time in our retr",
+              "e prado, and zhu [2017a] and chapter 14), and the sharpe ratio may be properly deflated by the number of t"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "n journals are flawed, as the result of selection bias on multiple tests (bailey, borwein, lópez de prad",
+              "survivorship bias: using as investment universe the current one, he",
+              "repeat an experiment while controlling for environmental variables, in order to deduce a precise cause-eff"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "features": {
+            "count": 2,
+            "examples": [
+              "ven though they are based on irrelevant features. feature importance is a true research tool, because it helps us unde",
+              "hm, regardless of their monetization. critically, feature importance is derived ex-ante, before the historical perform"
+            ]
+          },
+          "validation": {
+            "count": 5,
+            "examples": [
+              " structured data, labeling, weighting, ensembles, cross-validation, feature importance, bet sizing, etc. by the time",
+              " conditionality in labels defeats standard k-fold cross-validation, because the random sampling will spatter redunda",
+              "for multiple testing, selection bias, or backtest overfitting (bailey and lópez de prado [2014b])."
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "t al. [2017a] for an experimental analysis of the accuracy of this methodology."
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "1 Motivation\nBacktesting is one of the most essential, and yet least understood, techniques in the quant arsenal",
+          "Outliers: Basing a strategy on a few extreme outcomes that may never happen again as observed in the past",
+          "Even if some features are very important, it does not mean that they can be monetized through an investment strategy",
+          "Critically, feature importance is derived ex-ante, before the historical performance is simulated",
+          "Just as a lottery winner may feel he has done something to deserve his luck, there is always some ex-post story (Luo's sin number three)"
+        ],
+        "length": 23745
+      }
+    },
+    {
+      "title": "CHAPTER 12 Backtesting through Cross-Validation",
+      "file": "c12.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "risk": {
+            "count": 1,
+            "examples": [
+              "ledge of the data sources, market microstructure, risk management, performance measurement standards (e.g., gips), "
+            ]
+          },
+          "backtesting": {
+            "count": 6,
+            "examples": [
+              "chapter 12 backtesting through cross-validation",
+              "a backtest evaluates out-of-sample the performance of an inv",
+              " past. the first (narrow) approach, also known as walk-forward, is so prevalent that, in fact, the term “backtes"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "the φ[n, k] backtest paths. you can calculate one sharpe ratio from each path, and from that derive the em",
+              "pirical distribution of the strategy's sharpe ratio (rather than a single sharpe ratio, like wf"
+            ]
+          },
+          "psychology": {
+            "count": 3,
+            "examples": [
+              "entative of future performance, as results can be biased by the particular sequence of datapoints. propo",
+              "with zero variance, . there will not be selection bias, because the strategy selected out of i = 1, …, i",
+              "rds (e.g., gips), multiple testing methods, experimental mathematics, etc. unfortunately, there is no gene"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "validation": {
+            "count": 6,
+            "examples": [
+              "chapter 12 backtesting through cross-validation",
+              "12.3 the cross-validation method",
+              " yields inconsistent outcomes is evidence of that overfitting. if proponents of wf were right, we should observ"
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "hat was only available after 2008. but historical accuracy was not the goal of the test. the objective of th"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "To be accurate and representative, each backtest must be customized to evaluate the assumptions of a particular strategy",
+          "WF enjoys two key advantages: (1) WF has a clear historical interpretation",
+          "Embargoing is not needed in WF backtests, because the training set always predates the testing set",
+          "Extreme care must be taken to avoid leaking testing information into the training set",
+          "In Chapter 11, we argued that backtest overfitting may be the most important open problem in all of mathematical finance"
+        ],
+        "length": 18325
+      }
+    },
+    {
+      "title": "CHAPTER 13 Backtesting on Synthetic Data",
+      "file": "c13.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 3,
+            "examples": [
+              ", one and only one of the two exit conditions can trigger the exit from opportunity i. assuming that opport",
+              "cognizing that performance exhibits no consistent pattern, indicating that there is no optimal trading rule",
+              "we can observe a similar pattern in figures 13.11 through 13.15, where  and τ is p"
+            ]
+          },
+          "exits": {
+            "count": 2,
+            "examples": [
+              "e an otr ? similarly, should strategy s predict a profit target , can we compute the optimal stop-loss  given the",
+              "step 5b: if strategy s provides a profit target  for a particular opportunity i, we can use that "
+            ]
+          },
+          "risk": {
+            "count": 1,
+            "examples": [
+              "bailey, d. and m. lópez de prado (2013): “drawdown-based stop-outs and the triple penance rule.” jou"
+            ]
+          },
+          "backtesting": {
+            "count": 4,
+            "examples": [
+              "chapter 13 backtesting on synthetic data",
+              "in this chapter we will study an alternative backtesting method, which uses history to generate a synth",
+              "s. this practice leads to the problem of backtest overfitting, because these parameters target specific observa"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "…i. in other words, equation (13.1) maximizes the sharpe ratio of s on i opportunities over the space of a",
+              "prado [2012] for a definition and analysis of the sharpe ratio). because we count with two variables to ma"
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "ch as gdp or inflation; other strategies use fundamental and accounting information to price securities, o",
+              " we will show how to answer these questions experimentally."
+            ]
+          }
+        },
+        "ml_concepts": {
+          "validation": {
+            "count": 2,
+            "examples": [
+              "s. this practice leads to the problem of backtest overfitting, because these parameters target specific observa",
+              " al. [2014, 2017] discuss the problem of backtest overfitting, and provide methods to determine to what extent "
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              " the magnitude of the autoregressive coefficient (recall that ), thus bringing the process closer to a ran"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "Some strategies rely on econometric models to predict prices, using macroeconomic variables such as GDP or inflation; other strategies use fundamental and accounting information to price securities, or search for arbitrage-like opportunities in the pricing of derivatives products, etc",
+          "Trading rules provide the algorithm that must be followed to enter and exit a position",
+          "An important clarification is that we are interested in the exit corridor conditions that maximize performance",
+          "This is essentially the same definition we used in chapter 11 to derive PBO",
+          "This is why backtesting of synthetic data is so important: to avoid choosing a strategy because some statistical fluke took place in the past (a single random path)"
+        ],
+        "length": 27462
+      }
+    },
+    {
+      "title": "CHAPTER 14 Backtest Statistics",
+      "file": "c14.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "risk": {
+            "count": 4,
+            "examples": [
+              "easure leverage is as the ratio of average dollar position size to average aum.",
+              "maximum dollar position size: maximum dollar position size informs us whether the strategy at times took dol",
+              "d into general characteristics, performance, runs/drawdowns, implementation shortfall, return/risk efficienc"
+            ]
+          },
+          "backtesting": {
+            "count": 5,
+            "examples": [
+              "chapter 14 backtest statistics",
+              "in the previous chapters, we have studied three backtesting paradigms: first, historical simulations (the ",
+              "ing paradigms: first, historical simulations (the walk-forward method, chapters 11 and 12). second, scenario sim"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "high sharpe ratio",
+              "14.7.1 the sharpe ratio"
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              " to 0.5. if not, the strategy may have a position bias, or the backtested period may be too short and un",
+              "s. this is an interesting value for assessing the bias of long-short, market neutral strategies."
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 3,
+            "examples": [
+              "implementation shortfall, return/risk efficiency, classification scores, and attribution.",
+              "14.8 classification scores",
+              "“detection of false investment strategies using unsupervised learning methods.” working paper. available at https://ssr"
+            ]
+          },
+          "validation": {
+            "count": 2,
+            "examples": [
+              "pe ratio: correcting for selection bias, backtest overfitting and non-normality.” journal of portfolio manageme",
+              "d financial charlatanism: the effects of backtest overfitting on out-of-sample performance.” notices of the ame"
+            ]
+          },
+          "metrics": {
+            "count": 6,
+            "examples": [
+              "accuracy: accuracy is the fraction of opportunities correctly labele",
+              "f1: accuracy may not be an adequate classification score for m",
+              "precision: precision is the fraction of true positives among the predi"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "If leverage takes place, costs must be assigned to it",
+          "The number of bets is always smaller than the number of trades",
+          "When the correlation is significantly positive or negative, the strategy is essentially holding or short-selling the investment universe, without adding much value",
+          "Some important measurements of this include:\nBroker fees per turnover: These are the fees paid to the broker for turning the portfolio over, including exchange fees",
+          "MOST DISCOVERIES IN FINANCE ARE FALSE BECAUSE OF ITS VIOLATION\n\n“Every backtest result must be reported in conjunction with all the trials involved in its production"
+        ],
+        "length": 29910
+      }
+    },
+    {
+      "title": "CHAPTER 15 Understanding Strategy Risk",
+      "file": "c15.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "backtesting": {
+            "count": 2,
+            "examples": [
+              "ated sharpe ratio: correcting for selection bias, backtest overfitting and non-normality.” journal of portfo",
+              "pe ratio: correcting for selection bias, backtest overfitting and non-normality.” journal of portfolio manageme"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "p(1 − p). for n iid bets per year, the annualized sharpe ratio (θ) is\r",
+              "llustrates the point that, even for a small , the sharpe ratio can be made high for a sufficiently large n"
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "e deflated sharpe ratio: correcting for selection bias, backtest overfitting and non-normality.” journal",
+              "per year. snippet 15.1 verifies this result experimentally. figure 15.1 plots the sharpe ratio as a functi"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "validation": {
+            "count": 1,
+            "examples": [
+              "pe ratio: correcting for selection bias, backtest overfitting and non-normality.” journal of portfolio manageme"
+            ]
+          },
+          "metrics": {
+            "count": 3,
+            "examples": [
+              "arpe ratio is a function of precision rather than accuracy, because passing on an opportunity (a negative) i",
+              "ity p[xi = −π] = 1 − p. you can think of p as the precision of a binary classifier where a positive means bet",
+              " to increase n. the sharpe ratio is a function of precision rather than accuracy, because passing on an oppor"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": true,
+        "key_sentences": [
+          "Even when a strategy does not explicitly declare a stop-loss, there is always an implicit stop-loss limit, at which the investor can no longer finance her position (margin call) or bear the pain caused by an increasing unrealized loss",
+          "5, and the key to a successful business is to increase n",
+          "That is the critical difference we wish to establish with this chapter: Strategy risk should not be confused with portfolio risk",
+          "In order to be deployed, the strategy developer must find a way to reduce",
+          "The key difference is that, while PSR does not distinguish between parameters under or outside the portfolio manager's control, the method discussed here allows the portfolio manager to study the viability of the strategy subject to the parameters under her control: {π−, π+, n}"
+        ],
+        "length": 12813
+      }
+    },
+    {
+      "title": "CHAPTER 16 Machine Learning Asset Allocation",
+      "file": "c16.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              " for this example, as well as the distances  that triggered every cluster (third step). this procedure can "
+            ]
+          },
+          "backtesting": {
+            "count": 6,
+            "examples": [
+              "apter 11). instead, in this section we follow the backtesting paradigm explained in chapter 13, and evaluate",
+              "matics and financial charlatanism: the effects of backtest overfitting on out-of-sample performance.” notice",
+              "e than cla, even though minimum-variance is cla's optimization objective. hrp produces less risky portfolios out"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              " other words, hrp would improve the out-of-sample sharpe ratio of a cla strategy by about 31.3%, a rather ",
+              "y, d. and m. lópez de prado (2014): “the deflated sharpe ratio: correcting for selection bias, backtest ov"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "do [2014], and recall our discussion of selection bias in chapter 11). instead, in this section we follo",
+              "e deflated sharpe ratio: correcting for selection bias, backtest overfitting and non-normality.” journal",
+              "pted to answer more than six decades ago. his monumental insight was to recognize that various levels of r"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              "lying hrp can be used to replace many econometric regression methods, notorious for their unstable outputs (li",
+              "veloped decades and centuries ago (factor models, regression analysis, econometrics) fail to recognize the hie"
+            ]
+          },
+          "models": {
+            "count": 1,
+            "examples": [
+              "sting of machine learning signals, forecasts from random forests, replacement to unstable econometric models (var"
+            ]
+          },
+          "validation": {
+            "count": 2,
+            "examples": [
+              "d financial charlatanism: the effects of backtest overfitting on out-of-sample performance.” notices of the ame",
+              "pe ratio: correcting for selection bias, backtest overfitting and non-normality.” journal of portfolio manageme"
+            ]
+          },
+          "metrics": {
+            "count": 3,
+            "examples": [
+              " returns can rarely be forecasted with sufficient accuracy, many authors have opted for dropping them altoge",
+              "e what we have learned, and evaluate the method's accuracy out-of-sample.",
+              "nd ivp (see bailey and lópez de prado [2014], and recall our discussion of selection bias in chapter 11). "
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "1 HRP portfolios address three major concerns of quadratic optimizers in general and Markowitz's Critical Line Algorithm (CLA) in particular: instability, concentration, and underperformance",
+          "On a daily basis, investment managers must build portfolios that incorporate their views and forecasts on risks and returns",
+          "Before earning his PhD in 1954, Markowitz left academia to work for the RAND Corporation, where he developed the Critical Line Algorithm",
+          "The reason is that quadratic programming methods require the inversion of a positive-definite covariance matrix (all eigenvalues must be positive)",
+          "Real prices exhibit frequent jumps (Merton [1976]) and returns are not cross-sectionally independent, so we must add random shocks and a random correlation structure to our generated data"
+        ],
+        "length": 38642
+      }
+    },
+    {
+      "title": "CHAPTER 17 Structural Breaks",
+      "file": "c17.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 2,
+            "examples": [
+              "rticular interest. for instance, a mean-reverting pattern may give way to a momentum pattern. as this trans",
+              "ocess and a periodically collapsing bubble model. patterns of periodically collapsing bubbles in the data l"
+            ]
+          },
+          "exits": {
+            "count": 1,
+            "examples": [
+              "in desperation. eventually they will be forced to stop loss or stop out. structural breaks offer some of the "
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "res prices. it shows evidence that outliers in st bias sadft upwards.",
+              "ler than the  of a strong short-run bubble, hence biasing the method towards long-run bubbles. to correc"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              "data generated from a unit root or stationary autoregression than a potentially explosive process.” to address",
+              " this flaw, these authors propose fitting the regression specification\r"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "The idea was to sample a bar whenever some variable, like cumulative prediction errors, exceeded a predefined threshold",
+          "The time-dependent critical value for the one-sided test is\r\n\r\n\n\n\nThese authors derived via Monte Carlo that b0",
+          "1 Chow-Type Dickey-Fuller Test\nA family of explosiveness tests was inspired by the work of Gregory Chow, starting with Chow [1960]",
+          "As Breitung [2014] explains, we should leave out some of the possible τ* at the beginning and end of the sample, to ensure that either regime is fitted with enough observations (there must be enough zeros and enough ones in Dt[τ*])",
+          "For situations where three or more regimes (random walk → bubble → random walk …) exist, we need to discuss the Supremum Augmented Dickey-Fuler (SADF) test"
+        ],
+        "length": 19516
+      }
+    },
+    {
+      "title": "CHAPTER 18 Entropy Features",
+      "file": "c18.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 3,
+            "examples": [
+              "els. it is the black swan scenario most likely to trigger stop losses, thus generating a feedback mechanism",
+              "ictable (i.e., a martingale), with no discernable patterns. conversely, when arbitrage is not perfect, pric",
+              "s of information, which gives rise to predictable patterns. patterns occur when a string contains redundant"
+            ]
+          },
+          "exits": {
+            "count": 1,
+            "examples": [
+              "is the black swan scenario most likely to trigger stop losses, thus generating a feedback mechanism that will"
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "equal to the message length. considering that the bias of lni is of order  and the variance of lni is or",
+              "der , the bias/variance trade-off is balanced at around . that i"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "n even number to ensure that all bits are parsed (recall that xi is at the center, so for an odd-length me"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "The mutual information (MI) is always non-negative, symmetric, and equals zero if and only if X and Y are independent",
+          "In other words, index i must be at the center of the window",
+          "This is important in order to guarantee that both matching strings are of the same length",
+          "A second caveat is that, because the window for matching must be symmetric (same length for the dictionary as for the substring being matched), the last bit is only considered for matching if the message's length corresponds to an even number",
+          "The generalized weighted mean of x with weights p on a power q ≠ 0 is defined as\r\n\r\n\n\n\nFor q < 0, we must require that xi > 0, ∀i"
+        ],
+        "length": 28443
+      }
+    },
+    {
+      "title": "CHAPTER 19 Microstructural Features",
+      "file": "c19.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 4,
+            "examples": [
+              "d form a pack in order to maximize the chances of triggering a cascading effect (donefer [2010], fabozzi et",
+              "s, until eventually they were forced to stop-out, triggering a liquidity crisis that shocked markets, regul",
+              "sed when it fails to recognize complex non-linear patterns in 21st-century financial markets."
+            ]
+          },
+          "exits": {
+            "count": 1,
+            "examples": [
+              "] shows what appears to be pack hunters forcing a stop loss. although their individual actions are too small "
+            ]
+          },
+          "risk": {
+            "count": 1,
+            "examples": [
+              ".” in zopounidis, c., ed., quantitative financial risk management: theory and practice, 1st ed. wiley."
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "id. the ratio of high-to-low prices reflects fundamental volatility as well as the bid-ask spread. second,",
+              " trends, as human traders tend to bet with a fundamental view, belief, or conviction. conversely, a lower-"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 4,
+            "examples": [
+              "ndational results from those early days are trade classification models (like the tick rule) and the roll [1984] m",
+              " have determined that the tick rule achieves high classification accuracy, despite its relative simplicity (aitken",
+              "most of these features are estimated through regressions. in practice, i have observed that the t-values "
+            ]
+          },
+          "metrics": {
+            "count": 3,
+            "examples": [
+              "d that the tick rule achieves high classification accuracy, despite its relative simplicity (aitken and frin",
+              "s provided by the cme (fix tag 5797). what is the accuracy of the tick rule?",
+              "whenever there is a significant change in prices (recall sampling methods in chapter 2), etc. first, we de"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "That makes microstructural data one of the most important ingredients for building predictive ML features",
+          "Essentially, it illustrated that market makers were sellers of the option to be adversely selected by informed traders, and the bid-ask spread is the premium they charge for that option",
+          "Offer prices always exceed bid prices, because otherwise there would be an instant match",
+          "A trade occurs whenever a buyer matches an offer, or a seller matches a bid",
+          "The estimator is based on two principles: First, high prices are almost always matched against the offer, and low prices are almost always matched against the bid"
+        ],
+        "length": 39291
+      }
+    },
+    {
+      "title": "CHAPTER 20 Multiprocessing and Vectorization",
+      "file": "c20.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              "better programs using concurrency, libraries, and patterns, 1st ed. addison-wesley."
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "1 Motivation\nMultiprocessing is essential to ML",
+          "Then, r1 must satisfy the condition",
+          "Then, r2 must satisfy the condition",
+          "Then, rm must satisfy the condition",
+          "In this case, the argument upperTriang = True must be passed to function nestedParts"
+        ],
+        "length": 20974
+      }
+    },
+    {
+      "title": "CHAPTER 21 Brute Force and Quantum Computers",
+      "file": "c21.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              "what pattern do you observe? how would you connect it to marko"
+            ]
+          },
+          "backtesting": {
+            "count": 2,
+            "examples": [
+              "rches, decisions based on thresholds, and integer optimization. sometimes, these problems do not have a known an",
+              "supercomputers, can be reformulated as an integer optimization problem. such a representation makes it amenable "
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "the sharpe ratio (chapter 14) associated with r can be compu"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "This problem is particularly relevant to large asset managers, as the costs from excessive turnover and implementation shortfall may critically erode the profitability of their investment strategies",
+          "Note that non-continuous transaction costs are embedded in r",
+          "For example, if K = 6 and N = 3, partitions (1, 2, 3) and (3, 2, 1) must be treated as different (obviously (2, 2, 2) does not need to be permutated)",
+          "1 illustrates how order is important when allocating 6 units of capital to 3 different assets",
+          "This means that we must consider all distinct permutations of each partition"
+        ],
+        "length": 12574
+      }
+    },
+    {
+      "title": "CHAPTER 22 High-Performance Computational Intelligence and Forecasting Technologies",
+      "file": "c22.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 4,
+            "examples": [
+              "very minute, which is a tell-tale sign of trading triggered by algorithms that target a time-weighted avera",
+              "per-minute, which indicates that these trades are triggered by intentionally constructed automated events. ",
+              "e made it considerably easier to look for complex patterns. this pattern-finding capability is behind a num"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "f the difference may be due to the self-selection bias in treatment groups, especially the active group,",
+              "p baseline is a way to address the self-selection bias and plan to conduct additional studies to further",
+              "or the next run. during the analysis of the experimental measurement data, scientists might run simulation"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              " to classify the changes. such identification and classification tasks used to be performed by astronomers manuall",
+              "osion, as a result of the extensive automation in classification of astronomical observations"
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "te. additional work is expected to achieve higher accuracy rates in upcoming surveys, such as for the large "
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "The following sections explain the key features of HPC systems, introduce a few special tools used on these systems, and provide examples of streaming data analyses using these HPC tools",
+          "A key aspect of financial big data is that it consists of mostly time series",
+          "The HPC tools have some critical advantages that should be useful in a variety of business applications",
+          "The ability to prioritize quick turnaround time is essential in these cases",
+          "This is likely an urban legend, but it underscores an important point about the difference between HPC systems and cloud systems"
+        ],
+        "length": 56174
+      }
+    },
+    {
+      "title": "b_01.xhtml",
+      "file": "b_01.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "entries": {
+            "count": 1,
+            "examples": [
+              "pattern-finding capability in"
+            ]
+          },
+          "risk": {
+            "count": 3,
+            "examples": [
+              "maximum dollar position size, in backtesting",
+              "drawdown (dd) and time under water (tuw) in",
+              "drawdown (dd)\r"
+            ]
+          },
+          "backtesting": {
+            "count": 8,
+            "examples": [
+              "annualized turnover, in backtesting",
+              "average holding period, in backtesting",
+              "walk-forward (wf) method of"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "annualized sharpe ratio",
+              "targeting sharpe ratio for"
+            ]
+          },
+          "psychology": {
+            "count": 4,
+            "examples": [
+              "selection bias and",
+              "bias",
+              "fundamental"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 3,
+            "examples": [
+              "binary classification problems and",
+              "classification measurements in",
+              "econometric regression compared with"
+            ]
+          },
+          "features": {
+            "count": 2,
+            "examples": [
+              "feature importance\r",
+              "single feature importance (sfi) and"
+            ]
+          },
+          "models": {
+            "count": 2,
+            "examples": [
+              "random forest (rf) method to reduce",
+              "random forest (rf) method compared with"
+            ]
+          },
+          "validation": {
+            "count": 8,
+            "examples": [
+              "combinatorial purged cross-validation (cpcv) method in",
+              "cross-validation (cv) for",
+              "backtest overfitting\r"
+            ]
+          },
+          "metrics": {
+            "count": 5,
+            "examples": [
+              "accuracy\r",
+              "accuracy improvement using",
+              "implied precision computation and"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "See also Risk-based asset allocation approaches\ntree clustering approaches to\n\nAttribution\nAugmented Dickey-Fuller (ADF) test"
+        ],
+        "length": 22254
+      }
+    }
+  ],
+  "analyzed_date": "2026-02-09T15:14:56.194706"
+}

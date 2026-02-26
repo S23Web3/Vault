@@ -1,0 +1,24 @@
+.env
+data/cache/
+data/historical/
+__pycache__/
+*.pyc
+*.meta
+.pytest_cache/
+nul
+
+# Large data directories
+data/csv/
+data/periods/
+data/cache_backup_*/
+
+# Output / run artifacts
+results/
+models/
+*.csv
+*.pdf
+
+# Backup files
+*.backup
+*.bak
+*.pre_bugfix_bak

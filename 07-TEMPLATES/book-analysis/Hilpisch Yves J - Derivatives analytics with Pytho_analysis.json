@@ -1,0 +1,48 @@
+{
+  "file": "C:\\Users\\User\\Downloads\\Hilpisch, Yves J - Derivatives analytics with Python _ data analysis, models, simulation, calibration and hedging.epub",
+  "name": "Hilpisch, Yves J - Derivatives analytics with Python _ data analysis, models, simulation, calibration and hedging.epub",
+  "size_mb": 8.576154708862305,
+  "chapters": 20,
+  "rating": 9,
+  "stats": {
+    "trading_concepts": 36,
+    "ml_concepts": 21,
+    "code_chapters": 16,
+    "formula_chapters": 11
+  },
+  "top_concepts": {
+    "trading": [
+      [
+        "psychology",
+        112
+      ],
+      [
+        "backtesting",
+        34
+      ],
+      [
+        "entries",
+        10
+      ],
+      [
+        "risk",
+        9
+      ]
+    ],
+    "ml": [
+      [
+        "supervised",
+        70
+      ],
+      [
+        "metrics",
+        52
+      ],
+      [
+        "models",
+        1
+      ]
+    ]
+  },
+  "analyzed": "2026-02-09T15:16:33.868708"
+}

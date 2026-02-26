@@ -1,0 +1,63 @@
+flowchart TD
+    subgraph DATA["DATA"]
+        A1[("Bybit v5 API")] -->|"1000 candles per page"| A2["BybitFetcher - fetcher.py"]
+        A2 -->|"to_parquet"| A3[("Parquet Cache - 299 coins 1.36 GB")]
+        A3 -->|"pd.read_parquet"| A4{"Resample 1m to 5m"}
+    end
+
+    subgraph INDICATORS["INDICATORS"]
+        A4 --> B1["Stochastic K Raw - 9-3 14-3 40-3 60-10 - stochastics.py"]
+        A4 --> B2["Ripster EMA Clouds - Cloud 2 5/12 - Cloud 3 34/50 - Cloud 4 72/89 - clouds.py"]
+        A4 --> B3["ATR 14 EMA - stochastics.py"]
+    end
+
+    subgraph SIGNALS["SIGNALS"]
+        B1 --> C1{{"State Machine - Stage 0 to 1 to 2 - 10-bar lookback - state_machine.py"}}
+        B2 --> C1
+        B3 --> C1
+        C1 --> C2{{"Signal Grading - A 4/4 stochs - B 3/4 stochs - C 2/4 plus Cloud 3 - R Cloud 2 re-entry - four_pillars.py"}}
+        C2 --> C3{"Cloud 3 Filter - v3.8 ALWAYS ON - Bullish blocks shorts - Bearish blocks longs"}
+        C3 -->|"Allowed"| C4{"Cooldown Gate - 3 bars min"}
+        C3 -->|"Blocked"| DISCARD["Discard"]
+        C4 -->|"OK"| C5["Entry Priority Chain - 1 A signal flip/open - 2 BC flip - 3 BC new flat - 4 Re-entry flat"]
+        C4 -->|"Too soon"| SKIP["Skip bar"]
+    end
+
+    subgraph EXECUTION["EXECUTION"]
+        C5 -->|"Direction plus Grade"| D1["Open Position - SL entry +/- 1.0 ATR - TP entry +/- 1.5 ATR - position.py"]
+        D1 --> D2["Bar Update Loop - Check SL/TP intrabar - Update MFE/MAE"]
+        D2 --> D3{"BE Raise? - Profit exceeds 0.5 ATR"}
+        D3 -->|"No"| D2
+        D3 -->|"Yes"| D4["Lock SL at entry plus 0.3 ATR"]
+        D4 --> D2
+        D2 -->|"SL/TP/Flip hit"| D5["Exit Position"]
+    end
+
+    subgraph SETTLEMENT["COMMISSION"]
+        D1 -->|"$8 entry"| E1["Commission Model - 0.08 pct per side - commission.py"]
+        D5 -->|"$8 exit"| E1
+        E1 -->|"Daily 5pm UTC"| E2["Rebate 70 pct - credit equity"]
+    end
+
+    subgraph OUTPUT["OUTPUT"]
+        D5 --> F1["Trade Record - 15 fields"]
+        F1 --> F2["Metrics Calc - 22 KPIs plus grades - metrics.py"]
+        F2 --> F3[("PostgreSQL - vince database - 5 tables")]
+        F2 --> F4["Streamlit Dashboard - dashboard.py"]
+        F3 -->|"pd.read_sql"| F4
+    end
+
+    subgraph ML["ML - FUTURE"]
+        C2 -.->|"Signal"| G1["XGBoost Meta-Label - 21 features - SHAP explainability - NOT YET BUILT"]
+        G1 -.->|"Skip/Take/Size"| C5
+    end
+
+    style DATA fill:#1e3a5f,color:#fff
+    style INDICATORS fill:#1a4d2e,color:#fff
+    style SIGNALS fill:#5c3d1e,color:#fff
+    style EXECUTION fill:#5c5c1e,color:#fff
+    style SETTLEMENT fill:#5c1e1e,color:#fff
+    style OUTPUT fill:#3d1e5c,color:#fff
+    style ML fill:#333,color:#999,stroke-dasharray: 5 5
+    style DISCARD fill:#8b0000,color:#fff
+    style SKIP fill:#666,color:#fff

@@ -1,0 +1,484 @@
+{
+  "file_path": "C:\\Users\\User\\Downloads\\volatility.epub",
+  "file_name": "volatility.epub",
+  "file_size_mb": 53.626787185668945,
+  "total_chapters": 20,
+  "rating": 6,
+  "aggregate_stats": {
+    "total_trading_concepts": 13,
+    "total_ml_concepts": 8,
+    "chapters_with_code": 14,
+    "chapters_with_formulas": 0
+  },
+  "top_concepts": {
+    "trading": [
+      {
+        "topic": "risk",
+        "mentions": 7
+      },
+      {
+        "topic": "psychology",
+        "mentions": 7
+      },
+      {
+        "topic": "backtesting",
+        "mentions": 4
+      }
+    ],
+    "ml": [
+      {
+        "topic": "metrics",
+        "mentions": 6
+      },
+      {
+        "topic": "supervised",
+        "mentions": 5
+      }
+    ]
+  },
+  "chapter_analyses": [
+    {
+      "title": "f01.xhtml",
+      "file": "f01.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "risk": {
+            "count": 1,
+            "examples": [
+              "cs range from portfolio management to e-commerce, risk management, financial engineering, valuation and financial i"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 763
+      }
+    },
+    {
+      "title": "fcopyright.xhtml",
+      "file": "fcopyright.xhtml",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "representations or warranties with respect to the accuracy or completeness of the contents of this book and "
+            ]
+          }
+        },
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 2620
+      }
+    },
+    {
+      "title": "Part One: Introduction to Volatility and Variance",
+      "file": "toc.xhtml",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 5460
+      }
+    },
+    {
+      "title": "f02.xhtml",
+      "file": "f02.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "risk": {
+            "count": 1,
+            "examples": [
+              "effective option and equity portfolio hedging and risk management as well as straight out speculation on future vol"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "This book covers some of the most important listed volatility and variance derivatives with a focus on products provided by Eurex"
+        ],
+        "length": 2249
+      }
+    },
+    {
+      "title": "CHAPTER 1 Derivatives, Volatility and Variance",
+      "file": "c01.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "actice to use the definition for the uncorrected (biased) standard deviation with factor  instead of the",
+              " definition for the corrected (unbiased) standard deviation with factor . this explains"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "To avoid risk-less arbitrage, the value of the option must equal the payoff of the replicating portfolio",
+          "3 Listed Volatility and Variance Derivatives\nVolatility is one of the most important notions and concepts in derivatives pricing and analytics"
+        ],
+        "length": 26752
+      }
+    },
+    {
+      "title": "CHAPTER 2 Introduction to Python",
+      "file": "c02.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "risk": {
+            "count": 2,
+            "examples": [
+              "the maximum drawdown, which we only calculate for the s&p 500 index, i",
+              "the maximum drawdown is the largest difference between the running max"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              "plotlib consider the ordinary least squares (ols) regression of the sample data displayed in figure 2.1. numpy",
+              "figure 2.5 illustrates the regression results graphically."
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "Another important basic data type is string objects",
+          "Note that Python has in general zero-based numbering and indexing",
+          "Dictionary objects are so-called key-value stores and are generally constructed with curly brackets",
+          "Keys and values of a dictionary object can be retrieved as list objects",
+          "3  Control Structures\nIterations are very important operations in programming in general and financial analytics in particular"
+        ],
+        "length": 17985
+      }
+    },
+    {
+      "title": "CHAPTER 3 Model-Free Replication of Variance",
+      "file": "c03.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "psychology": {
+            "count": 1,
+            "examples": [
+              "calculation of the vstoxx and vix avoids a “model-bias” and uses standard market practice for the valuat"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "mportant role in the valuation of variance swaps. recall that a long position in a variance contract pays "
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "This, for example, does not apply to most other important concepts in option pricing and trading, such as implied volatility or delta hedging of options",
+          "3 Log Contracts\nSo-called log contracts are a kind of derivative instrument that plays an important role in the valuation of variance swaps",
+          "A doubling of the strike leads to a doubling of the maximum dollar gamma value which is always achieved at the ATM level (see strikes 25, 50, 100, 200)",
+          "Then\n\n\n\nNote that\n\n\n\nA possible discretization for the integral then is\n\n\n\ngiving the defining equation for",
+          "The calculation of the VSTOXX and VIX avoids a “model-bias” and uses standard market practice for the valuation of important variance related instruments, like variance swaps"
+        ],
+        "length": 12938
+      }
+    },
+    {
+      "title": "CHAPTER 4 Data Analysis and Strategies",
+      "file": "c04.xhtml",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {
+          "supervised": {
+            "count": 2,
+            "examples": [
+              "nd represent the negative correlation by a linear regression line. figure 4.9 adds such a regression line to t",
+              "rrelation translates into a negative slope of the regression line."
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 13175
+      }
+    },
+    {
+      "title": "CHAPTER 5 VSTOXX Index",
+      "file": "c05.xhtml",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {
+          "metrics": {
+            "count": 1,
+            "examples": [
+              "recall that the sub-index vstoxx 1m is not defined on th"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "py for the complete script) used in this section decides whether the VSTOXX 1M sub-index is defined or not (remember that the sub-index is not defined at the final settlement day and one day before)",
+          "Remember that this file contains a dictionary-like HDFStore object with one entry for every options series",
+          "The keys for the entries are three letter abbreviations of the respective month’s name plus the actual year represented by two numbers, for example Mar16, Jun16 and so on"
+        ],
+        "length": 12202
+      }
+    },
+    {
+      "title": "CHAPTER 6 Valuing Volatility Derivatives",
+      "file": "c06.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "backtesting": {
+            "count": 1,
+            "examples": [
+              "lobal (i.e. via the brute() function) and a local optimization (i.e. via the fmin() function). this is all wrapp"
+            ]
+          }
+        },
+        "ml_concepts": {
+          "supervised": {
+            "count": 1,
+            "examples": [
+              "the linear regression illustrates graphically the statement that the hi"
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "examples": [
+              "arametrizations already illustrate that valuation accuracy is, in general, higher the higher the computation",
+              "he computational effort the higher in general the accuracy of the mcs valuations. the high variability of th"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "Important passages are commented inline",
+          "Note that option quotes for Eurex volatility options have tick sizes of 5 cents, i"
+        ],
+        "length": 21113
+      }
+    },
+    {
+      "title": "CHAPTER 7 Advanced Modeling of the VSTOXX Index",
+      "file": "c07.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "backtesting": {
+            "count": 1,
+            "examples": [
+              "o take into account more parameter values for the optimization. the python code is contained in script srjd_mode"
+            ]
+          },
+          "psychology": {
+            "count": 2,
+            "examples": [
+              "d et al. (2008) for an analysis of this and other biased discretization schemes for the square-root diff",
+              "by the fundamental theorem of asset pricing, the time t value of an "
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "This model, which is essentially an extension of the Grünbichler and Longstaff (1996) model as analyzed in the previous chapter, is capable of reproducing prices of European options written on the VSTOXX reasonably well",
+          "By the Fundamental Theorem of Asset Pricing, the time t value of an attainable, -measurable contingent claim VT ≡ hT(XT) ⩾ 0 (satisfying suitable integrability conditions) is given by arbitrage as\n\n\n\nwith V0 = EQ0(B0(T)VT) as the important special case for valuation purposes",
+          "Another solution is a deterministic shift approach according to Brigo and Mercurio (2001) which preserves the basic structure of the model with all its advantages and which nevertheless allows us to better account for different term structures of the short rate",
+          "2  Technical Implementation\nBecause we are using a numerical method like MCS for all valuation and calibration tasks, the parametrization and implementation of the MCS algorithm play an important role",
+          "For the approach to be valid, it is not important how we originally came up with the ϕ"
+        ],
+        "length": 17238
+      }
+    },
+    {
+      "title": "CHAPTER 8 Terms of the VSTOXX and its Derivatives",
+      "file": "c08.xhtml",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [
+          "Note that countries like the United Kingdom or Switzerland are not represented due to the euro zone criterion",
+          "While perhaps not as important from an academic point of view, they are of paramount importance for practitioners"
+        ],
+        "length": 7370
+      }
+    },
+    {
+      "title": "CHAPTER 9",
+      "file": "c09.xhtml",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {
+          "metrics": {
+            "count": 1,
+            "examples": [
+              " variance swap with regard to implied volatility? recall that the value itself is given by"
+            ]
+          }
+        },
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "Note that the VSTOXX sub-index is only available up until two days before the maturity date",
+          "Note that one needs to keep the weighting factor constant at  in order to retain additivity"
+        ],
+        "length": 14685
+      }
+    },
+    {
+      "title": "CHAPTER 10Variance Futures at Eurex",
+      "file": "c10.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "risk": {
+            "count": 1,
+            "examples": [
+              "mong other things, low counterparty risk and high risk management standards."
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "Now consider the second settlement day t = 2 (say Tuesday), assume that a rate of reo applies and remember that FS1 = 3000",
+          "Note that we take the index level of the EURO STOXX 50 at close and not the average of its level between 11:50 and 12:00 CET at the final settlement day (see chapter 11, Trading and Settlement)",
+          "Note that we subtract the constant C for the comparison"
+        ],
+        "length": 12031
+      }
+    },
+    {
+      "title": "CHAPTER 11 Trading and Settlement",
+      "file": "c11.xhtml",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 7140
+      }
+    },
+    {
+      "title": "CHAPTER 12 DX Analytics – An Overview",
+      "file": "c12.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "psychology": {
+            "count": 1,
+            "examples": [
+              "e when it comes to derivatives analytics as a sub-discipline. one exception in this regard is dx analytics (th"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "The major statistics for this option are:\n\n\n\n\nNote that all these values might vary to a greater or lesser extent with the parameters chosen for the Monte Carlo simulation",
+          "Note that this step is independent from the risk factor model and option model definitions"
+        ],
+        "length": 9393
+      }
+    },
+    {
+      "title": "CHAPTER 13 DX Analytics – Square-Root Diffusion",
+      "file": "c13.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "backtesting": {
+            "count": 2,
+            "examples": [
+              " get updated to reflect the current status of the optimization procedure.",
+              "odel usually boils down to using global and local optimization algorithms to find parameters that minimize a giv"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "For our analysis in this chapter we have nevertheless used the Monte Carlo valuation model of DX Analytics since this approach is more general in that we can easily replace one model by another, maybe more sophisticated, one"
+        ],
+        "length": 6251
+      }
+    },
+    {
+      "title": "CHAPTER 14 DX Analytics – Square-Root Jump Diffusion",
+      "file": "c14.xhtml",
+      "analysis": {
+        "trading_concepts": {},
+        "ml_concepts": {},
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [
+          "Although the calibration we are implementing in this chapter is more or less the same as in the previous one, we need nevertheless to adjust the code significantly in many places",
+          "Note that the perfect shift gets lost again later on when the SRD parameters are updated during the calibration to the option quotes",
+          "Remember that the maturities in this case are selected in the function srjd_get_option_selection()"
+        ],
+        "length": 8515
+      }
+    },
+    {
+      "title": "b01.xhtml",
+      "file": "b01.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "psychology": {
+            "count": 1,
+            "examples": [
+              "oekkoek and dick van dijk (2008) “a comparison of biased simulation schemes for stochastic volatility mo"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": false,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 4176
+      }
+    },
+    {
+      "title": "bindex.xhtml",
+      "file": "bindex.xhtml",
+      "analysis": {
+        "trading_concepts": {
+          "risk": {
+            "count": 2,
+            "examples": [
+              "longest drawdown",
+              "maximum drawdown"
+            ]
+          }
+        },
+        "ml_concepts": {},
+        "has_code": true,
+        "has_formulas": false,
+        "key_sentences": [],
+        "length": 11559
+      }
+    }
+  ],
+  "analyzed_date": "2026-02-09T15:15:09.386682"
+}

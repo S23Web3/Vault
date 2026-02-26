@@ -1,0 +1,688 @@
+//@version=6
+// Four Pillars v3.6 Strategy - Backtesting Version
+// MAJOR CHANGES from v3.5.1:
+//   - AVWAP (Anchored VWAP from A trade entry) replaces Cloud 3/4 trail
+//   - A trade SL = AVWAP ± max(stdev, ATR), ratchets favorable only
+//   - BC trade SL = AVWAP ± ATR, ratchets favorable only
+//   - Separate order IDs: "Long A"/"Short A" and "Long BC"/"Short BC"
+//   - B/C filter: Cloud 3/4 parallel (both slopes same direction)
+//   - B/C exit: Cloud 2 cross against OR 60-10 K/D cross in extreme zone
+//   - AVWAP recovery re-entry: stop-out + price crosses back past AVWAP
+//   - RAW K stochastics (K smoothing=1)
+//   - Stage-based entry: Stage 1 = 9-3 enters zone, Stage 2 = 9-3 exits zone
+
+strategy("Four Pillars v3.6 Strategy", shorttitle="4Pv3.6-S", overlay=true,
+         initial_capital=10000, default_qty_type=strategy.cash,
+         default_qty_value=500, margin_long=5, margin_short=5,
+         commission_type=strategy.commission.percent,
+         commission_value=0.1, pyramiding=3, process_orders_on_close=false,
+         max_labels_count=500)
+
+// ═══════════════════════════════════════════════════════════════════════════
+// INPUTS
+// ═══════════════════════════════════════════════════════════════════════════
+
+grp1 = "═══ STOCHASTIC SETTINGS ═══"
+i_crossLevel    = input.int(25, "9-3 Cross Level", minval=10, maxval=40, group=grp1, tooltip="9-3 enters zone below this / above (100-this). Stage 2 fires when 9-3 exits zone.")
+i_zoneLevel     = input.int(30, "Others Zone Level", minval=20, maxval=40, group=grp1, tooltip="Other stochs must be below/above this")
+i_stageLookback = input.int(10, "Stage Lookback (bars)", minval=3, maxval=30, group=grp1, tooltip="Max bars 9-3 can stay in zone before setup expires.")
+i_allowBTrades  = input.bool(false, "Allow B Trades (3/4 stochs)", group=grp1, tooltip="Add $500 B/C when 3/4 stochs + Cloud 3/4 parallel. Exits via Cloud 2 or 60-10.")
+i_allowCTrades  = input.bool(false, "Allow C Trades (2/4 + Cloud 3)", group=grp1, tooltip="Add $500 B/C when 9-3+14-3 + Cloud 3. Exits via Cloud 2 or 60-10.")
+i_cloud2Reentry = input.bool(true, "Cloud 2 Re-entry (A trade)", group=grp1, tooltip="Price crosses Cloud 2 after a recent A rotation = A trade.")
+i_reentryLookback = input.int(10, "Cloud 2 Re-entry Lookback", minval=3, maxval=30, group=grp1)
+
+grp2 = "═══ RIPSTER EMAs ═══"
+i_ema5      = input.int(5, "EMA 5 (Cloud 2 Short)", group=grp2)
+i_ema12     = input.int(12, "EMA 12 (Cloud 2 Long)", group=grp2)
+i_ema34     = input.int(34, "EMA 34 (Cloud 3 Short)", group=grp2)
+i_ema50     = input.int(50, "EMA 50 (Cloud 3 Long)", group=grp2)
+i_ema72     = input.int(72, "EMA 72 (Cloud 4 Short)", group=grp2)
+i_ema89     = input.int(89, "EMA 89 (Cloud 4 Long)", group=grp2)
+i_slopeLen  = input.int(5, "Cloud Slope Length (bars)", minval=2, maxval=20, group=grp2, tooltip="Both C3+C4 slopes must match direction for B/C entry.")
+
+grp3 = "═══ POSITION MANAGEMENT ═══"
+i_atrLen    = input.int(14, "ATR Length", group=grp3)
+i_slMult    = input.float(2.0, "Initial SL ATR Mult", step=0.1, group=grp3, tooltip="Initial SL at entry ± this * ATR. AVWAP trail takes over as data accumulates.")
+i_tpMult    = input.float(4.0, "TP ATR Mult (A trades)", step=0.1, group=grp3)
+i_useTP     = input.bool(true, "Use Take Profit (A trades)", group=grp3, tooltip="When OFF, A trades exit only via AVWAP trail SL")
+i_avwapReentry = input.bool(true, "AVWAP Recovery Re-entry", group=grp3, tooltip="After stop-out, if price recovers past last AVWAP within lookback bars, re-enter same direction (V-shape dip).")
+i_avwapReentryLookback = input.int(5, "AVWAP Re-entry Lookback", minval=2, maxval=20, group=grp3, tooltip="Bars after stop-out to watch for AVWAP price recovery")
+i_useFlipVol      = input.bool(true, "Volume Filter for Flips", group=grp3, tooltip="Require high volume candle to flip A trade direction. Volume must exceed max(avg over lookback, avg since entry).")
+i_flipVolLookback = input.int(20, "Flip Volume Lookback", minval=5, maxval=100, group=grp3, tooltip="Lookback period for average volume comparison on trade flips.")
+
+grp3b = "═══ ADD SIGNAL SETTINGS ═══"
+i_addZoneShort = input.int(70, "Short ADD: 9-3 above", minval=60, maxval=90, group=grp3b)
+i_addZoneLong  = input.int(30, "Long ADD: 9-3 below", minval=10, maxval=40, group=grp3b)
+i_addMidShort  = input.float(52.0, "Short ADD: 40/60 below", step=1.0, group=grp3b)
+i_addMidLong   = input.float(48.0, "Long ADD: 40/60 above", step=1.0, group=grp3b)
+
+grp4 = "═══ FILTERS ═══"
+i_useRipster = input.bool(false, "Ripster Cloud Filter", group=grp4)
+i_use60D     = input.bool(false, "60-10 D Filter", group=grp4)
+
+grp5 = "═══ VISUALS ═══"
+i_showDash   = input.bool(true, "Show Dashboard", group=grp5)
+i_showCloud2 = input.bool(false, "Show Cloud 2 (5/12)", group=grp5)
+i_showCloud3 = input.bool(false, "Show Cloud 3 (34/50)", group=grp5)
+i_showCloud4 = input.bool(false, "Show Cloud 4 (72/89)", group=grp5)
+i_showAVWAP  = input.bool(true, "Show AVWAP Bands", group=grp5)
+
+// ═══════════════════════════════════════════════════════════════════════════
+// STOCHASTIC CALCULATIONS (RAW K — K smoothing=1)
+// ═══════════════════════════════════════════════════════════════════════════
+
+stoch_k(int k_len) =>
+    float lowest = ta.lowest(low, k_len)
+    float highest = ta.highest(high, k_len)
+    highest - lowest == 0 ? 50.0 : 100.0 * (close - lowest) / (highest - lowest)
+
+float stoch_9_3      = stoch_k(9)
+float stoch_14_3     = stoch_k(14)
+float stoch_40_3     = stoch_k(40)
+float stoch_60_10    = stoch_k(60)
+float stoch_60_10_d  = ta.sma(stoch_60_10, 10)
+
+// ═══════════════════════════════════════════════════════════════════════════
+// RIPSTER CLOUDS + PARALLEL DETECTION
+// ═══════════════════════════════════════════════════════════════════════════
+
+float ema5  = ta.ema(close, i_ema5)
+float ema12 = ta.ema(close, i_ema12)
+bool  cloud2_bull    = ema5 > ema12
+float cloud2_top     = math.max(ema5, ema12)
+float cloud2_bottom  = math.min(ema5, ema12)
+bool  price_cross_above_cloud2 = ta.crossover(close, cloud2_top)
+bool  price_cross_below_cloud2 = ta.crossunder(close, cloud2_bottom)
+
+float ema34 = ta.ema(close, i_ema34)
+float ema50 = ta.ema(close, i_ema50)
+bool  cloud3_bull    = ema34 > ema50
+float cloud3_top     = math.max(ema34, ema50)
+float cloud3_bottom  = math.min(ema34, ema50)
+int   price_pos      = close > cloud3_top ? 1 : close < cloud3_bottom ? -1 : 0
+
+float ema72 = ta.ema(close, i_ema72)
+float ema89 = ta.ema(close, i_ema89)
+bool  cloud4_bull = ema72 > ema89
+
+// Cloud 3/4 parallel: both slopes same direction over N bars
+float c3_slope = ema50 - nz(ema50[i_slopeLen], ema50)
+float c4_slope = ema72 - nz(ema72[i_slopeLen], ema72)
+bool  clouds_parallel_bull = c3_slope > 0 and c4_slope > 0
+bool  clouds_parallel_bear = c3_slope < 0 and c4_slope < 0
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ENTRY SIGNAL STATE MACHINE (Stage 1 → Stage 2)
+// ═══════════════════════════════════════════════════════════════════════════
+
+float crossLow  = i_crossLevel
+float crossHigh = 100 - i_crossLevel
+float zoneLow   = i_zoneLevel
+float zoneHigh  = 100 - i_zoneLevel
+
+bool ripster_ok_long  = not i_useRipster or cloud3_bull or price_pos >= 0
+bool ripster_ok_short = not i_useRipster or not cloud3_bull or price_pos <= 0
+bool d_ok_long  = not i_use60D or stoch_60_10_d > 20
+bool d_ok_short = not i_use60D or stoch_60_10_d < 80
+
+// --- LONG SETUP ---
+var int  long_stage = 0
+var int  long_stage1_bar = na
+var bool long_14_seen = false
+var bool long_40_seen = false
+var bool long_60_seen = false
+
+bool long_signal   = false
+bool long_signal_b = false
+bool c_long_base   = false
+
+if long_stage == 0
+    if stoch_9_3 < crossLow
+        long_stage      := 1
+        long_stage1_bar := bar_index
+        long_14_seen    := stoch_14_3 < zoneLow
+        long_40_seen    := stoch_40_3 < zoneLow
+        long_60_seen    := stoch_60_10 < crossLow
+
+else if long_stage == 1
+    if bar_index - long_stage1_bar > i_stageLookback
+        long_stage := 0
+    else if stoch_9_3 >= crossLow
+        int long_others = (long_14_seen ? 1 : 0) + (long_40_seen ? 1 : 0) + (long_60_seen ? 1 : 0)
+        if long_others == 3 and ripster_ok_long and d_ok_long
+            long_signal := true
+        else if long_others >= 2 and i_allowBTrades and ripster_ok_long and d_ok_long
+            long_signal_b := true
+        else if long_14_seen and i_allowCTrades and price_pos == 1
+            c_long_base := true
+        long_stage := 0
+    else
+        if stoch_14_3 < zoneLow
+            long_14_seen := true
+        if stoch_40_3 < zoneLow
+            long_40_seen := true
+        if stoch_60_10 < crossLow
+            long_60_seen := true
+
+// --- SHORT SETUP ---
+var int  short_stage = 0
+var int  short_stage1_bar = na
+var bool short_14_seen = false
+var bool short_40_seen = false
+var bool short_60_seen = false
+
+bool short_signal   = false
+bool short_signal_b = false
+bool c_short_base   = false
+
+if short_stage == 0
+    if stoch_9_3 > crossHigh
+        short_stage      := 1
+        short_stage1_bar := bar_index
+        short_14_seen    := stoch_14_3 > zoneHigh
+        short_40_seen    := stoch_40_3 > zoneHigh
+        short_60_seen    := stoch_60_10 > crossHigh
+
+else if short_stage == 1
+    if bar_index - short_stage1_bar > i_stageLookback
+        short_stage := 0
+    else if stoch_9_3 <= crossHigh
+        int short_others = (short_14_seen ? 1 : 0) + (short_40_seen ? 1 : 0) + (short_60_seen ? 1 : 0)
+        if short_others == 3 and ripster_ok_short and d_ok_short
+            short_signal := true
+        else if short_others >= 2 and i_allowBTrades and ripster_ok_short and d_ok_short
+            short_signal_b := true
+        else if short_14_seen and i_allowCTrades and price_pos == -1
+            c_short_base := true
+        short_stage := 0
+    else
+        if stoch_14_3 > zoneHigh
+            short_14_seen := true
+        if stoch_40_3 > zoneHigh
+            short_40_seen := true
+        if stoch_60_10 > crossHigh
+            short_60_seen := true
+
+// Dashboard helper
+bool others_oversold  = stoch_14_3 < zoneLow and stoch_40_3 < zoneLow and stoch_60_10 < crossLow
+bool others_overbought = stoch_14_3 > zoneHigh and stoch_40_3 > zoneHigh and stoch_60_10 > crossHigh
+
+// Cloud 2 re-entry tracking
+var int bars_since_a_long  = 999
+var int bars_since_a_short = 999
+if long_signal
+    bars_since_a_long := 0
+else
+    bars_since_a_long := bars_since_a_long + 1
+if short_signal
+    bars_since_a_short := 0
+else
+    bars_since_a_short := bars_since_a_short + 1
+
+bool recent_a_long  = bars_since_a_long <= i_reentryLookback and bars_since_a_long > 0
+bool recent_a_short = bars_since_a_short <= i_reentryLookback and bars_since_a_short > 0
+bool reentry_long   = i_cloud2Reentry and price_cross_above_cloud2 and recent_a_long and not long_signal
+bool reentry_short  = i_cloud2Reentry and price_cross_below_cloud2 and recent_a_short and not short_signal
+
+// ADD signals (informational only)
+bool add_long_trigger  = ta.crossover(stoch_9_3, i_addZoneLong) and stoch_40_3 > i_addMidLong and stoch_60_10 > i_addMidLong
+bool add_short_trigger = ta.crossunder(stoch_9_3, i_addZoneShort) and stoch_40_3 < i_addMidShort and stoch_60_10 < i_addMidShort
+
+// ═══════════════════════════════════════════════════════════════════════════
+// POSITION STATE
+// ═══════════════════════════════════════════════════════════════════════════
+
+float atr = ta.atr(i_atrLen)
+
+var string posDir        = "FLAT"
+var float  entryPrice_a  = na
+var int    entryBar_a    = na
+var float  current_sl_a  = na
+var float  current_tp_a  = na
+var string tradeGrade    = ""
+var float  entryPrice_bc = na
+var int    entryBar_bc   = na
+var float  current_sl_bc = na
+var int    add_count     = 0
+
+// AVWAP cumulative state (anchored to A trade entry)
+var float cumPV  = 0.0
+var float cumVol = 0.0
+var float cumPV2 = 0.0
+
+// AVWAP recovery re-entry state
+var float  lastAVWAP   = na
+var int    stopOutBar   = na
+var string stopOutDir   = ""
+
+// Volume flip filter state
+var float cumVolTrade   = 0.0
+var int   tradeBarCount = 0
+
+// ═══════════════════════════════════════════════════════════════════════════
+// STATE SYNC — detect exits via strategy engine open trades
+// ═══════════════════════════════════════════════════════════════════════════
+
+bool aStillOpen  = false
+bool bcStillOpen = false
+if strategy.opentrades > 0
+    for i = 0 to strategy.opentrades - 1
+        string eid = strategy.opentrades.entry_id(i)
+        if str.contains(eid, " A")
+            aStillOpen := true
+        if str.contains(eid, " BC")
+            bcStillOpen := true
+
+// A trade exited (was tracking, strategy shows closed, not on entry bar)
+if not na(entryBar_a) and not aStillOpen and bar_index > entryBar_a
+    lastAVWAP    := cumVol > 0 ? cumPV / cumVol : close
+    stopOutBar   := bar_index
+    stopOutDir   := posDir
+    entryPrice_a := na
+    entryBar_a   := na
+    current_sl_a := na
+    current_tp_a := na
+    tradeGrade   := ""
+
+// BC trade exited
+if not na(entryBar_bc) and not bcStillOpen and bar_index > entryBar_bc
+    entryPrice_bc := na
+    entryBar_bc   := na
+    current_sl_bc := na
+    add_count     := 0
+
+// Both closed = flat
+if not aStillOpen and not bcStillOpen and posDir != "FLAT"
+    posDir := "FLAT"
+
+// ═══════════════════════════════════════════════════════════════════════════
+// VOLUME FLIP FILTER
+// Current bar volume must exceed max(lookback avg, avg since entry) for flips
+// ═══════════════════════════════════════════════════════════════════════════
+
+float avgVolLookback    = ta.sma(volume, i_flipVolLookback)
+float avgVolSinceEntry  = tradeBarCount > 0 ? cumVolTrade / tradeBarCount : 0.0
+bool  highVolFlip       = not i_useFlipVol or volume > math.max(nz(avgVolLookback, 0.0), avgVolSinceEntry)
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AVWAP RECOVERY RE-ENTRY SIGNALS
+// V-shape dip: stopped out, price rebounds past last AVWAP = re-enter same dir
+// ═══════════════════════════════════════════════════════════════════════════
+
+bool isFlat = posDir == "FLAT"
+
+bool avwap_reentry_long = i_avwapReentry and isFlat and not na(stopOutBar) and
+     stopOutDir == "LONG" and bar_index - stopOutBar <= i_avwapReentryLookback and
+     not na(lastAVWAP) and ta.crossover(close, lastAVWAP)
+
+bool avwap_reentry_short = i_avwapReentry and isFlat and not na(stopOutBar) and
+     stopOutDir == "SHORT" and bar_index - stopOutBar <= i_avwapReentryLookback and
+     not na(lastAVWAP) and ta.crossunder(close, lastAVWAP)
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ENTRY LOGIC
+// A trades: can open new or flip direction
+// B/C trades: add when A is open + same dir + Cloud 3/4 parallel
+// Re-entries: flat only
+// ═══════════════════════════════════════════════════════════════════════════
+
+bool canFlipLong  = isFlat or (posDir == "SHORT" and highVolFlip)
+bool canFlipShort = isFlat or (posDir == "LONG" and highVolFlip)
+bool canAddLong   = aStillOpen and posDir == "LONG" and na(entryBar_bc) and clouds_parallel_bull
+bool canAddShort  = aStillOpen and posDir == "SHORT" and na(entryBar_bc) and clouds_parallel_bear
+
+bool didEnterA  = false
+bool didEnterBC = false
+bool didAdd     = false
+
+// --- A long (4/4 stochs) ---
+if long_signal and canFlipLong
+    if posDir == "SHORT"
+        strategy.close_all("Flip to Long")
+        entryPrice_bc := na
+        entryBar_bc   := na
+        current_sl_bc := na
+        add_count     := 0
+    posDir       := "LONG"
+    entryPrice_a := close
+    entryBar_a   := bar_index
+    current_sl_a := close - (i_slMult * atr)
+    current_tp_a := i_useTP ? close + (i_tpMult * atr) : na
+    tradeGrade   := "A"
+    cumPV  := hlc3 * volume
+    cumVol := volume
+    cumPV2 := hlc3 * hlc3 * volume
+    cumVolTrade  := volume
+    tradeBarCount := 1
+    didEnterA := true
+
+// --- A short (4/4 stochs) ---
+else if short_signal and canFlipShort
+    if posDir == "LONG"
+        strategy.close_all("Flip to Short")
+        entryPrice_bc := na
+        entryBar_bc   := na
+        current_sl_bc := na
+        add_count     := 0
+    posDir       := "SHORT"
+    entryPrice_a := close
+    entryBar_a   := bar_index
+    current_sl_a := close + (i_slMult * atr)
+    current_tp_a := i_useTP ? close - (i_tpMult * atr) : na
+    tradeGrade   := "A"
+    cumPV  := hlc3 * volume
+    cumVol := volume
+    cumPV2 := hlc3 * hlc3 * volume
+    cumVolTrade  := volume
+    tradeBarCount := 1
+    didEnterA := true
+
+// --- Cloud 2 re-entry A long (flat only) ---
+else if reentry_long and isFlat
+    posDir       := "LONG"
+    entryPrice_a := close
+    entryBar_a   := bar_index
+    current_sl_a := close - (i_slMult * atr)
+    current_tp_a := na
+    tradeGrade   := "A"
+    cumPV  := hlc3 * volume
+    cumVol := volume
+    cumPV2 := hlc3 * hlc3 * volume
+    cumVolTrade  := volume
+    tradeBarCount := 1
+    didEnterA := true
+
+// --- Cloud 2 re-entry A short (flat only) ---
+else if reentry_short and isFlat
+    posDir       := "SHORT"
+    entryPrice_a := close
+    entryBar_a   := bar_index
+    current_sl_a := close + (i_slMult * atr)
+    current_tp_a := na
+    tradeGrade   := "A"
+    cumPV  := hlc3 * volume
+    cumVol := volume
+    cumPV2 := hlc3 * hlc3 * volume
+    cumVolTrade  := volume
+    tradeBarCount := 1
+    didEnterA := true
+
+// --- AVWAP recovery re-entry long (V-shape dip) ---
+else if avwap_reentry_long
+    posDir       := "LONG"
+    entryPrice_a := close
+    entryBar_a   := bar_index
+    current_sl_a := close - (i_slMult * atr)
+    current_tp_a := na
+    tradeGrade   := "A"
+    cumPV  := hlc3 * volume
+    cumVol := volume
+    cumPV2 := hlc3 * hlc3 * volume
+    cumVolTrade  := volume
+    tradeBarCount := 1
+    stopOutBar := na
+    didEnterA  := true
+
+// --- AVWAP recovery re-entry short (V-shape dip) ---
+else if avwap_reentry_short
+    posDir       := "SHORT"
+    entryPrice_a := close
+    entryBar_a   := bar_index
+    current_sl_a := close + (i_slMult * atr)
+    current_tp_a := na
+    tradeGrade   := "A"
+    cumPV  := hlc3 * volume
+    cumVol := volume
+    cumPV2 := hlc3 * hlc3 * volume
+    cumVolTrade  := volume
+    tradeBarCount := 1
+    stopOutBar := na
+    didEnterA  := true
+
+// --- B trade long (3/4 stochs + parallel) ---
+else if long_signal_b and canAddLong
+    entryPrice_bc := close
+    entryBar_bc   := bar_index
+    current_sl_bc := close - atr
+    add_count     += 1
+    tradeGrade    := tradeGrade == "A" ? "A+B" : tradeGrade
+    didEnterBC    := true
+
+// --- B trade short ---
+else if short_signal_b and canAddShort
+    entryPrice_bc := close
+    entryBar_bc   := bar_index
+    current_sl_bc := close + atr
+    add_count     += 1
+    tradeGrade    := tradeGrade == "A" ? "A+B" : tradeGrade
+    didEnterBC    := true
+
+// --- C trade long (2/4 fast + Cloud 3 + parallel) ---
+else if c_long_base and canAddLong
+    entryPrice_bc := close
+    entryBar_bc   := bar_index
+    current_sl_bc := close - atr
+    add_count     += 1
+    tradeGrade    := tradeGrade == "A" ? "A+C" : tradeGrade
+    didEnterBC    := true
+
+// --- C trade short ---
+else if c_short_base and canAddShort
+    entryPrice_bc := close
+    entryBar_bc   := bar_index
+    current_sl_bc := close + atr
+    add_count     += 1
+    tradeGrade    := tradeGrade == "A" ? "A+C" : tradeGrade
+    didEnterBC    := true
+
+// --- ADD signals (informational only) ---
+else if not na(entryBar_a) and posDir == "LONG" and add_long_trigger
+    add_count += 1
+    didAdd    := true
+else if not na(entryBar_a) and posDir == "SHORT" and add_short_trigger
+    add_count += 1
+    didAdd    := true
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AVWAP CALCULATION (Anchored VWAP from A trade entry)
+// cumPV/cumVol/cumPV2 seeded on entry bar. Accumulates while any trade open.
+// ═══════════════════════════════════════════════════════════════════════════
+
+if not na(entryBar_a) and bar_index > entryBar_a
+    cumPV  += hlc3 * volume
+    cumVol += volume
+    cumPV2 += hlc3 * hlc3 * volume
+    cumVolTrade  += volume
+    tradeBarCount += 1
+
+float avwap       = cumVol > 0 ? cumPV / cumVol : close
+float avwap_var   = cumVol > 0 ? math.max((cumPV2 / cumVol) - (avwap * avwap), 0.0) : 0.0
+float avwap_stdev = math.sqrt(avwap_var)
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SL MANAGEMENT (AVWAP-based trail)
+// A trade: AVWAP ± max(stdev, ATR) — ratchets favorable, never crosses price
+// BC trade: AVWAP ± ATR — tighter, ratchets favorable
+// ═══════════════════════════════════════════════════════════════════════════
+
+if not na(entryBar_a) and bar_index > entryBar_a
+    if posDir == "LONG"
+        float avwap_sl = avwap - math.max(avwap_stdev, atr)
+        if avwap_sl > current_sl_a and avwap_sl < close
+            current_sl_a := avwap_sl
+    else if posDir == "SHORT"
+        float avwap_sl = avwap + math.max(avwap_stdev, atr)
+        if avwap_sl < current_sl_a and avwap_sl > close
+            current_sl_a := avwap_sl
+
+if not na(entryBar_bc) and bar_index > entryBar_bc
+    if posDir == "LONG"
+        float bc_sl = avwap - atr
+        if bc_sl > current_sl_bc and bc_sl < close
+            current_sl_bc := bc_sl
+    else if posDir == "SHORT"
+        float bc_sl = avwap + atr
+        if bc_sl < current_sl_bc and bc_sl > close
+            current_sl_bc := bc_sl
+
+// ═══════════════════════════════════════════════════════════════════════════
+// BC EXIT CONDITIONS (in addition to SL trail)
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Cloud 2 cross against direction
+bool bc_exit_cloud2_long  = not na(entryBar_bc) and posDir == "LONG" and close < cloud2_bottom
+bool bc_exit_cloud2_short = not na(entryBar_bc) and posDir == "SHORT" and close > cloud2_top
+
+// 60-10 K crosses D in extreme zone (momentum waning at top/bottom)
+bool bc_exit_6010_long  = not na(entryBar_bc) and posDir == "LONG" and
+     stoch_60_10 > 75 and stoch_60_10_d > 75 and ta.crossunder(stoch_60_10, stoch_60_10_d)
+bool bc_exit_6010_short = not na(entryBar_bc) and posDir == "SHORT" and
+     stoch_60_10 < 25 and stoch_60_10_d < 25 and ta.crossover(stoch_60_10, stoch_60_10_d)
+
+bool bc_exit_long  = bc_exit_cloud2_long or bc_exit_6010_long
+bool bc_exit_short = bc_exit_cloud2_short or bc_exit_6010_short
+
+// ═══════════════════════════════════════════════════════════════════════════
+// STRATEGY EXECUTION
+// ═══════════════════════════════════════════════════════════════════════════
+
+// A trade entries
+if didEnterA
+    if posDir == "LONG"
+        strategy.entry("Long A", strategy.long)
+    else
+        strategy.entry("Short A", strategy.short)
+
+// BC trade entries
+if didEnterBC
+    if posDir == "LONG"
+        strategy.entry("Long BC", strategy.long)
+    else
+        strategy.entry("Short BC", strategy.short)
+
+// A trade exit orders (update every bar for AVWAP trail)
+if aStillOpen or (not na(entryBar_a) and entryBar_a == bar_index)
+    if posDir == "LONG"
+        if na(current_tp_a)
+            strategy.exit("Exit Long A", "Long A", stop=current_sl_a)
+        else
+            strategy.exit("Exit Long A", "Long A", stop=current_sl_a, limit=current_tp_a)
+    else if posDir == "SHORT"
+        if na(current_tp_a)
+            strategy.exit("Exit Short A", "Short A", stop=current_sl_a)
+        else
+            strategy.exit("Exit Short A", "Short A", stop=current_sl_a, limit=current_tp_a)
+
+// BC trade exit orders (SL via strategy.exit, updated every bar)
+if bcStillOpen or (not na(entryBar_bc) and entryBar_bc == bar_index)
+    if posDir == "LONG"
+        strategy.exit("Exit Long BC", "Long BC", stop=current_sl_bc)
+    else if posDir == "SHORT"
+        strategy.exit("Exit Short BC", "Short BC", stop=current_sl_bc)
+
+// BC condition-based exits (Cloud 2 cross or 60-10 K/D cross)
+if bc_exit_long
+    strategy.close("Long BC", comment=bc_exit_cloud2_long ? "C2 Exit" : "60-10 Exit")
+if bc_exit_short
+    strategy.close("Short BC", comment=bc_exit_cloud2_short ? "C2 Exit" : "60-10 Exit")
+
+// ═══════════════════════════════════════════════════════════════════════════
+// VISUALS
+// ═══════════════════════════════════════════════════════════════════════════
+
+bool anyOpen = not na(entryBar_a) or not na(entryBar_bc)
+
+// A trade SL (yellow=AVWAP trailing, orange=initial static)
+bool a_trailing = not na(entryBar_a) and bar_index > entryBar_a + 1
+color slColor_a = a_trailing ? color.yellow : color.orange
+plot(not na(entryBar_a) ? current_sl_a : na, "SL A", slColor_a, 2, plot.style_linebr)
+
+// BC trade SL (teal)
+plot(not na(entryBar_bc) ? current_sl_bc : na, "SL BC", color.teal, 1, plot.style_linebr)
+
+// TP line (A trade only)
+plot(not na(entryBar_a) and not na(current_tp_a) ? current_tp_a : na, "TP A", color.green, 1, plot.style_linebr)
+
+// AVWAP bands (when any trade is open)
+float avwap_show = anyOpen and i_showAVWAP ? avwap : na
+float avwap_p1   = anyOpen and i_showAVWAP ? avwap + avwap_stdev : na
+float avwap_m1   = anyOpen and i_showAVWAP ? avwap - avwap_stdev : na
+float avwap_p2   = anyOpen and i_showAVWAP ? avwap + 2 * avwap_stdev : na
+float avwap_m2   = anyOpen and i_showAVWAP ? avwap - 2 * avwap_stdev : na
+
+plot(avwap_show, "AVWAP", color.white, 2, plot.style_linebr)
+p_ap1 = plot(avwap_p1, "AVWAP +1\u03C3", color.new(color.lime, 60), 1, plot.style_linebr)
+p_am1 = plot(avwap_m1, "AVWAP -1\u03C3", color.new(color.red, 60), 1, plot.style_linebr)
+plot(avwap_p2, "AVWAP +2\u03C3", color.new(color.lime, 80), 1, plot.style_linebr)
+plot(avwap_m2, "AVWAP -2\u03C3", color.new(color.red, 80), 1, plot.style_linebr)
+fill(p_ap1, p_am1, color.new(color.gray, 90))
+
+// Clouds
+pC2a = plot(i_showCloud2 ? ema5 : na, "EMA 5", color.new(color.teal, 70))
+pC2b = plot(i_showCloud2 ? ema12 : na, "EMA 12", color.new(color.teal, 70))
+fill(pC2a, pC2b, cloud2_bull ? color.new(color.teal, 85) : color.new(color.maroon, 85))
+
+pC3a = plot(i_showCloud3 ? ema34 : na, "EMA 34", color.new(color.blue, 70))
+pC3b = plot(i_showCloud3 ? ema50 : na, "EMA 50", color.new(color.blue, 70))
+fill(pC3a, pC3b, cloud3_bull ? color.new(color.green, 85) : color.new(color.red, 85))
+
+pC4a = plot(i_showCloud4 ? ema72 : na, "EMA 72", color.new(color.purple, 70))
+pC4b = plot(i_showCloud4 ? ema89 : na, "EMA 89", color.new(color.purple, 70))
+fill(pC4a, pC4b, cloud4_bull ? color.new(color.green, 90) : color.new(color.red, 90))
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════════════════════
+
+var table dash = table.new(position.top_right, 2, 13, bgcolor=color.new(#1e222d, 10))
+
+if i_showDash and barstate.islast
+    table.cell(dash, 0, 0, "4P v3.6S", text_color=color.white, text_size=size.small)
+    table.cell(dash, 1, 0, posDir, text_color=posDir == "LONG" ? color.lime : posDir == "SHORT" ? color.red : color.gray, text_size=size.small)
+
+    table.cell(dash, 0, 1, "9-3", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 1, str.tostring(stoch_9_3, "#.0"), text_color=stoch_9_3 < crossLow ? color.lime : stoch_9_3 > crossHigh ? color.red : color.white, text_size=size.tiny)
+
+    table.cell(dash, 0, 2, "14-3", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 2, str.tostring(stoch_14_3, "#.0"), text_color=stoch_14_3 < zoneLow ? color.lime : stoch_14_3 > zoneHigh ? color.red : color.white, text_size=size.tiny)
+
+    table.cell(dash, 0, 3, "40-3", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 3, str.tostring(stoch_40_3, "#.0"), text_color=stoch_40_3 < zoneLow ? color.lime : stoch_40_3 > zoneHigh ? color.red : color.white, text_size=size.tiny)
+
+    table.cell(dash, 0, 4, "60-10", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 4, str.tostring(stoch_60_10, "#.0"), text_color=stoch_60_10 < zoneLow ? color.lime : stoch_60_10 > zoneHigh ? color.red : color.white, text_size=size.tiny)
+
+    string allInZone = others_oversold ? "ALL < " + str.tostring(zoneLow, "#") : others_overbought ? "ALL > " + str.tostring(zoneHigh, "#") : "---"
+    color zoneColor = others_oversold ? color.lime : others_overbought ? color.red : color.gray
+    table.cell(dash, 0, 5, "Zone", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 5, allInZone, text_color=zoneColor, text_size=size.tiny)
+
+    string parallelStr = clouds_parallel_bull ? "BULL" : clouds_parallel_bear ? "BEAR" : "---"
+    color parallelColor = clouds_parallel_bull ? color.lime : clouds_parallel_bear ? color.red : color.gray
+    table.cell(dash, 0, 6, "C3/C4", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 6, parallelStr, text_color=parallelColor, text_size=size.tiny)
+
+    table.cell(dash, 0, 7, "Cloud2", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 7, cloud2_bull ? "BULL" : "BEAR", text_color=cloud2_bull ? color.lime : color.red, text_size=size.tiny)
+
+    string avwapStr = anyOpen ? str.tostring(avwap, "#.5") : "---"
+    table.cell(dash, 0, 8, "AVWAP", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 8, avwapStr, text_color=anyOpen ? color.white : color.gray, text_size=size.tiny)
+
+    string slAStr = not na(entryBar_a) ? str.tostring(current_sl_a, "#.5") : "---"
+    color slAColor = not na(entryBar_a) ? (a_trailing ? color.yellow : color.orange) : color.gray
+    table.cell(dash, 0, 9, "SL A", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 9, slAStr, text_color=slAColor, text_size=size.tiny)
+
+    string slBCStr = not na(entryBar_bc) ? str.tostring(current_sl_bc, "#.5") : "---"
+    table.cell(dash, 0, 10, "SL BC", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 10, slBCStr, text_color=not na(entryBar_bc) ? color.teal : color.gray, text_size=size.tiny)
+
+    string tradeStr = posDir != "FLAT" ? tradeGrade + (add_count > 0 ? "+" + str.tostring(add_count) : "") : "---"
+    table.cell(dash, 0, 11, "Trades", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 11, tradeStr, text_color=posDir != "FLAT" ? color.white : color.gray, text_size=size.tiny)
+
+    string dStr = str.tostring(stoch_60_10_d, "#.0")
+    color dColor = stoch_60_10_d > 20 and stoch_60_10_d < 80 ? color.lime : color.orange
+    table.cell(dash, 0, 12, "60 D", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 12, dStr, text_color=dColor, text_size=size.tiny)

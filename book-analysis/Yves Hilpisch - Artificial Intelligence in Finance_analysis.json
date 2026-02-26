@@ -1,0 +1,56 @@
+{
+  "file": "C:\\Users\\User\\Downloads\\Yves Hilpisch - Artificial Intelligence in Finance_ A Python-Based Guide.pdf",
+  "name": "Yves Hilpisch - Artificial Intelligence in Finance_ A Python-Based Guide.pdf",
+  "size_mb": 23.73779010772705,
+  "chapters": 55,
+  "rating": 9,
+  "stats": {
+    "trading_concepts": 86,
+    "ml_concepts": 63,
+    "code_chapters": 30,
+    "formula_chapters": 9
+  },
+  "top_concepts": {
+    "trading": [
+      [
+        "backtesting",
+        474
+      ],
+      [
+        "psychology",
+        116
+      ],
+      [
+        "exits",
+        103
+      ],
+      [
+        "metrics",
+        44
+      ],
+      [
+        "risk",
+        37
+      ]
+    ],
+    "ml": [
+      [
+        "models",
+        313
+      ],
+      [
+        "supervised",
+        250
+      ],
+      [
+        "metrics",
+        174
+      ],
+      [
+        "validation",
+        52
+      ]
+    ]
+  },
+  "analyzed": "2026-02-09T15:37:52.347959"
+}

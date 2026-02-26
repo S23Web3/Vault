@@ -1,0 +1,60 @@
+{
+  "file": "C:\\Users\\User\\Downloads\\López de Prado, Marcos Mailoc - Advances in Financial Machine Learnin.epub",
+  "name": "López de Prado, Marcos Mailoc - Advances in Financial Machine Learnin.epub",
+  "size_mb": 13.067323684692383,
+  "chapters": 27,
+  "rating": 10,
+  "stats": {
+    "trading_concepts": 74,
+    "ml_concepts": 69,
+    "code_chapters": 23,
+    "formula_chapters": 4
+  },
+  "top_concepts": {
+    "trading": [
+      [
+        "backtesting",
+        469
+      ],
+      [
+        "psychology",
+        130
+      ],
+      [
+        "metrics",
+        130
+      ],
+      [
+        "risk",
+        21
+      ],
+      [
+        "entries",
+        17
+      ]
+    ],
+    "ml": [
+      [
+        "validation",
+        235
+      ],
+      [
+        "metrics",
+        234
+      ],
+      [
+        "supervised",
+        74
+      ],
+      [
+        "features",
+        67
+      ],
+      [
+        "models",
+        46
+      ]
+    ]
+  },
+  "analyzed": "2026-02-09T15:16:34.402686"
+}

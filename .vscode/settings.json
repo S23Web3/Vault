@@ -1,0 +1,9 @@
+{
+    "claudeCode.hideOnboarding": true,
+    "claudeCode.initialPermissionMode": "plan",
+    "claudeCode.enableNewConversationShortcut": true,
+    "claudeCode.environmentVariables": [
+
+    ],
+    "claudeCode.useCtrlEnterToSend": true
+}

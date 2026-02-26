@@ -1,0 +1,60 @@
+{
+  "file": "C:\\Users\\User\\Downloads\\Stefan mschine learning.epub",
+  "name": "Stefan mschine learning.epub",
+  "size_mb": 27.138280868530273,
+  "chapters": 29,
+  "rating": 10,
+  "stats": {
+    "trading_concepts": 103,
+    "ml_concepts": 115,
+    "code_chapters": 28,
+    "formula_chapters": 7
+  },
+  "top_concepts": {
+    "trading": [
+      [
+        "backtesting",
+        602
+      ],
+      [
+        "psychology",
+        425
+      ],
+      [
+        "metrics",
+        70
+      ],
+      [
+        "risk",
+        66
+      ],
+      [
+        "entries",
+        37
+      ]
+    ],
+    "ml": [
+      [
+        "supervised",
+        729
+      ],
+      [
+        "models",
+        368
+      ],
+      [
+        "validation",
+        228
+      ],
+      [
+        "features",
+        212
+      ],
+      [
+        "metrics",
+        180
+      ]
+    ]
+  },
+  "analyzed": "2026-02-09T15:36:07.837371"
+}

@@ -1,0 +1,27 @@
+{
+  "file": "C:\\Users\\User\\Downloads\\pysample.pdf",
+  "name": "pysample.pdf",
+  "size_mb": 0.35071277618408203,
+  "chapters": 13,
+  "rating": 1,
+  "stats": {
+    "trading_concepts": 3,
+    "ml_concepts": 0,
+    "code_chapters": 2,
+    "formula_chapters": 0
+  },
+  "top_concepts": {
+    "trading": [
+      [
+        "entries",
+        2
+      ],
+      [
+        "psychology",
+        1
+      ]
+    ],
+    "ml": []
+  },
+  "analyzed": "2026-02-09T15:36:25.612303"
+}

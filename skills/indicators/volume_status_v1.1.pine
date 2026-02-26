@@ -1,0 +1,173 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © MalikTrader - Simplified Candle Rvol for fast decision making
+// Version: 1.1
+// Purpose: Single-glance volume confirmation for 5-minute trading
+// Philosophy: No mental math - just GO / WAIT / SKIP
+//
+// ┌────────────────────────────────────────────────────────────────┐
+// │ TRADING DECISION GUIDE                                         │
+// ├──────────┬─────────┬───────────────────────────────────────────┤
+// │ Status   │ Color   │ Action                                    │
+// ├──────────┼─────────┼───────────────────────────────────────────┤
+// │ SPIKE 🔥 │ Red     │ High conviction - AVWAP anchor candidate  │
+// │ STRONG ✓ │ Green   │ Confirmed - TAKE THE TRADE                │
+// │ NORMAL ~ │ Yellow  │ Proceed with standard position size       │
+// │ WEAK ⚠   │ Orange  │ Reduce size 50% or SKIP                   │
+// │ DEAD ✗   │ Gray    │ No participation - DO NOT TRADE           │
+// └──────────┴─────────┴───────────────────────────────────────────┘
+//
+// Quick Rule: GREEN = GO, YELLOW = CAUTION, ORANGE/GRAY = SKIP
+
+//@version=6
+indicator("Volume Status", shorttitle="Vol Status", overlay=true)
+
+// ══════════════════════════════════════════════════════════════════════════════
+// INPUTS
+// ══════════════════════════════════════════════════════════════════════════════
+
+grp_settings = "Settings"
+i_avgLength  = input.int(50, "Lookback Candles", minval=10, maxval=200, group=grp_settings,
+               tooltip="Number of candles for average volume calculation")
+i_tablePos   = input.string("Top Right", "Position", 
+               options=["Top Left", "Top Center", "Top Right", "Bottom Left", "Bottom Center", "Bottom Right"], 
+               group=grp_settings)
+i_showMultiplier = input.bool(true, "Show Multiplier (e.g., 1.5x)", group=grp_settings,
+               tooltip="Show volume as multiplier of average below status")
+i_compactMode = input.bool(false, "Compact Mode (status only)", group=grp_settings,
+               tooltip="Show only the status word, no additional info")
+
+grp_thresholds = "Thresholds (% of average)"
+i_spikeThresh  = input.int(200, "SPIKE threshold", minval=150, group=grp_thresholds)
+i_strongThresh = input.int(150, "STRONG threshold", minval=100, group=grp_thresholds)
+i_normalThresh = input.int(80, "NORMAL threshold", minval=50, group=grp_thresholds)
+i_weakThresh   = input.int(50, "WEAK threshold", minval=20, group=grp_thresholds)
+
+grp_colors = "Status Colors"
+i_colorSpike  = input.color(color.red, "SPIKE", group=grp_colors)
+i_colorStrong = input.color(color.green, "STRONG", group=grp_colors)
+i_colorNormal = input.color(color.yellow, "NORMAL", group=grp_colors)
+i_colorWeak   = input.color(color.orange, "WEAK", group=grp_colors)
+i_colorDead   = input.color(color.gray, "DEAD", group=grp_colors)
+
+// ══════════════════════════════════════════════════════════════════════════════
+// CALCULATIONS
+// ══════════════════════════════════════════════════════════════════════════════
+
+avgVolume = ta.sma(volume, i_avgLength)
+currentRvol = avgVolume > 0 ? (volume / avgVolume) * 100 : 0
+multiplier = avgVolume > 0 ? volume / avgVolume : 0
+
+// ══════════════════════════════════════════════════════════════════════════════
+// STATUS DETERMINATION
+// ══════════════════════════════════════════════════════════════════════════════
+
+// Determine status text and color based on thresholds
+getStatus(rvol) =>
+    if rvol >= i_spikeThresh
+        ["SPIKE", "🔥"]
+    else if rvol >= i_strongThresh
+        ["STRONG", "✓"]
+    else if rvol >= i_normalThresh
+        ["NORMAL", "~"]
+    else if rvol >= i_weakThresh
+        ["WEAK", "⚠"]
+    else
+        ["DEAD", "✗"]
+
+getStatusColor(rvol) =>
+    if rvol >= i_spikeThresh
+        i_colorSpike
+    else if rvol >= i_strongThresh
+        i_colorStrong
+    else if rvol >= i_normalThresh
+        i_colorNormal
+    else if rvol >= i_weakThresh
+        i_colorWeak
+    else
+        i_colorDead
+
+[statusText, statusIcon] = getStatus(currentRvol)
+statusColor = getStatusColor(currentRvol)
+
+// ══════════════════════════════════════════════════════════════════════════════
+// HELPER FUNCTIONS
+// ══════════════════════════════════════════════════════════════════════════════
+
+getTablePosition(pos) =>
+    switch pos
+        "Top Left"      => position.top_left
+        "Top Center"    => position.top_center
+        "Top Right"     => position.top_right
+        "Bottom Left"   => position.bottom_left
+        "Bottom Center" => position.bottom_center
+        "Bottom Right"  => position.bottom_right
+        => position.top_right
+
+formatMultiplier(mult) =>
+    if mult >= 10
+        str.tostring(mult, "#") + "x"
+    else if mult >= 1
+        str.tostring(mult, "#.#") + "x"
+    else
+        str.tostring(mult, "#.##") + "x"
+
+// ══════════════════════════════════════════════════════════════════════════════
+// DISPLAY
+// ══════════════════════════════════════════════════════════════════════════════
+
+var table volTable = table.new(getTablePosition(i_tablePos), 1, 2, 
+                               bgcolor=color.new(color.black, 40), 
+                               border_width=0)
+
+if barstate.islast
+    // Main status row
+    // Full: "VOL: STRONG ✓"  |  Compact: "✓ STRONG"
+    displayText = i_compactMode ? statusIcon + " " + statusText : "VOL: " + statusText + " " + statusIcon
+    
+    table.cell(volTable, 0, 0, displayText, 
+               text_color=statusColor, 
+               text_size=size.normal,
+               text_halign=text.align_center,
+               bgcolor=color.new(statusColor, 85))
+    
+    // Secondary row: multiplier in simple format "(1.5x)"
+    if i_showMultiplier and not i_compactMode
+        table.cell(volTable, 0, 1, formatMultiplier(multiplier), 
+                   text_color=color.new(statusColor, 20),
+                   text_size=size.small,
+                   text_halign=text.align_center,
+                   bgcolor=color.new(color.black, 70))
+    else
+        // Clear second row if not needed
+        table.cell(volTable, 0, 1, "", bgcolor=color.new(color.black, 100))
+
+// ══════════════════════════════════════════════════════════════════════════════
+// DATA WINDOW (for detailed inspection when needed)
+// ══════════════════════════════════════════════════════════════════════════════
+
+plot(currentRvol, "RVol %", display=display.data_window)
+plot(multiplier, "Multiplier", display=display.data_window)
+plot(volume, "Volume", display=display.data_window)
+plot(avgVolume, "Avg Volume", display=display.data_window)
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ALERTS - Actionable notifications
+// ══════════════════════════════════════════════════════════════════════════════
+
+// Volume spike - potential AVWAP anchor point
+alertcondition(currentRvol >= i_spikeThresh, "🔥 SPIKE", 
+               "Volume SPIKE on {{ticker}} - potential anchor point")
+
+// Volume confirmed for entry
+alertcondition(currentRvol >= i_strongThresh and currentRvol < i_spikeThresh, "✓ STRONG", 
+               "Volume STRONG on {{ticker}} - confirmed for entry")
+
+// Volume dropped to weak - caution
+alertcondition(ta.crossunder(currentRvol, float(i_weakThresh)), "⚠ WEAK", 
+               "Volume turned WEAK on {{ticker}} - reduce exposure")
+
+// ══════════════════════════════════════════════════════════════════════════════
+// BACKGROUND FLASH ON SPIKE (optional visual alert)
+// ══════════════════════════════════════════════════════════════════════════════
+
+bgcolor(currentRvol >= i_spikeThresh ? color.new(i_colorSpike, 90) : na, title="Spike Background")

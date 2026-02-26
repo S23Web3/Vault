@@ -1,0 +1,250 @@
+//@version=6
+indicator("ATR Position Manager", shorttitle="ATR-PM", overlay=true, max_lines_count=100, max_labels_count=100)
+
+// ============================================
+// INPUTS
+// ============================================
+
+// ----- Entry Signal Settings -----
+// >>> INTEGRATION PLACEHOLDER <<<
+// Current: SSL Channel crossover (89 MA) for testing
+// Future: Replace with Four Pillars combined indicator signals
+// Reference: long_condition / short_condition variables below
+
+i_ssl_length    = input.int(89, "SSL MA Length", minval=1, group="Entry Signal (SSL - Placeholder)")
+i_ssl_source    = input.source(close, "SSL Source", group="Entry Signal (SSL - Placeholder)")
+
+// ----- ATR Settings -----
+i_atr_length    = input.int(14, "ATR Length", minval=1, group="ATR Settings")
+i_sl_mult       = input.float(2.0, "Stop Loss Multiplier", minval=0.1, step=0.1, group="ATR Settings")
+i_trail_mult    = input.float(2.0, "Trailing Multiplier", minval=0.1, step=0.1, group="ATR Settings")
+i_htf           = input.timeframe("5", "Trailing ATR Timeframe", group="ATR Settings")
+
+// ----- Order Settings -----
+i_position_size = input.float(250, "Position Size USD", minval=1, group="Order Settings")
+i_leverage      = input.int(20, "Leverage", minval=1, maxval=125, group="Order Settings")
+i_secret        = input.string("", "Webhook Secret", group="Order Settings")
+
+// ----- Visuals -----
+i_show_lines    = input.bool(true, "Show SL/Trail Lines", group="Visuals")
+i_show_ssl      = input.bool(true, "Show SSL Channel", group="Visuals")
+i_sl_color      = input.color(color.red, "Stop Loss Color", group="Visuals")
+i_trail_color   = input.color(color.orange, "Trail Activation Color", group="Visuals")
+
+
+// ============================================
+// SSL CHANNEL CALCULATION
+// Source: https://www.tradingview.com/script/6y9SkpnV-SSL-Channel/
+// ============================================
+// >>> PLACEHOLDER ENTRY SIGNAL <<<
+// This SSL implementation is for TESTING ONLY
+// Replace with Four Pillars integration when ready
+// The buy/sell crossover triggers position management calculations
+
+f_ssl(int length) =>
+    smaHigh = ta.sma(high, length)
+    smaLow  = ta.sma(low, length)
+    
+    var int Hlv = 0
+    Hlv := i_ssl_source > smaHigh ? 1 : i_ssl_source < smaLow ? -1 : Hlv[1]
+    
+    sslDown = Hlv < 0 ? smaHigh : smaLow
+    sslUp   = Hlv > 0 ? smaHigh : smaLow
+    
+    [sslUp, sslDown, Hlv]
+
+[sslUp, sslDown, sslHlv] = f_ssl(i_ssl_length)
+
+// SSL Crossover Detection
+bool ssl_cross_up   = ta.crossover(sslUp, sslDown)   // Buy signal
+bool ssl_cross_down = ta.crossunder(sslUp, sslDown)  // Sell signal
+
+// Plot SSL Channel
+plot(i_show_ssl ? sslUp : na, "SSL Up", color=color.lime, linewidth=2)
+plot(i_show_ssl ? sslDown : na, "SSL Down", color=color.red, linewidth=2)
+
+
+// ============================================
+// ENTRY DETECTION
+// ============================================
+// >>> INTEGRATION POINT - ACTIVE <<<
+// Current: SSL Channel 89 MA crossover signals
+// Future: Replace with Four Pillars combined indicator
+//
+// To integrate Four Pillars:
+// 1. Import or include Four Pillars signal logic
+// 2. Replace ssl_cross_up with fourPillars_long_signal
+// 3. Replace ssl_cross_down with fourPillars_short_signal
+// 4. Remove or disable SSL calculation section above
+
+bool long_condition  = ssl_cross_up and barstate.isconfirmed
+bool short_condition = ssl_cross_down and barstate.isconfirmed
+
+// Entry price captured at signal bar
+float entry_price = close
+
+// Unified trigger
+bool entry_signal = long_condition or short_condition
+string direction  = long_condition ? "LONG" : "SHORT"
+
+
+// ============================================
+// FUNCTION: ATR CALCULATION (ANY TIMEFRAME)
+// ============================================
+
+f_atr(int length, simple string tf) =>
+    request.security(syminfo.tickerid, tf, ta.atr(length), lookahead=barmerge.lookahead_off, gaps=barmerge.gaps_off)
+
+
+// ============================================
+// FUNCTION: CALCULATE POSITION LEVELS
+// ============================================
+
+type PositionLevels
+    float sl_price
+    float trail_activation
+    float trail_callback
+    float entry
+    string dir
+
+f_calc_levels(string dir, float entry, float atr_chart, float atr_htf, float sl_mult, float trail_mult) =>
+    PositionLevels levels = PositionLevels.new()
+    levels.entry := entry
+    levels.dir   := dir
+    
+    if dir == "LONG"
+        levels.sl_price         := entry - (atr_chart * sl_mult)
+        levels.trail_activation := entry + (atr_htf * trail_mult)
+        levels.trail_callback   := atr_htf * trail_mult
+    else // SHORT
+        levels.sl_price         := entry + (atr_chart * sl_mult)
+        levels.trail_activation := entry - (atr_htf * trail_mult)
+        levels.trail_callback   := atr_htf * trail_mult
+    
+    levels
+
+
+// ============================================
+// MAIN CALCULATIONS
+// ============================================
+
+// Get ATR values
+float atr_chart = ta.atr(i_atr_length)                    // Chart timeframe
+float atr_htf   = f_atr(i_atr_length, i_htf)              // Higher timeframe
+
+// Persistent position levels
+var PositionLevels pos = PositionLevels.new()
+
+if entry_signal
+    pos := f_calc_levels(direction, entry_price, atr_chart, atr_htf, i_sl_mult, i_trail_mult)
+
+
+// ============================================
+// LINE DRAWING
+// ============================================
+
+var line sl_line       = na
+var line trail_line    = na
+var line entry_line    = na
+var label sl_label     = na
+var label trail_label  = na
+var label entry_label  = na
+
+if entry_signal and i_show_lines
+    // Delete previous lines
+    line.delete(sl_line)
+    line.delete(trail_line)
+    line.delete(entry_line)
+    label.delete(sl_label)
+    label.delete(trail_label)
+    label.delete(entry_label)
+    
+    // Entry line
+    entry_line := line.new(
+        x1=bar_index, y1=pos.entry,
+        x2=bar_index + 100, y2=pos.entry,
+        color=color.white, style=line.style_solid, width=1, extend=extend.right)
+    
+    entry_label := label.new(
+        x=bar_index + 5, y=pos.entry,
+        text="Entry: " + str.tostring(pos.entry, format.mintick) + " [" + pos.dir + "]",
+        color=color.new(color.white, 100), textcolor=color.white, style=label.style_none, size=size.small)
+    
+    // Stop Loss line
+    sl_line := line.new(
+        x1=bar_index, y1=pos.sl_price,
+        x2=bar_index + 100, y2=pos.sl_price,
+        color=i_sl_color, style=line.style_dotted, width=2, extend=extend.right)
+    
+    sl_label := label.new(
+        x=bar_index + 5, y=pos.sl_price,
+        text="SL: " + str.tostring(pos.sl_price, format.mintick),
+        color=color.new(color.white, 100), textcolor=i_sl_color, style=label.style_none, size=size.small)
+    
+    // Trail activation line
+    trail_line := line.new(
+        x1=bar_index, y1=pos.trail_activation,
+        x2=bar_index + 100, y2=pos.trail_activation,
+        color=i_trail_color, style=line.style_dashed, width=1, extend=extend.right)
+    
+    trail_label := label.new(
+        x=bar_index + 5, y=pos.trail_activation,
+        text="Trail: " + str.tostring(pos.trail_activation, format.mintick),
+        color=color.new(color.white, 100), textcolor=i_trail_color, style=label.style_none, size=size.small)
+
+
+// ============================================
+// SIGNAL MARKERS
+// ============================================
+
+plotshape(long_condition, "Long Signal", shape.triangleup, location.belowbar, color.lime, size=size.small)
+plotshape(short_condition, "Short Signal", shape.triangledown, location.abovebar, color.red, size=size.small)
+
+
+// ============================================
+// ALERT
+// ============================================
+
+string alert_msg = na
+
+if entry_signal
+    // NOTE: Webhook secret removed from alert payload for security.
+    // Configure secret in your webhook URL instead (e.g. https://host/webhook?secret=xxx)
+    // or validate via TradingView's IP allowlist at the receiving server.
+    alert_msg := str.format(
+        '\{"ticker":"{0}","direction":"{1}","entry":{2},"atr_chart":{3},"atr_htf":{4},"sl_price":{5},"trail_activation":{6},"trail_callback":{7},"position_usd":{8},"leverage":{9}\}',
+        syminfo.ticker, pos.dir, pos.entry, atr_chart, atr_htf, pos.sl_price, pos.trail_activation, pos.trail_callback, i_position_size, i_leverage)
+
+    alert(alert_msg, alert.freq_once_per_bar_close)
+
+
+// ============================================
+// TABLE: DISPLAY CURRENT VALUES
+// ============================================
+
+var table info_table = table.new(position.top_right, 2, 8, bgcolor=color.new(color.black, 80), border_width=1)
+
+if barstate.islast
+    table.cell(info_table, 0, 0, "Last Signal", text_color=color.gray, text_size=size.small)
+    table.cell(info_table, 1, 0, pos.dir, text_color=pos.dir == "LONG" ? color.lime : color.red, text_size=size.small)
+    
+    table.cell(info_table, 0, 1, "Entry", text_color=color.gray, text_size=size.small)
+    table.cell(info_table, 1, 1, str.tostring(pos.entry, format.mintick), text_color=color.white, text_size=size.small)
+    
+    table.cell(info_table, 0, 2, "ATR (Chart)", text_color=color.gray, text_size=size.small)
+    table.cell(info_table, 1, 2, str.tostring(atr_chart, format.mintick), text_color=color.white, text_size=size.small)
+    
+    table.cell(info_table, 0, 3, "ATR (" + i_htf + ")", text_color=color.gray, text_size=size.small)
+    table.cell(info_table, 1, 3, str.tostring(atr_htf, format.mintick), text_color=color.white, text_size=size.small)
+    
+    table.cell(info_table, 0, 4, "Stop Loss", text_color=color.gray, text_size=size.small)
+    table.cell(info_table, 1, 4, str.tostring(pos.sl_price, format.mintick), text_color=i_sl_color, text_size=size.small)
+    
+    table.cell(info_table, 0, 5, "Trail Activation", text_color=color.gray, text_size=size.small)
+    table.cell(info_table, 1, 5, str.tostring(pos.trail_activation, format.mintick), text_color=i_trail_color, text_size=size.small)
+    
+    table.cell(info_table, 0, 6, "Trail Callback", text_color=color.gray, text_size=size.small)
+    table.cell(info_table, 1, 6, str.tostring(pos.trail_callback, format.mintick), text_color=i_trail_color, text_size=size.small)
+    
+    table.cell(info_table, 0, 7, "Signal", text_color=color.gray, text_size=size.small)
+    table.cell(info_table, 1, 7, "SSL " + str.tostring(i_ssl_length), text_color=color.yellow, text_size=size.small)

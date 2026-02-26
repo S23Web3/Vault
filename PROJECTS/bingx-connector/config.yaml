@@ -1,0 +1,88 @@
+connector:
+  poll_interval_sec: 45    # was 30, bumped for 53 coins (~25s to poll all)
+  position_check_sec: 60
+  timeframe: "5m"
+  ohlcv_buffer_bars: 201
+  demo_mode: true
+
+coins:
+  # 47 coins: 14 high-Exp originals + 33 low-DD additions from v384 sweep
+  # Removed: 1000TOSHI, XCN, MON, DODO, ES, 1000000MOG (not on BingX perps 2026-02-25)
+  # All filtered: Trades >= 400, PF >= 1.03, DD <= 30%, Exp > 0
+  # Verify against BingX before starting: python scripts/verify_coins.py
+  # --- Original high-Exp picks ---
+  - "SKR-USDT"
+  - "TRUTH-USDT"
+  - "RIVER-USDT"
+  - "STBL-USDT"
+  - "ZKP-USDT"
+  - "LYN-USDT"
+  - "BEAT-USDT"
+  - "GIGGLE-USDT"
+  - "PIPPIN-USDT"
+  - "FOLKS-USDT"
+  - "NAORIS-USDT"
+  - "Q-USDT"
+  - "ELSA-USDT"
+  - "UB-USDT"
+  # --- Low-DD additions (sorted by DD% ascending) ---
+  - "THETA-USDT"       # DD: 0.8% | PF: 1.17 | Exp: 1.24
+  - "SAHARA-USDT"      # DD: 0.9% | PF: 1.32 | Exp: 1.74
+  - "TIA-USDT"         # DD: 0.9% | PF: 1.11 | Exp: 1.09
+  - "APT-USDT"         # DD: 1.0% | PF: 1.17 | Exp: 1.29
+  - "AIXBT-USDT"       # DD: 1.1% | PF: 1.05 | Exp: 0.93
+  - "GALA-USDT"        # DD: 1.1% | PF: 1.04 | Exp: 0.84
+  - "LDO-USDT"         # DD: 1.1% | PF: 1.07 | Exp: 0.96
+  - "SUSHI-USDT"       # DD: 1.1% | PF: 1.16 | Exp: 1.20
+  - "VET-USDT"         # DD: 1.1% | PF: 1.08 | Exp: 0.96
+  - "WAL-USDT"         # DD: 1.1% | PF: 1.04 | Exp: 0.84
+  - "WIF-USDT"         # DD: 1.1% | PF: 1.11 | Exp: 1.09
+  - "WOO-USDT"         # DD: 1.1% | PF: 1.11 | Exp: 1.04
+
+  - "ATOM-USDT"        # DD: 1.2% | PF: 1.12 | Exp: 1.06
+  - "BOME-USDT"        # DD: 1.2% | PF: 1.17 | Exp: 1.39
+  - "DYDX-USDT"        # DD: 1.3% | PF: 1.08 | Exp: 0.98
+  - "VIRTUAL-USDT"     # DD: 1.3% | PF: 1.09 | Exp: 1.10
+  - "BREV-USDT"        # DD: 1.4% | PF: 1.11 | Exp: 1.24
+  - "CYBER-USDT"       # DD: 1.4% | PF: 1.24 | Exp: 1.61
+  - "EIGEN-USDT"       # DD: 1.4% | PF: 1.11 | Exp: 1.11
+  - "MUBARAK-USDT"     # DD: 1.4% | PF: 1.15 | Exp: 1.25
+  - "1000PEPE-USDT"    # DD: 1.5% | PF: 1.08 | Exp: 0.99
+  - "DEEP-USDT"        # DD: 1.5% | PF: 1.09 | Exp: 1.08
+  - "ETHFI-USDT"       # DD: 1.5% | PF: 1.05 | Exp: 0.92
+  - "RENDER-USDT"      # DD: 1.5% | PF: 1.21 | Exp: 1.52
+  - "BB-USDT"          # DD: 1.6% | PF: 1.03 | Exp: 0.83
+  - "F-USDT"           # DD: 1.6% | PF: 1.13 | Exp: 1.30
+  - "GUN-USDT"         # DD: 1.6% | PF: 1.20 | Exp: 1.64
+  - "KAITO-USDT"       # DD: 1.6% | PF: 1.11 | Exp: 1.13
+  - "MEME-USDT"        # DD: 1.6% | PF: 1.14 | Exp: 1.20
+  - "PENDLE-USDT"      # DD: 1.7% | PF: 1.03 | Exp: 0.86
+  - "SCRT-USDT"        # DD: 1.7% | PF: 1.20 | Exp: 1.68
+  - "SQD-USDT"         # DD: 1.7% | PF: 1.07 | Exp: 0.93
+  - "STX-USDT"         # DD: 1.8% | PF: 1.12 | Exp: 1.12
+
+strategy:
+  plugin: "four_pillars_v384"
+
+four_pillars:
+  allow_a: true
+  allow_b: true
+  allow_c: false
+  sl_atr_mult: 2.0
+  tp_atr_mult: 4.0   # 4x ATR TP on every trade (was null = no TP)
+
+risk:
+  max_positions: 25       # 47 coins, allow up to 25 concurrent (25 * $75 = $1875 margin, well within 102k VST)
+  max_daily_trades: 200   # scaled for 53 coins
+  daily_loss_limit_usd: 2000.0  # demo mode, let it run
+  min_atr_ratio: 0.003
+
+position:
+  margin_usd: 75.0
+  leverage: 20
+  margin_mode: "ISOLATED"
+  sl_working_type: "MARK_PRICE"
+  tp_working_type: "MARK_PRICE"
+
+notification:
+  daily_summary_utc_hour: 17

@@ -1,0 +1,39 @@
+{
+  "file": "C:\\Users\\User\\Downloads\\Yves Hilpisch - Python for Algorithmic Trading_ From Idea to Cloud Deployment.pdf",
+  "name": "Yves Hilpisch - Python for Algorithmic Trading_ From Idea to Cloud Deployment.pdf",
+  "size_mb": 1.187215805053711,
+  "chapters": 71,
+  "rating": 3,
+  "stats": {
+    "trading_concepts": 11,
+    "ml_concepts": 0,
+    "code_chapters": 11,
+    "formula_chapters": 1
+  },
+  "top_concepts": {
+    "trading": [
+      [
+        "backtesting",
+        12
+      ],
+      [
+        "psychology",
+        5
+      ],
+      [
+        "risk",
+        3
+      ],
+      [
+        "entries",
+        3
+      ],
+      [
+        "metrics",
+        1
+      ]
+    ],
+    "ml": []
+  },
+  "analyzed": "2026-02-09T15:39:14.827333"
+}

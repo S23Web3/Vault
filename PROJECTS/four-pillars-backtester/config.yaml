@@ -1,0 +1,47 @@
+# Four Pillars Backtester Configuration
+# No secrets here — those go in .env
+
+weex:
+  base_url: "https://api-contract.weex.com"
+  max_candles_per_request: 100
+  rate_limit_delay: 0.25  # seconds between requests (~4 req/s)
+
+data:
+  granularity: "1m"
+  cache_dir: "data/cache"
+  cache_format: "parquet"
+
+# Default coins for testing — override via CLI
+coins:
+  - BTCUSDT
+  - ETHUSDT
+  - SOLUSDT
+  - DOGEUSDT
+  - MEMEUSDT
+
+# Strategy defaults (v3.7.1)
+strategy:
+  atr_length: 14
+  sl_mult: 1.0
+  tp_mult: 1.5
+  cooldown: 3
+  cross_level: 25
+  zone_level: 30
+  stage_lookback: 10
+  allow_b_trades: true
+  allow_c_trades: true
+  b_open_fresh: true
+  cloud2_reentry: true
+  reentry_lookback: 10
+
+# Commission
+commission:
+  commission_rate: 0.0008  # 0.08% taker per side
+  rebate_pct: 0.70  # 70% rebate account
+  settlement_hour_utc: 17  # 5pm UTC
+
+# Default position sizing (dashboard lets user override)
+position:
+  margin: 500.0
+  leverage: 20
+  notional: 10000.0  # margin * leverage

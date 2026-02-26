@@ -1,0 +1,2289 @@
+{
+  "generated": "2026-02-14",
+  "total_files": 62,
+  "active_count": 62,
+  "inactive_count": 0,
+  "files": {
+    "localllm\\test_example.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\localllm\\test_example.py",
+      "lines": 17,
+      "size": 568,
+      "modified": "2026-02-13 14:41",
+      "is_active": true,
+      "activity_reason": [
+        "recently modified"
+      ],
+      "functions": [
+        "test_has_title",
+        "test_get_started_link"
+      ],
+      "classes": [],
+      "imports": [
+        "re",
+        "playwright.sync_api"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\data\\fetcher.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\data\\fetcher.py",
+      "lines": 252,
+      "size": 9411,
+      "modified": "2026-02-12 15:20",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 10 files",
+        "recently modified"
+      ],
+      "functions": [
+        "__init__",
+        "_cache_path",
+        "_meta_path",
+        "_fetch_page",
+        "fetch_symbol",
+        "fetch_multiple",
+        "load_cached",
+        "list_cached",
+        "__init__",
+        "to_api_symbol",
+        "fetch_latest"
+      ],
+      "classes": [
+        "BybitFetcher",
+        "WEEXFetcher"
+      ],
+      "imports": [
+        "time",
+        "requests",
+        "pandas",
+        "pyarrow",
+        "pyarrow.parquet",
+        "pathlib",
+        "datetime",
+        "typing"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\scripts\\build_all_specs.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\dashboard.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\dashboard_v2.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\dashboard_v3.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\download_1year_gap_FIXED.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\download_all_available.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\download_periods.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\download_periods_v2.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_download_periods.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_download_periods_v2.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\data\\normalizer.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\data\\normalizer.py",
+      "lines": 542,
+      "size": 21027,
+      "modified": "2026-02-12 20:30",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 8 files",
+        "recently modified"
+      ],
+      "functions": [
+        "__init__",
+        "_detect_delimiter",
+        "_detect_columns",
+        "_detect_timestamp_format",
+        "_parse_timestamps",
+        "_detect_interval",
+        "_validate",
+        "resample_ohlcv",
+        "detect_format",
+        "normalize",
+        "normalize_batch"
+      ],
+      "classes": [
+        "NormalizerError",
+        "OHLCVNormalizer"
+      ],
+      "imports": [
+        "csv",
+        "io",
+        "pathlib",
+        "typing",
+        "numpy",
+        "pandas"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\scripts\\build_all_specs.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\build_all_specs.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\convert_csv.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\dashboard.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\dashboard_v2.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\dashboard_v3.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\dashboard_v3.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_normalizer.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\data\\period_loader.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\data\\period_loader.py",
+      "lines": 123,
+      "size": 4038,
+      "modified": "2026-02-13 12:07",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 2 files",
+        "recently modified"
+      ],
+      "functions": [
+        "load_multi_period",
+        "list_available_symbols",
+        "get_symbol_coverage"
+      ],
+      "classes": [],
+      "imports": [
+        "data.period_loader",
+        "pandas",
+        "pathlib",
+        "typing"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\data\\period_loader.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_period_loader.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\engine\\avwap.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\engine\\avwap.py",
+      "lines": 52,
+      "size": 1739,
+      "modified": "2026-02-12 13:41",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 10 files",
+        "recently modified"
+      ],
+      "functions": [
+        "__init__",
+        "update",
+        "bands",
+        "clone",
+        "freeze"
+      ],
+      "classes": [
+        "AVWAPTracker"
+      ],
+      "imports": [
+        "math"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\engine\\backtester_v383.py",
+        "PROJECTS\\four-pillars-backtester\\engine\\backtester_v384.py",
+        "PROJECTS\\four-pillars-backtester\\engine\\position_v382.py",
+        "PROJECTS\\four-pillars-backtester\\engine\\position_v383.py",
+        "PROJECTS\\four-pillars-backtester\\engine\\position_v384.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v382.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v382.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v383.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v383.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v383.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\engine\\backtester_v382.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\engine\\backtester_v382.py",
+      "lines": 410,
+      "size": 17165,
+      "modified": "2026-02-12 12:38",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 6 files",
+        "recently modified"
+      ],
+      "functions": [
+        "__init__",
+        "run",
+        "_find_empty",
+        "_open_slot"
+      ],
+      "classes": [
+        "Backtester382"
+      ],
+      "imports": [
+        "numpy",
+        "pandas",
+        "datetime",
+        "typing",
+        ".position_v382",
+        ".commission",
+        ".metrics"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\scripts\\batch_sweep_v382.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\batch_sweep_v382_be.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\lsg_diagnostic_v382.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\run_backtest_v382.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v382.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v382.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\engine\\backtester_v383.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\engine\\backtester_v383.py",
+      "lines": 579,
+      "size": 24642,
+      "modified": "2026-02-12 14:33",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 7 files",
+        "recently modified"
+      ],
+      "functions": [
+        "__init__",
+        "run",
+        "_find_empty",
+        "_open_slot",
+        "_compute_metrics",
+        "_trades_to_df"
+      ],
+      "classes": [
+        "Backtester383"
+      ],
+      "imports": [
+        "numpy",
+        "pandas",
+        "datetime",
+        "typing",
+        ".position_v383",
+        ".commission",
+        ".avwap"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\scripts\\capital_analysis_v383.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\mfe_analysis_v383.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\run_backtest_v383.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\sweep_sl_mult_v383.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v383.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v383.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\validation_v371_vs_v383.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\engine\\backtester_v384.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\engine\\backtester_v384.py",
+      "lines": 571,
+      "size": 24523,
+      "modified": "2026-02-12 17:39",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 12 files",
+        "recently modified"
+      ],
+      "functions": [
+        "__init__",
+        "run",
+        "_find_empty",
+        "_open_slot",
+        "_compute_metrics",
+        "_trades_to_df"
+      ],
+      "classes": [
+        "Backtester384"
+      ],
+      "imports": [
+        "numpy",
+        "pandas",
+        "datetime",
+        "typing",
+        ".position_v384",
+        ".commission",
+        ".avwap"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\engine\\backtester_v385.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\build_all_specs.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\build_all_specs.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\build_all_specs.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\capital_analysis_v384.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\dashboard.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\dashboard_v2.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\dashboard_v3.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\run_backtest_v384.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\sweep_tp_v384.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_sweep.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v385.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\engine\\backtester_v385.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\engine\\backtester_v385.py",
+      "lines": 379,
+      "size": 13567,
+      "modified": "2026-02-13 16:36",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 4 files",
+        "recently modified"
+      ],
+      "functions": [
+        "_safe_val",
+        "__init__",
+        "run",
+        "_extract_arrays",
+        "col",
+        "_snapshot_entry",
+        "_compute_lifecycle",
+        "_empty_lifecycle",
+        "_classify_pnl_path",
+        "_categorize_lsg",
+        "_v385_metrics"
+      ],
+      "classes": [
+        "Backtester385"
+      ],
+      "imports": [
+        "os",
+        "numpy",
+        "pandas",
+        "typing",
+        "engine.backtester_v384",
+        "engine.position_v384"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\scripts\\build_all_specs.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\build_all_specs.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\dashboard_v3.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v385.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\engine\\commission.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\engine\\commission.py",
+      "lines": 112,
+      "size": 4261,
+      "modified": "2026-02-12 14:33",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 4 files",
+        "recently modified"
+      ],
+      "functions": [
+        "__init__",
+        "charge",
+        "charge_custom",
+        "check_settlement",
+        "net_commission"
+      ],
+      "classes": [
+        "CommissionModel"
+      ],
+      "imports": [
+        "datetime"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\engine\\backtester_v382.py",
+        "PROJECTS\\four-pillars-backtester\\engine\\backtester_v383.py",
+        "PROJECTS\\four-pillars-backtester\\engine\\backtester_v384.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v383.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\engine\\metrics.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\engine\\metrics.py",
+      "lines": 134,
+      "size": 4577,
+      "modified": "2026-02-12 13:41",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 1 files",
+        "recently modified"
+      ],
+      "functions": [
+        "compute_metrics",
+        "trades_to_dataframe"
+      ],
+      "classes": [],
+      "imports": [
+        "numpy",
+        "pandas",
+        "typing"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\engine\\backtester_v382.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\engine\\position_v382.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\engine\\position_v382.py",
+      "lines": 225,
+      "size": 7496,
+      "modified": "2026-02-12 12:37",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 3 files",
+        "recently modified"
+      ],
+      "functions": [
+        "__init__",
+        "check_exit",
+        "update_bar",
+        "close_at"
+      ],
+      "classes": [
+        "Trade382",
+        "PositionSlot"
+      ],
+      "imports": [
+        "dataclasses",
+        "typing",
+        ".avwap"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\engine\\backtester_v382.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v382.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v382.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\engine\\position_v383.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\engine\\position_v383.py",
+      "lines": 246,
+      "size": 8219,
+      "modified": "2026-02-12 14:40",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 5 files",
+        "recently modified"
+      ],
+      "functions": [
+        "__init__",
+        "check_exit",
+        "update_bar",
+        "check_scale_out",
+        "do_scale_out",
+        "close_at"
+      ],
+      "classes": [
+        "Trade383",
+        "PositionSlot383"
+      ],
+      "imports": [
+        "dataclasses",
+        "typing",
+        ".avwap"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\engine\\backtester_v383.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v383.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v383.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v383.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v383.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\engine\\position_v384.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\engine\\position_v384.py",
+      "lines": 295,
+      "size": 10386,
+      "modified": "2026-02-12 17:37",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 3 files",
+        "recently modified"
+      ],
+      "functions": [
+        "__init__",
+        "check_exit",
+        "update_bar",
+        "check_scale_out",
+        "do_scale_out",
+        "close_at"
+      ],
+      "classes": [
+        "Trade384",
+        "PositionSlot384"
+      ],
+      "imports": [
+        "dataclasses",
+        "typing",
+        ".avwap"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\engine\\backtester_v384.py",
+        "PROJECTS\\four-pillars-backtester\\engine\\backtester_v385.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\build_all_specs.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\ml\\coin_features.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\ml\\coin_features.py",
+      "lines": 115,
+      "size": 4226,
+      "modified": "2026-02-13 16:36",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 2 files",
+        "recently modified"
+      ],
+      "functions": [
+        "compute_coin_features",
+        "get_feature_names"
+      ],
+      "classes": [],
+      "imports": [
+        "numpy",
+        "pandas",
+        "typing"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\scripts\\build_all_specs.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_vince_ml.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\ml\\features_v2.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\ml\\features_v2.py",
+      "lines": 334,
+      "size": 14046,
+      "modified": "2026-02-13 12:07",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 3 files",
+        "recently modified"
+      ],
+      "functions": [
+        "extract_trade_features",
+        "get_feature_columns"
+      ],
+      "classes": [],
+      "imports": [
+        "numpy",
+        "pandas",
+        "typing"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\scripts\\build_all_specs.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\dashboard_v3.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_features_v2.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\ml\\training_pipeline.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\ml\\training_pipeline.py",
+      "lines": 182,
+      "size": 6296,
+      "modified": "2026-02-13 16:38",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 2 files",
+        "recently modified"
+      ],
+      "functions": [
+        "assign_pools",
+        "__init__",
+        "__len__",
+        "__getitem__",
+        "load_trade_parquets",
+        "prepare_labels",
+        "train_phase1"
+      ],
+      "classes": [
+        "TradeDataset"
+      ],
+      "imports": [
+        "os",
+        "json",
+        "random",
+        "numpy",
+        "pandas",
+        "torch",
+        "torch.nn",
+        "torch.utils.data",
+        "typing"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\scripts\\build_all_specs.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_vince_ml.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\ml\\vince_model.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\ml\\vince_model.py",
+      "lines": 148,
+      "size": 5315,
+      "modified": "2026-02-13 16:36",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 2 files",
+        "recently modified"
+      ],
+      "functions": [
+        "__init__",
+        "forward",
+        "__init__",
+        "forward",
+        "__init__",
+        "forward",
+        "__init__",
+        "forward",
+        "predict_tabular_only"
+      ],
+      "classes": [
+        "TabularBranch",
+        "SequenceBranch",
+        "ContextBranch",
+        "VinceModel"
+      ],
+      "imports": [
+        "torch",
+        "torch.nn",
+        "numpy",
+        "typing"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\scripts\\build_all_specs.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_vince_ml.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\ml\\xgboost_auditor.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\ml\\xgboost_auditor.py",
+      "lines": 113,
+      "size": 4146,
+      "modified": "2026-02-13 16:36",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 2 files",
+        "recently modified"
+      ],
+      "functions": [
+        "__init__",
+        "train",
+        "compute_shap",
+        "get_top_features",
+        "compare_with_pytorch",
+        "get_feature_importance_df"
+      ],
+      "classes": [
+        "XGBoostAuditor"
+      ],
+      "imports": [
+        "numpy",
+        "pandas",
+        "xgboost",
+        "shap",
+        "typing"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\scripts\\build_all_specs.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_vince_ml.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\batch_sweep_v382.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\batch_sweep_v382.py",
+      "lines": 231,
+      "size": 8292,
+      "modified": "2026-02-12 12:39",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "list_5m_coins",
+        "load_5m",
+        "run_coin",
+        "format_batch_table",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "argparse",
+        "random",
+        "sys",
+        "time",
+        "pathlib",
+        "datetime",
+        "pandas",
+        "signals.four_pillars_v382",
+        "engine.backtester_v382"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\batch_sweep_v382_be.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\batch_sweep_v382_be.py",
+      "lines": 231,
+      "size": 8734,
+      "modified": "2026-02-12 12:41",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "list_5m_coins",
+        "load_5m",
+        "run_coin",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "argparse",
+        "random",
+        "sys",
+        "time",
+        "numpy",
+        "pathlib",
+        "pandas",
+        "signals.four_pillars_v382",
+        "engine.backtester_v382"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\build_all_specs.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\build_all_specs.py",
+      "lines": 2190,
+      "size": 78339,
+      "modified": "2026-02-13 16:38",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "check_no_overwrite",
+        "ensure_dirs",
+        "write_file",
+        "gen_backtester_v385",
+        "_safe_val",
+        "__init__",
+        "run",
+        "_extract_arrays",
+        "col",
+        "_snapshot_entry",
+        "_compute_lifecycle",
+        "_empty_lifecycle",
+        "_classify_pnl_path",
+        "_categorize_lsg",
+        "_v385_metrics",
+        "gen_coin_features",
+        "compute_coin_features",
+        "get_feature_names",
+        "gen_vince_model",
+        "__init__",
+        "forward",
+        "__init__",
+        "forward",
+        "__init__",
+        "forward",
+        "__init__",
+        "forward",
+        "predict_tabular_only",
+        "gen_training_pipeline",
+        "assign_pools",
+        "__init__",
+        "__len__",
+        "__getitem__",
+        "load_trade_parquets",
+        "prepare_labels",
+        "train_phase1",
+        "gen_xgboost_auditor",
+        "__init__",
+        "train",
+        "compute_shap",
+        "get_top_features",
+        "compare_with_pytorch",
+        "get_feature_importance_df",
+        "gen_dashboard_v3",
+        "safe_dataframe",
+        "safe_plotly_chart",
+        "params_hash",
+        "load_presets",
+        "save_preset",
+        "get_cached_symbols",
+        "load_cached_data",
+        "run_backtest",
+        "render_detail_view",
+        "render_sidebar",
+        "render_tab1_single",
+        "render_tab2_sweep",
+        "render_tab3_placeholder",
+        "render_tab4_placeholder",
+        "render_tab5_capital",
+        "render_tab6_placeholder",
+        "main",
+        "gen_test_v385",
+        "check",
+        "main",
+        "gen_test_dashboard_v3",
+        "check",
+        "main",
+        "gen_test_vince_ml",
+        "check",
+        "main",
+        "main"
+      ],
+      "classes": [
+        "Backtester385",
+        "TabularBranch",
+        "SequenceBranch",
+        "ContextBranch",
+        "VinceModel",
+        "TradeDataset",
+        "XGBoostAuditor"
+      ],
+      "imports": [
+        "os",
+        "sys",
+        "os",
+        "numpy",
+        "pandas",
+        "typing",
+        "engine.backtester_v384",
+        "engine.position_v384",
+        "numpy",
+        "pandas",
+        "typing",
+        "torch",
+        "torch.nn",
+        "numpy",
+        "typing",
+        "os",
+        "json",
+        "random",
+        "numpy",
+        "pandas",
+        "torch",
+        "torch.nn",
+        "torch.utils.data",
+        "typing",
+        "numpy",
+        "pandas",
+        "xgboost",
+        "shap",
+        "typing",
+        "os",
+        "sys",
+        "json",
+        "time",
+        "hashlib",
+        "logging",
+        "logging.handlers",
+        "datetime",
+        "streamlit",
+        "pandas",
+        "numpy",
+        "plotly.express",
+        "plotly.graph_objects",
+        "data.fetcher",
+        "data.normalizer",
+        "signals.four_pillars_v383",
+        "engine.backtester_v385",
+        "engine.backtester_v384",
+        "gui.parameter_inputs",
+        "data.normalizer",
+        "ml.meta_label",
+        "ml.features_v2",
+        "ml.walk_forward",
+        "io",
+        "os",
+        "sys",
+        "numpy",
+        "pandas",
+        "engine.backtester_v385",
+        "signals.four_pillars_v383",
+        "engine.backtester_v384",
+        "os",
+        "sys",
+        "importlib.util",
+        "os",
+        "sys",
+        "numpy",
+        "pandas",
+        "ml.coin_features",
+        "torch",
+        "ml.vince_model",
+        "ml.training_pipeline",
+        "tempfile",
+        "ml.xgboost_auditor",
+        "traceback"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\capital_analysis_v383.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\capital_analysis_v383.py",
+      "lines": 295,
+      "size": 12870,
+      "modified": "2026-02-12 14:06",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "list_5m_coins",
+        "load_5m",
+        "run_coin",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "argparse",
+        "random",
+        "sys",
+        "time",
+        "numpy",
+        "pandas",
+        "pathlib",
+        "signals.four_pillars_v383",
+        "engine.backtester_v383",
+        "traceback"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\capital_analysis_v384.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\capital_analysis_v384.py",
+      "lines": 285,
+      "size": 11074,
+      "modified": "2026-02-12 14:52",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "load_5m",
+        "run_coin",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "argparse",
+        "sys",
+        "time",
+        "numpy",
+        "pandas",
+        "pathlib",
+        "signals.four_pillars_v383",
+        "engine.backtester_v384",
+        "traceback"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\convert_csv.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\convert_csv.py",
+      "lines": 168,
+      "size": 5904,
+      "modified": "2026-02-12 19:36",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "main",
+        "_print_format_info",
+        "_do_resample"
+      ],
+      "classes": [],
+      "imports": [
+        "argparse",
+        "json",
+        "sys",
+        "pathlib",
+        "data.normalizer"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\dashboard.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\dashboard.py",
+      "lines": 1498,
+      "size": 78121,
+      "modified": "2026-02-12 19:50",
+      "is_active": true,
+      "activity_reason": [
+        "recently modified"
+      ],
+      "functions": [
+        "get_cached_symbols",
+        "resample_5m",
+        "load_data",
+        "compute_sortino",
+        "log_params",
+        "run_backtest",
+        "compute_params_hash",
+        "compute_avg_green_bars"
+      ],
+      "classes": [],
+      "imports": [
+        "sys",
+        "json",
+        "time",
+        "hashlib",
+        "pathlib",
+        "datetime",
+        "streamlit",
+        "pandas",
+        "numpy",
+        "plotly.graph_objects",
+        "data.fetcher",
+        "data.normalizer",
+        "signals.four_pillars_v383",
+        "engine.backtester_v384",
+        "ml.loser_analysis",
+        "ml.features",
+        "ml.triple_barrier",
+        "ml.meta_label",
+        "ml.bet_sizing",
+        "ml.shap_analyzer",
+        "ml.purged_cv",
+        "ml.walk_forward",
+        "ml.features",
+        "ml.triple_barrier",
+        "ml.meta_label",
+        "csv",
+        "tempfile"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\dashboard_v2.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\dashboard_v2.py",
+      "lines": 1533,
+      "size": 79337,
+      "modified": "2026-02-13 11:10",
+      "is_active": true,
+      "activity_reason": [
+        "recently modified"
+      ],
+      "functions": [
+        "safe_dataframe",
+        "safe_plotly_chart",
+        "get_cached_symbols",
+        "resample_5m",
+        "load_data",
+        "compute_sortino",
+        "log_params",
+        "run_backtest",
+        "compute_params_hash",
+        "compute_avg_green_bars"
+      ],
+      "classes": [],
+      "imports": [
+        "sys",
+        "json",
+        "time",
+        "hashlib",
+        "logging",
+        "logging.handlers",
+        "pathlib",
+        "datetime",
+        "streamlit",
+        "pandas",
+        "numpy",
+        "plotly.graph_objects",
+        "data.fetcher",
+        "data.normalizer",
+        "signals.four_pillars_v383",
+        "engine.backtester_v384",
+        "ml.loser_analysis",
+        "ml.features",
+        "ml.triple_barrier",
+        "ml.meta_label",
+        "ml.bet_sizing",
+        "ml.shap_analyzer",
+        "ml.purged_cv",
+        "ml.walk_forward",
+        "ml.features",
+        "ml.triple_barrier",
+        "ml.meta_label",
+        "csv",
+        "tempfile"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\dashboard_v3.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\dashboard_v3.py",
+      "lines": 704,
+      "size": 29198,
+      "modified": "2026-02-13 16:36",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "safe_dataframe",
+        "safe_plotly_chart",
+        "params_hash",
+        "load_presets",
+        "save_preset",
+        "get_cached_symbols",
+        "load_cached_data",
+        "run_backtest",
+        "render_detail_view",
+        "render_sidebar",
+        "render_tab1_single",
+        "render_tab2_sweep",
+        "render_tab3_placeholder",
+        "render_tab4_placeholder",
+        "render_tab5_capital",
+        "render_tab6_placeholder",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "os",
+        "sys",
+        "json",
+        "time",
+        "hashlib",
+        "logging",
+        "logging.handlers",
+        "datetime",
+        "streamlit",
+        "pandas",
+        "numpy",
+        "plotly.express",
+        "plotly.graph_objects",
+        "data.fetcher",
+        "data.normalizer",
+        "signals.four_pillars_v383",
+        "engine.backtester_v385",
+        "engine.backtester_v384",
+        "gui.parameter_inputs",
+        "data.normalizer",
+        "ml.meta_label",
+        "ml.features_v2",
+        "ml.walk_forward",
+        "io"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\download_1year_gap_FIXED.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\download_1year_gap_FIXED.py",
+      "lines": 116,
+      "size": 3893,
+      "modified": "2026-02-12 16:25",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "download_missing_gap",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "sys",
+        "pathlib",
+        "datetime",
+        "pandas",
+        "time",
+        "data.fetcher"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\download_all_available.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\download_all_available.py",
+      "lines": 485,
+      "size": 16827,
+      "modified": "2026-02-13 10:53",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "backup_cache",
+        "load_progress",
+        "save_progress",
+        "fetch_range",
+        "raw_to_df",
+        "sanity_check",
+        "resample_5m",
+        "process_symbol",
+        "_export_csv",
+        "main",
+        "_print_output_paths"
+      ],
+      "classes": [],
+      "imports": [
+        "sys",
+        "json",
+        "shutil",
+        "time",
+        "argparse",
+        "pathlib",
+        "datetime",
+        "typing",
+        "pandas",
+        "data.fetcher"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\download_periods.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\download_periods.py",
+      "lines": 385,
+      "size": 13258,
+      "modified": "2026-02-13 12:05",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "imported by 2 files",
+        "recently modified"
+      ],
+      "functions": [
+        "log",
+        "state_file",
+        "load_state",
+        "save_state",
+        "load_listing_dates",
+        "save_listing_dates",
+        "fetch_range",
+        "raw_to_df",
+        "sanity_check",
+        "process_symbol",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "sys",
+        "json",
+        "time",
+        "argparse",
+        "pathlib",
+        "datetime",
+        "pandas",
+        "data.fetcher"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_download_periods.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_download_periods.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\download_periods_v2.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\download_periods_v2.py",
+      "lines": 553,
+      "size": 20478,
+      "modified": "2026-02-13 13:49",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "imported by 2 files",
+        "recently modified"
+      ],
+      "functions": [
+        "log",
+        "load_coingecko_listing_dates",
+        "filter_coins_for_period",
+        "state_file",
+        "load_state",
+        "save_state",
+        "load_listing_dates",
+        "save_listing_dates",
+        "fetch_range",
+        "raw_to_df",
+        "sanity_check",
+        "process_symbol",
+        "run_period",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "sys",
+        "json",
+        "time",
+        "argparse",
+        "pathlib",
+        "datetime",
+        "pandas",
+        "data.fetcher"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_download_periods_v2.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_download_periods_v2.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\fetch_coingecko_v2.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\fetch_coingecko_v2.py",
+      "lines": 811,
+      "size": 30395,
+      "modified": "2026-02-13 12:35",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "log",
+        "progress_bar",
+        "eta_str",
+        "load_state",
+        "save_state",
+        "load_env_key",
+        "api_get",
+        "action_1_coin_history",
+        "_save_coin_history",
+        "action_2_global_history",
+        "action_3_categories",
+        "action_4_coin_detail",
+        "_save_metadata",
+        "action_5_movers",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "os",
+        "sys",
+        "json",
+        "time",
+        "argparse",
+        "pathlib",
+        "datetime",
+        "requests",
+        "pandas"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\fetch_market_caps.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\fetch_market_caps.py",
+      "lines": 322,
+      "size": 10570,
+      "modified": "2026-02-13 12:06",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "imported by 2 files",
+        "recently modified"
+      ],
+      "functions": [
+        "log",
+        "load_env_key",
+        "load_state",
+        "save_state",
+        "fetch_market_chart",
+        "main",
+        "_save_parquet"
+      ],
+      "classes": [],
+      "imports": [
+        "os",
+        "sys",
+        "json",
+        "time",
+        "argparse",
+        "pathlib",
+        "datetime",
+        "requests",
+        "pandas"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_fetch_market_caps.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_fetch_market_caps.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\lsg_diagnostic_v382.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\lsg_diagnostic_v382.py",
+      "lines": 305,
+      "size": 11666,
+      "modified": "2026-02-12 12:40",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "list_5m_coins",
+        "load_5m",
+        "run_coin_trades",
+        "analyze_lsg",
+        "format_report",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "argparse",
+        "random",
+        "sys",
+        "time",
+        "numpy",
+        "pathlib",
+        "pandas",
+        "signals.four_pillars_v382",
+        "engine.backtester_v382"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\mfe_analysis_v383.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\mfe_analysis_v383.py",
+      "lines": 318,
+      "size": 14075,
+      "modified": "2026-02-12 14:10",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "list_5m_coins",
+        "load_5m",
+        "mfe_to_atr",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "argparse",
+        "random",
+        "sys",
+        "time",
+        "numpy",
+        "pandas",
+        "pathlib",
+        "signals.four_pillars_v383",
+        "engine.backtester_v383"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\run_backtest_v382.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\run_backtest_v382.py",
+      "lines": 136,
+      "size": 5197,
+      "modified": "2026-02-12 12:41",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "load_cached",
+        "list_cached",
+        "run_single",
+        "print_results",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "argparse",
+        "sys",
+        "pathlib",
+        "pandas",
+        "signals.four_pillars_v382",
+        "engine.backtester_v382"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\run_backtest_v383.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\run_backtest_v383.py",
+      "lines": 120,
+      "size": 4713,
+      "modified": "2026-02-12 14:33",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "load_cached",
+        "print_results",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "argparse",
+        "sys",
+        "pathlib",
+        "pandas",
+        "signals.four_pillars_v383",
+        "engine.backtester_v383"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\run_backtest_v384.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\run_backtest_v384.py",
+      "lines": 144,
+      "size": 5790,
+      "modified": "2026-02-12 14:55",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "load_cached",
+        "print_results",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "argparse",
+        "sys",
+        "pathlib",
+        "pandas",
+        "signals.four_pillars_v383",
+        "engine.backtester_v384"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\sanity_check_cache.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\sanity_check_cache.py",
+      "lines": 156,
+      "size": 6137,
+      "modified": "2026-02-12 16:25",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "check_file",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "sys",
+        "pathlib",
+        "pandas",
+        "datetime"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\sweep_sl_mult_v383.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\sweep_sl_mult_v383.py",
+      "lines": 239,
+      "size": 9792,
+      "modified": "2026-02-12 13:59",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "list_5m_coins",
+        "load_5m",
+        "run_coin",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "argparse",
+        "random",
+        "sys",
+        "time",
+        "numpy",
+        "pathlib",
+        "pandas",
+        "signals.four_pillars_v383",
+        "engine.backtester_v383"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\sweep_tp_v384.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\sweep_tp_v384.py",
+      "lines": 191,
+      "size": 6931,
+      "modified": "2026-02-12 14:42",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "load_5m",
+        "run_config",
+        "main",
+        "p"
+      ],
+      "classes": [],
+      "imports": [
+        "argparse",
+        "sys",
+        "time",
+        "numpy",
+        "pandas",
+        "pathlib",
+        "signals.four_pillars_v383",
+        "engine.backtester_v384"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\test_dashboard_v3.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\test_dashboard_v3.py",
+      "lines": 76,
+      "size": 2824,
+      "modified": "2026-02-13 16:36",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "check",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "os",
+        "sys",
+        "importlib.util"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\test_download_periods.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\test_download_periods.py",
+      "lines": 166,
+      "size": 5993,
+      "modified": "2026-02-13 12:08",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "test",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "sys",
+        "json",
+        "tempfile",
+        "shutil",
+        "pathlib",
+        "datetime",
+        "pandas",
+        "numpy",
+        "data.fetcher",
+        "download_periods",
+        "download_periods"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\test_download_periods_v2.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\test_download_periods_v2.py",
+      "lines": 251,
+      "size": 10369,
+      "modified": "2026-02-13 13:47",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "test",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "sys",
+        "json",
+        "tempfile",
+        "shutil",
+        "pathlib",
+        "datetime",
+        "pandas",
+        "numpy",
+        "data.fetcher",
+        "download_periods_v2",
+        "download_periods_v2"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\test_features_v2.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\test_features_v2.py",
+      "lines": 235,
+      "size": 9092,
+      "modified": "2026-02-13 12:09",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "test",
+        "make_synthetic_ohlcv",
+        "make_synthetic_trades",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "sys",
+        "pathlib",
+        "datetime",
+        "numpy",
+        "pandas",
+        "ml.features_v2"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\test_fetch_market_caps.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\test_fetch_market_caps.py",
+      "lines": 162,
+      "size": 5669,
+      "modified": "2026-02-13 12:17",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "test",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "sys",
+        "json",
+        "tempfile",
+        "pathlib",
+        "datetime",
+        "requests",
+        "pandas",
+        "fetch_market_caps",
+        "fetch_market_caps",
+        "shutil"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\test_normalizer.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\test_normalizer.py",
+      "lines": 637,
+      "size": 21906,
+      "modified": "2026-02-12 20:30",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "check",
+        "write_csv",
+        "mock_bybit_csv",
+        "mock_binance_csv",
+        "mock_okx_csv",
+        "mock_weex_csv",
+        "mock_tradingview_csv",
+        "mock_epoch_seconds_csv",
+        "mock_5m_csv",
+        "mock_tab_csv",
+        "mock_semicolon_csv",
+        "mock_bom_csv",
+        "mock_no_vol_csv",
+        "mock_bad_ohlc_csv",
+        "mock_dupes_csv",
+        "test_delimiter_detection",
+        "test_column_mapping",
+        "test_timestamp_parsing",
+        "test_interval_detection",
+        "test_normalize_bybit",
+        "test_normalize_binance",
+        "test_normalize_tradingview",
+        "test_normalize_epoch_seconds",
+        "test_5m_detection",
+        "test_bom_handling",
+        "test_missing_volume",
+        "test_missing_quote_vol",
+        "test_duplicate_removal",
+        "test_validation_warnings",
+        "test_batch_normalize",
+        "test_column_override",
+        "test_integration_pipeline"
+      ],
+      "classes": [],
+      "imports": [
+        "sys",
+        "os",
+        "tempfile",
+        "shutil",
+        "pathlib",
+        "numpy",
+        "pandas",
+        "data.normalizer",
+        "signals.four_pillars_v383"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\test_period_loader.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\test_period_loader.py",
+      "lines": 141,
+      "size": 4889,
+      "modified": "2026-02-13 12:10",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "test",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "sys",
+        "pathlib",
+        "datetime",
+        "pandas",
+        "numpy",
+        "data.period_loader"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\test_sweep.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\test_sweep.py",
+      "lines": 498,
+      "size": 19293,
+      "modified": "2026-02-12 20:02",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "check",
+        "_import_dashboard_helpers",
+        "compute_params_hash",
+        "compute_avg_green_bars",
+        "test_params_hash_determinism",
+        "test_sweep_csv_write_read",
+        "test_sweep_csv_resume",
+        "test_sweep_csv_hash_filter",
+        "test_avg_green_bars",
+        "test_avg_green_bars_short",
+        "test_avg_green_bars_no_losers",
+        "test_mode_transitions",
+        "test_metrics_completeness",
+        "test_get_cached_symbols",
+        "test_coin_list_parsing"
+      ],
+      "classes": [],
+      "imports": [
+        "sys",
+        "os",
+        "tempfile",
+        "shutil",
+        "pathlib",
+        "numpy",
+        "pandas",
+        "importlib",
+        "streamlit",
+        "hashlib",
+        "json",
+        "signals.four_pillars_v383",
+        "engine.backtester_v384",
+        "json",
+        "csv"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\test_v382.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\test_v382.py",
+      "lines": 265,
+      "size": 9454,
+      "modified": "2026-02-12 13:13",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "test_imports",
+        "test_avwap",
+        "test_position_slot",
+        "test_state_machine",
+        "test_backtest",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "sys",
+        "pathlib",
+        "engine.avwap",
+        "engine.position_v382",
+        "engine.backtester_v382",
+        "signals.state_machine_v382",
+        "signals.four_pillars_v382",
+        "engine.avwap",
+        "engine.position_v382",
+        "signals.state_machine_v382",
+        "pandas",
+        "signals.four_pillars_v382",
+        "engine.backtester_v382",
+        "traceback"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\test_v383.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\test_v383.py",
+      "lines": 392,
+      "size": 14884,
+      "modified": "2026-02-12 13:59",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "test_imports",
+        "test_avwap_clone",
+        "test_position_atr_sl",
+        "test_position_avwap_sl",
+        "test_scale_out",
+        "test_state_machine_abcd",
+        "test_commission_custom",
+        "test_backtest",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "sys",
+        "pathlib",
+        "engine.avwap",
+        "engine.position_v383",
+        "engine.backtester_v383",
+        "signals.state_machine_v383",
+        "signals.four_pillars_v383",
+        "engine.avwap",
+        "engine.position_v383",
+        "engine.avwap",
+        "engine.position_v383",
+        "engine.position_v383",
+        "signals.state_machine_v383",
+        "engine.commission",
+        "pandas",
+        "signals.four_pillars_v383",
+        "engine.backtester_v383",
+        "traceback"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\test_v385.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\test_v385.py",
+      "lines": 145,
+      "size": 4972,
+      "modified": "2026-02-13 16:37",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "check",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "os",
+        "sys",
+        "numpy",
+        "pandas",
+        "engine.backtester_v385",
+        "signals.four_pillars_v383",
+        "engine.backtester_v384"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\test_vince_ml.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\test_vince_ml.py",
+      "lines": 168,
+      "size": 5946,
+      "modified": "2026-02-13 16:36",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "check",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "os",
+        "sys",
+        "numpy",
+        "pandas",
+        "ml.coin_features",
+        "torch",
+        "ml.vince_model",
+        "ml.training_pipeline",
+        "tempfile",
+        "ml.xgboost_auditor"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\scripts\\validation_v371_vs_v383.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\scripts\\validation_v371_vs_v383.py",
+      "lines": 486,
+      "size": 19680,
+      "modified": "2026-02-12 14:24",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "load_5m",
+        "compute_daily_avwap",
+        "build_trade_df",
+        "stoch_analysis_block",
+        "safe_stats",
+        "avwap_analysis_block",
+        "main",
+        "p"
+      ],
+      "classes": [],
+      "imports": [
+        "argparse",
+        "sys",
+        "numpy",
+        "pandas",
+        "pathlib",
+        "signals.four_pillars",
+        "signals.four_pillars_v383",
+        "engine.backtester",
+        "engine.backtester_v383"
+      ],
+      "imported_by": []
+    },
+    "PROJECTS\\four-pillars-backtester\\signals\\four_pillars_v382.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\signals\\four_pillars_v382.py",
+      "lines": 104,
+      "size": 3529,
+      "modified": "2026-02-12 10:49",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 6 files",
+        "recently modified"
+      ],
+      "functions": [
+        "compute_signals_v382"
+      ],
+      "classes": [],
+      "imports": [
+        "numpy",
+        "pandas",
+        ".stochastics",
+        ".clouds",
+        ".state_machine_v382"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\scripts\\batch_sweep_v382.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\batch_sweep_v382_be.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\lsg_diagnostic_v382.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\run_backtest_v382.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v382.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v382.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\signals\\four_pillars_v383.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\signals\\four_pillars_v383.py",
+      "lines": 111,
+      "size": 3826,
+      "modified": "2026-02-12 13:42",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 18 files",
+        "recently modified"
+      ],
+      "functions": [
+        "compute_signals_v383"
+      ],
+      "classes": [],
+      "imports": [
+        "numpy",
+        "pandas",
+        ".stochastics",
+        ".clouds",
+        ".state_machine_v383"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\scripts\\build_all_specs.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\build_all_specs.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\capital_analysis_v383.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\capital_analysis_v384.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\dashboard.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\dashboard_v2.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\dashboard_v3.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\mfe_analysis_v383.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\run_backtest_v383.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\run_backtest_v384.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\sweep_sl_mult_v383.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\sweep_tp_v384.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_normalizer.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_sweep.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v383.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v383.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v385.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\validation_v371_vs_v383.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\signals\\state_machine_v382.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\signals\\state_machine_v382.py",
+      "lines": 240,
+      "size": 8701,
+      "modified": "2026-02-12 13:12",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 3 files",
+        "recently modified"
+      ],
+      "functions": [
+        "any_long",
+        "any_short",
+        "__init__",
+        "process_bar"
+      ],
+      "classes": [
+        "SignalResult",
+        "FourPillarsStateMachine382"
+      ],
+      "imports": [
+        "dataclasses"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v382.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v382.py",
+        "PROJECTS\\four-pillars-backtester\\signals\\four_pillars_v382.py"
+      ]
+    },
+    "PROJECTS\\four-pillars-backtester\\signals\\state_machine_v383.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\four-pillars-backtester\\signals\\state_machine_v383.py",
+      "lines": 339,
+      "size": 12755,
+      "modified": "2026-02-12 13:42",
+      "is_active": true,
+      "activity_reason": [
+        "imported by 3 files",
+        "recently modified"
+      ],
+      "functions": [
+        "any_long",
+        "any_short",
+        "__init__",
+        "process_bar"
+      ],
+      "classes": [
+        "SignalResult",
+        "FourPillarsStateMachine383"
+      ],
+      "imports": [
+        "dataclasses"
+      ],
+      "imported_by": [
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v383.py",
+        "PROJECTS\\four-pillars-backtester\\scripts\\test_v383.py",
+        "PROJECTS\\four-pillars-backtester\\signals\\four_pillars_v383.py"
+      ]
+    },
+    "vault_sweep.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\vault_sweep.py",
+      "lines": 532,
+      "size": 19566,
+      "modified": "2026-02-13 15:21",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "find_code_files",
+        "extract_imports",
+        "extract_functions_classes",
+        "build_dependency_map",
+        "check_ollama",
+        "resolve_model",
+        "review_file",
+        "write_review_markdown",
+        "write_manifest",
+        "setup_active_folder",
+        "main"
+      ],
+      "classes": [],
+      "imports": [
+        "requests",
+        "json",
+        "time",
+        "argparse",
+        "re",
+        "os",
+        "pathlib",
+        "datetime",
+        "collections"
+      ],
+      "imported_by": []
+    },
+    "vault_sweep_3.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\vault_sweep_3.py",
+      "lines": 515,
+      "size": 19346,
+      "modified": "2026-02-13 15:44",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "__init__",
+        "start",
+        "_tick",
+        "update",
+        "stop",
+        "stop_error",
+        "find_code_files",
+        "extract_imports",
+        "extract_functions_classes",
+        "build_dependency_map",
+        "check_ollama",
+        "resolve_model",
+        "review_file_streaming",
+        "save_review",
+        "write_manifest",
+        "setup_active_folder",
+        "main"
+      ],
+      "classes": [
+        "ProgressTracker"
+      ],
+      "imports": [
+        "requests",
+        "json",
+        "time",
+        "argparse",
+        "re",
+        "os",
+        "sys",
+        "threading",
+        "pathlib",
+        "datetime"
+      ],
+      "imported_by": []
+    },
+    "vault_sweep_4.py": {
+      "path": "C:\\Users\\User\\Documents\\Obsidian Vault\\vault_sweep_4.py",
+      "lines": 539,
+      "size": 20281,
+      "modified": "2026-02-14 11:08",
+      "is_active": true,
+      "activity_reason": [
+        "has __main__",
+        "recently modified"
+      ],
+      "functions": [
+        "__init__",
+        "start",
+        "_tick",
+        "update",
+        "stop",
+        "stop_error",
+        "find_code_files",
+        "extract_imports",
+        "extract_functions_classes",
+        "build_dependency_map",
+        "check_ollama",
+        "unload_model",
+        "resolve_model",
+        "review_file_streaming",
+        "save_review",
+        "write_manifest",
+        "setup_active_folder",
+        "main"
+      ],
+      "classes": [
+        "ProgressTracker"
+      ],
+      "imports": [
+        "requests",
+        "json",
+        "time",
+        "argparse",
+        "re",
+        "os",
+        "sys",
+        "threading",
+        "pathlib",
+        "datetime"
+      ],
+      "imported_by": []
+    }
+  }
+}

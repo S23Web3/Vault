@@ -1,0 +1,301 @@
+//@version=6
+indicator("Malik's Liquidity Farming Detector", "LFD", overlay=true, max_lines_count=500)
+
+// ============================================================================
+// INPUTS
+// ============================================================================
+
+// Ripster EMA Clouds
+ma_len1 = input.int(defval=8, title="Short EMA1 (8/9 Cloud)", minval=1)
+ma_len2 = input.int(defval=9, title="Long EMA1 (8/9 Cloud)", minval=1)
+ma_len3 = input.int(defval=5, title="Short EMA2 (5/12 Cloud)", minval=1)
+ma_len4 = input.int(defval=12, title="Long EMA2 (5/12 Cloud)", minval=1)
+ma_len5 = input.int(defval=34, title="Short EMA3 (34/50 Cloud)", minval=1)
+ma_len6 = input.int(defval=50, title="Long EMA3 (34/50 Cloud)", minval=1)
+
+// ATR Settings
+atr_period = input.int(defval=14, title="ATR Period", minval=1)
+atr_spike_multiplier = input.float(defval=1.5, title="ATR Spike Threshold", minval=1.0, step=0.1)
+atr_decline_threshold = input.float(defval=0.7, title="ATR Decline Threshold", minval=0.1, step=0.1)
+atr_flat_periods = input.int(defval=3, title="Flat Detection Periods", minval=2)
+
+// Alert Settings
+show_long_signals = input.bool(defval=true, title="Show LONG Signals")
+show_short_signals = input.bool(defval=true, title="Show SHORT Signals")
+show_ema_lines = input.bool(defval=false, title="Display EMA Lines")
+show_clouds = input.bool(defval=true, title="Show EMA Clouds")
+
+// ============================================================================
+// EMA CALCULATIONS
+// ============================================================================
+
+ema_source = hl2
+
+// 8/9 Cloud (Pullback ribbon)
+ema8 = ta.ema(ema_source, ma_len1)
+ema9 = ta.ema(ema_source, ma_len2)
+
+// 5/12 Cloud (Entry confirmation)
+ema5 = ta.ema(ema_source, ma_len3)
+ema12 = ta.ema(ema_source, ma_len4)
+
+// 34/50 Cloud (Trend direction)
+ema34 = ta.ema(ema_source, ma_len5)
+ema50 = ta.ema(ema_source, ma_len6)
+
+// ============================================================================
+// ATR HEARTBEAT DETECTION
+// ============================================================================
+
+// Calculate ATR
+atr = ta.atr(atr_period)
+atr_pct = (atr / close) * 100
+
+// ATR Spike Detection
+atr_sma = ta.sma(atr, 20)
+atr_spike_level = atr_sma * atr_spike_multiplier
+atr_spike = atr > atr_spike_level
+
+// ATR Peak tracking
+var float atr_peak = na
+if atr_spike
+    if na(atr_peak) or atr > atr_peak
+        atr_peak := atr
+
+// ATR Decline Detection (from peak)
+atr_decline = false
+if not na(atr_peak)
+    atr_decline_level = atr_peak * atr_decline_threshold
+    atr_decline := atr < atr_decline_level
+
+// ATR Flat Detection (low volatility in ATR itself)
+atr_volatility = ta.stdev(atr, atr_flat_periods)
+atr_avg = ta.sma(atr, atr_flat_periods)
+atr_flat = atr_volatility < (atr_avg * 0.1)
+
+// Second Heartbeat (small ATR increase)
+atr_increase = atr > atr[2] * 1.15
+
+// Heartbeat Pattern Confirmed
+heartbeat_confirmed = atr_spike and atr_decline and atr_flat
+
+// Reset peak when new cycle starts
+if not atr_spike and not atr_decline
+    atr_peak := na
+
+// ============================================================================
+// VOLUME SURGE DETECTION
+// ============================================================================
+
+volume_avg = ta.sma(volume, 30)
+volume_surge = volume > volume_avg * 2.0
+
+// ============================================================================
+// TREND DETERMINATION (Ripster EMA Clouds)
+// ============================================================================
+
+// Trend bias from 34/50 cloud
+bullish_trend = close > ema34 and close > ema50 and ema34 > ema50
+bearish_trend = close < ema34 and close < ema50 and ema34 < ema50
+
+// Entry confirmation from 5/12 cloud
+ema5_cross_up = ta.crossover(ema5, ema12)
+ema5_cross_down = ta.crossunder(ema5, ema12)
+
+// ============================================================================
+// SIGNAL GENERATION
+// ============================================================================
+
+// LONG Signal Requirements:
+// 1. Heartbeat confirmed OR (ATR flat + second beat forming)
+// 2. Bullish trend (price above 34/50 cloud)
+// 3. 5/12 EMA crossover OR price bouncing off 5/12 cloud
+// 4. Optional: Volume surge
+
+long_setup = (heartbeat_confirmed or (atr_flat and atr_increase)) and bullish_trend
+long_trigger = ema5_cross_up or (close > ema5 and close > ema12 and low <= ema12)
+long_signal = long_setup and long_trigger
+
+// SHORT Signal Requirements:
+// 1. Heartbeat confirmed OR (ATR flat + second beat forming)
+// 2. Bearish trend (price below 34/50 cloud)
+// 3. 5/12 EMA crossdown OR price rejecting from 5/12 cloud
+// 4. Optional: Volume surge
+
+short_setup = (heartbeat_confirmed or (atr_flat and atr_increase)) and bearish_trend
+short_trigger = ema5_cross_down or (close < ema5 and close < ema12 and high >= ema12)
+short_signal = short_setup and short_trigger
+
+// Enhanced signals with volume confirmation
+long_signal_strong = long_signal and volume_surge
+short_signal_strong = short_signal and volume_surge
+
+// ============================================================================
+// PLOTTING - EMA CLOUDS
+// ============================================================================
+
+// Cloud colors
+bull1 = color.new(#036103, 45)
+bear1 = color.new(#880e4f, 45)
+bull2 = color.new(#4caf50, 65)
+bear2 = color.new(#f44336, 65)
+bull3 = color.new(#2196f3, 70)
+bear3 = color.new(#ffb74d, 70)
+
+cloudcolor1 = ema8 >= ema9 ? bull1 : bear1
+cloudcolor2 = ema5 >= ema12 ? bull2 : bear2
+cloudcolor3 = ema34 >= ema50 ? bull3 : bear3
+
+// Plot EMAs
+plot1_short = plot(show_clouds ? ema8 : na, title="EMA 8", color=show_ema_lines ? color.olive : color.new(color.white, 100), linewidth=1)
+plot1_long = plot(show_clouds ? ema9 : na, title="EMA 9", color=show_ema_lines ? color.green : color.new(color.white, 100), linewidth=2)
+
+plot2_short = plot(show_clouds ? ema5 : na, title="EMA 5", color=show_ema_lines ? color.olive : color.new(color.white, 100), linewidth=1)
+plot2_long = plot(show_clouds ? ema12 : na, title="EMA 12", color=show_ema_lines ? color.green : color.new(color.white, 100), linewidth=2)
+
+plot3_short = plot(show_clouds ? ema34 : na, title="EMA 34", color=show_ema_lines ? color.olive : color.new(color.white, 100), linewidth=1)
+plot3_long = plot(show_clouds ? ema50 : na, title="EMA 50", color=show_ema_lines ? color.red : color.new(color.white, 100), linewidth=3)
+
+// Fill clouds
+fill(plot1_short, plot1_long, color=cloudcolor1, title="8/9 Cloud")
+fill(plot2_short, plot2_long, color=cloudcolor2, title="5/12 Cloud")
+fill(plot3_short, plot3_long, color=cloudcolor3, title="34/50 Cloud")
+
+// ============================================================================
+// PLOTTING - SIGNALS
+// ============================================================================
+
+// LONG signals
+plotshape(
+    show_long_signals and long_signal_strong,
+    title="LONG Signal (Strong)",
+    style=shape.triangleup,
+    location=location.belowbar,
+    color=color.new(color.lime, 0),
+    size=size.normal,
+    text="LONG"
+)
+
+plotshape(
+    show_long_signals and long_signal and not long_signal_strong,
+    title="LONG Signal",
+    style=shape.triangleup,
+    location=location.belowbar,
+    color=color.new(color.green, 30),
+    size=size.small,
+    text="L"
+)
+
+// SHORT signals
+plotshape(
+    show_short_signals and short_signal_strong,
+    title="SHORT Signal (Strong)",
+    style=shape.triangledown,
+    location=location.abovebar,
+    color=color.new(color.red, 0),
+    size=size.normal,
+    text="SHORT"
+)
+
+plotshape(
+    show_short_signals and short_signal and not short_signal_strong,
+    title="SHORT Signal",
+    style=shape.triangledown,
+    location=location.abovebar,
+    color=color.new(color.maroon, 30),
+    size=size.small,
+    text="S"
+)
+
+// ============================================================================
+// BACKGROUND COLORS - STATUS INDICATION
+// ============================================================================
+
+// Background color based on heartbeat status
+bgcolor_color = color.new(color.gray, 95)
+
+if heartbeat_confirmed
+    bgcolor_color := color.new(color.orange, 90)  // Watchlist status
+else if atr_spike
+    bgcolor_color := color.new(color.yellow, 95)  // Prospect status
+
+bgcolor(bgcolor_color, title="Heartbeat Status")
+
+// ============================================================================
+// DASHBOARD - ATR STATUS
+// ============================================================================
+
+var table dashboard = table.new(position.top_right, 3, 6, border_width=1)
+
+if barstate.islast
+    // Header
+    table.cell(dashboard, 0, 0, "ATR STATUS", text_color=color.white, bgcolor=color.new(color.gray, 30))
+    table.cell(dashboard, 1, 0, "Value", text_color=color.white, bgcolor=color.new(color.gray, 30))
+    table.cell(dashboard, 2, 0, "Status", text_color=color.white, bgcolor=color.new(color.gray, 30))
+    
+    // ATR %
+    table.cell(dashboard, 0, 1, "ATR %", text_color=color.white)
+    table.cell(dashboard, 1, 1, str.tostring(atr_pct, "#.##") + "%", text_color=color.white)
+    table.cell(dashboard, 2, 1, "", bgcolor=atr_pct > 5 ? color.red : atr_pct > 3 ? color.orange : color.green)
+    
+    // Spike
+    table.cell(dashboard, 0, 2, "Spike", text_color=color.white)
+    table.cell(dashboard, 1, 2, atr_spike ? "YES" : "NO", text_color=color.white)
+    table.cell(dashboard, 2, 2, "", bgcolor=atr_spike ? color.green : color.gray)
+    
+    // Decline
+    table.cell(dashboard, 0, 3, "Decline", text_color=color.white)
+    table.cell(dashboard, 1, 3, atr_decline ? "YES" : "NO", text_color=color.white)
+    table.cell(dashboard, 2, 3, "", bgcolor=atr_decline ? color.green : color.gray)
+    
+    // Flat
+    table.cell(dashboard, 0, 4, "Flat", text_color=color.white)
+    table.cell(dashboard, 1, 4, atr_flat ? "YES" : "NO", text_color=color.white)
+    table.cell(dashboard, 2, 4, "", bgcolor=atr_flat ? color.green : color.gray)
+    
+    // Overall Status
+    status_text = heartbeat_confirmed ? "🎯 WATCHLIST" : atr_spike ? "👀 PROSPECT" : "📋 BUCKET"
+    status_color = heartbeat_confirmed ? color.red : atr_spike ? color.orange : color.gray
+    table.cell(dashboard, 0, 5, "STATUS", text_color=color.white, bgcolor=color.new(color.gray, 30))
+    table.cell(dashboard, 1, 5, status_text, text_color=color.white, bgcolor=status_color, colspan=2)
+
+// ============================================================================
+// ALERTS
+// ============================================================================
+
+// Alert conditions
+alertcondition(
+    long_signal_strong,
+    title="LONG Signal (Strong)",
+    message='{"symbol":"{{ticker}}", "action":"LONG", "price":{{close}}, "atr_pct":' + str.tostring(atr_pct) + ', "type":"STRONG", "timeframe":"{{interval}}"}'
+)
+
+alertcondition(
+    long_signal,
+    title="LONG Signal",
+    message='{"symbol":"{{ticker}}", "action":"LONG", "price":{{close}}, "atr_pct":' + str.tostring(atr_pct) + ', "type":"NORMAL", "timeframe":"{{interval}}"}'
+)
+
+alertcondition(
+    short_signal_strong,
+    title="SHORT Signal (Strong)",
+    message='{"symbol":"{{ticker}}", "action":"SHORT", "price":{{close}}, "atr_pct":' + str.tostring(atr_pct) + ', "type":"STRONG", "timeframe":"{{interval}}"}'
+)
+
+alertcondition(
+    short_signal,
+    title="SHORT Signal",
+    message='{"symbol":"{{ticker}}", "action":"SHORT", "price":{{close}}, "atr_pct":' + str.tostring(atr_pct) + ', "type":"NORMAL", "timeframe":"{{interval}}"}'
+)
+
+alertcondition(
+    heartbeat_confirmed and not heartbeat_confirmed[1],
+    title="Heartbeat Confirmed - WATCHLIST",
+    message='{"symbol":"{{ticker}}", "status":"WATCHLIST", "price":{{close}}, "atr_pct":' + str.tostring(atr_pct) + ', "action":"MONITOR_CLOSELY", "timeframe":"{{interval}}"}'
+)
+
+alertcondition(
+    atr_spike and not atr_spike[1],
+    title="ATR Spike - PROSPECT",
+    message='{"symbol":"{{ticker}}", "status":"PROSPECT", "price":{{close}}, "atr_pct":' + str.tostring(atr_pct) + ', "action":"WATCH", "timeframe":"{{interval}}"}'
+)

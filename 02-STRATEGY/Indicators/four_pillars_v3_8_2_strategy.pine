@@ -1,0 +1,952 @@
+//@version=6
+// Four Pillars v3.8.2 Strategy -- AVWAP Trailing Stop + Adds + Re-entry
+// CHANGES from v3.8:
+//   - NEW 1: AVWAP-based 3-stage SL replaces fixed ATR SL/TP
+//   - NEW 2: AVWAP sigma band adds (scale-in at 1sigma when price hits 2sigma)
+//   - NEW 3: AVWAP re-entry after stop-out (5-bar window)
+//   - NEW 4: Pyramiding=4 with per-position AVWAP tracking
+//   - FIX 1: Update stops BEFORE checking exits (v3.8 bug)
+//   - REMOVED: Fixed ATR SL/TP, BE raise, take profit
+//   - KEPT: All stochastic entry logic (A/B/C signals, Cloud 3 filter, cooldown)
+
+strategy("Four Pillars v3.8.2 AVWAP-TS", shorttitle="4Pv3.8.2-S", overlay=true,
+         initial_capital=10000, default_qty_type=strategy.cash,
+         default_qty_value=5000, margin_long=5, margin_short=5,
+         commission_type=strategy.commission.cash_per_order,
+         commission_value=8, pyramiding=4, process_orders_on_close=false,
+         max_labels_count=500)
+
+// =============================================================================
+// SECTION 1: INPUTS -- Stochastic Settings (unchanged from v3.8)
+// =============================================================================
+
+grp1 = "=== STOCHASTIC SETTINGS ==="
+i_crossLevel    = input.int(25, "9-3 Cross Level", minval=10, maxval=40, group=grp1,
+                  tooltip="9-3 enters zone below this / above (100-this). Stage 2 fires when 9-3 exits zone.")
+i_zoneLevel     = input.int(30, "Others Zone Level", minval=20, maxval=40, group=grp1,
+                  tooltip="Other stochs must be below/above this")
+i_stageLookback = input.int(10, "Stage Lookback (bars)", minval=3, maxval=30, group=grp1,
+                  tooltip="Max bars 9-3 can stay in zone before setup expires.")
+i_allowBTrades  = input.bool(true, "Allow B Trades (3/4 stochs)", group=grp1,
+                  tooltip="B signal = 3/4 stochs aligned. Can open fresh or add.")
+i_allowCTrades  = input.bool(true, "Allow C Trades (2/4 + Cloud 3)", group=grp1,
+                  tooltip="C signal = 9-3 + 14-3 + Cloud 3. Can open fresh or add.")
+i_bOpenFresh    = input.bool(true, "B/C Can Open Fresh Position", group=grp1,
+                  tooltip="ON = B/C signals can enter when flat. OFF = only add to existing A.")
+i_cloud2Reentry = input.bool(true, "Cloud 2 Re-entry", group=grp1,
+                  tooltip="Price crosses Cloud 2 after a recent rotation = re-enter.")
+i_reentryLookback = input.int(10, "Cloud 2 Re-entry Lookback", minval=3, maxval=30, group=grp1)
+
+// =============================================================================
+// SECTION 2: INPUTS -- Ripster EMAs (unchanged from v3.8)
+// =============================================================================
+
+grp2 = "=== RIPSTER EMAs ==="
+i_ema5      = input.int(5, "EMA 5 (Cloud 2 Short)", group=grp2)
+i_ema12     = input.int(12, "EMA 12 (Cloud 2 Long)", group=grp2)
+i_ema34     = input.int(34, "EMA 34 (Cloud 3 Short)", group=grp2)
+i_ema50     = input.int(50, "EMA 50 (Cloud 3 Long)", group=grp2)
+i_ema72     = input.int(72, "EMA 72 (Cloud 4 Short)", group=grp2)
+i_ema89     = input.int(89, "EMA 89 (Cloud 4 Long)", group=grp2)
+
+// =============================================================================
+// SECTION 3: INPUTS -- AVWAP Trailing (NEW in v3.8.2)
+// =============================================================================
+
+grpAVWAP = "=== AVWAP TRAILING (v3.8.2) ==="
+i_atrLen        = input.int(14, "ATR Length", group=grpAVWAP)
+i_sigmaFloor    = input.float(0.5, "Sigma Floor (x ATR)", step=0.1, minval=0.0, maxval=2.0,
+                  group=grpAVWAP, tooltip="When sigma < this * ATR, use this * ATR. Prevents zero-width bands on bar 1.")
+i_stage1to2     = input.string("opposite_2sigma", "Stage 1->2 Trigger",
+                  options=["opposite_2sigma", "bars_5", "bars_10"], group=grpAVWAP,
+                  tooltip="Stage 1 ends when: opposite 2sigma hit, or after N bars")
+i_stage2Bars    = input.int(5, "Stage 2 Duration (bars)", minval=1, maxval=20, group=grpAVWAP,
+                  tooltip="Bars in Stage 2 before transitioning to Stage 3 (Cloud 3 trail)")
+i_slAtrMult     = input.float(1.0, "SL ATR Buffer (Stage 2/3)", step=0.1, minval=0.3, maxval=2.0,
+                  group=grpAVWAP, tooltip="ATR multiplier for SL distance in Stages 2 and 3")
+i_cooldown      = input.int(3, "Min Bars Between Entries", minval=0, maxval=20, group=grpAVWAP,
+                  tooltip="Minimum bars between entries. Prevents rapid-fire entries.")
+i_maxPositions  = input.int(4, "Max Simultaneous Positions", minval=1, maxval=4, group=grpAVWAP)
+i_enableAdds    = input.bool(true, "Enable AVWAP Adds", group=grpAVWAP,
+                  tooltip="Place limit adds at 1sigma when price hits 2sigma")
+i_enableReentry = input.bool(true, "Enable AVWAP Re-entry", group=grpAVWAP,
+                  tooltip="Re-enter via limit at 1sigma after stop-out (5-bar window)")
+i_cancelBars    = input.int(3, "Cancel Unfilled After (bars)", minval=1, maxval=10, group=grpAVWAP)
+i_reentryWindow = input.int(5, "Re-entry Window (bars)", minval=1, maxval=20, group=grpAVWAP,
+                  tooltip="Bars after stop-out during which AVWAP re-entry is active.")
+i_maxAvwapAge   = input.int(50, "Max AVWAP Age (bars)", minval=10, maxval=200, group=grpAVWAP,
+                  tooltip="AVWAP expires after this many bars for re-entry.")
+
+// =============================================================================
+// SECTION 4: INPUTS -- ADD Signal Settings + Filters + Visuals
+// =============================================================================
+
+grp3c = "=== ADD SIGNAL SETTINGS ==="
+i_addZoneShort = input.int(70, "Short ADD: 9-3 above", minval=60, maxval=90, group=grp3c)
+i_addZoneLong  = input.int(30, "Long ADD: 9-3 below", minval=10, maxval=40, group=grp3c)
+i_addMidShort  = input.float(52.0, "Short ADD: 40/60 below", step=1.0, group=grp3c)
+i_addMidLong   = input.float(48.0, "Long ADD: 40/60 above", step=1.0, group=grp3c)
+
+grp4 = "=== FILTERS ==="
+i_use60D = input.bool(false, "60-10 D Filter", group=grp4)
+
+grp5 = "=== VISUALS ==="
+i_showDash   = input.bool(true, "Show Dashboard", group=grp5)
+i_showCloud2 = input.bool(false, "Show Cloud 2 (5/12)", group=grp5)
+i_showCloud3 = input.bool(true, "Show Cloud 3 (34/50)", group=grp5)
+i_showCloud4 = input.bool(false, "Show Cloud 4 (72/89)", group=grp5)
+i_showAVWAP  = input.bool(true, "Show AVWAP Bands", group=grp5)
+i_showSL     = input.bool(true, "Show SL Lines", group=grp5)
+
+// =============================================================================
+// SECTION 5: STOCHASTIC CALCULATIONS (Raw K -- K smoothing=1, unchanged from v3.8)
+// stoch_k() -- Returns Raw K value for given lookback period
+// Params: k_len = stochastic K period
+// Returns: Raw K (0-100), returns 50 when range=0 (flat market)
+// =============================================================================
+
+stoch_k(int k_len) =>
+    float lowest = ta.lowest(low, k_len)
+    float highest = ta.highest(high, k_len)
+    highest - lowest == 0 ? 50.0 : 100.0 * (close - lowest) / (highest - lowest)
+
+float stoch_9_3      = stoch_k(9)
+float stoch_14_3     = stoch_k(14)
+float stoch_40_3     = stoch_k(40)
+float stoch_60_10    = stoch_k(60)
+float stoch_60_10_d  = ta.sma(stoch_60_10, 10)
+
+// =============================================================================
+// SECTION 6: RIPSTER CLOUDS (unchanged from v3.8)
+// Cloud 2: EMA 5/12 -- re-entry signals
+// Cloud 3: EMA 34/50 -- directional filter (ALWAYS ON) + Stage 3 SL anchor
+// Cloud 4: EMA 72/89 -- visual only
+// =============================================================================
+
+float ema5  = ta.ema(close, i_ema5)
+float ema12 = ta.ema(close, i_ema12)
+bool  cloud2_bull    = ema5 > ema12
+float cloud2_top     = math.max(ema5, ema12)
+float cloud2_bottom  = math.min(ema5, ema12)
+bool  price_cross_above_cloud2 = ta.crossover(close, cloud2_top)
+bool  price_cross_below_cloud2 = ta.crossunder(close, cloud2_bottom)
+
+float ema34 = ta.ema(close, i_ema34)
+float ema50 = ta.ema(close, i_ema50)
+bool  cloud3_bull    = ema34 > ema50
+float cloud3_top     = math.max(ema34, ema50)
+float cloud3_bottom  = math.min(ema34, ema50)
+int   price_pos      = close > cloud3_top ? 1 : close < cloud3_bottom ? -1 : 0
+
+float ema72 = ta.ema(close, i_ema72)
+float ema89 = ta.ema(close, i_ema89)
+bool  cloud4_bull = ema72 > ema89
+
+// =============================================================================
+// SECTION 7: CLOUD 3 DIRECTIONAL FILTER (v3.8 -- ALWAYS ON)
+// Blocks entries against Cloud 3 direction. Inside Cloud 3 = both allowed.
+// =============================================================================
+
+int cloud3_direction = price_pos
+bool cloud3_allows_long  = cloud3_direction >= 0
+bool cloud3_allows_short = cloud3_direction <= 0
+
+// =============================================================================
+// SECTION 8: ENTRY SIGNAL STATE MACHINE (unchanged from v3.8)
+// Two-stage rotation: Stage 1 = 9-3 enters zone, Stage 2 = 9-3 exits zone
+// Outputs: long_signal (A), long_signal_b (B), long_signal_c (C), and shorts
+// =============================================================================
+
+float crossLow  = i_crossLevel
+float crossHigh = 100 - i_crossLevel
+float zoneLow   = i_zoneLevel
+float zoneHigh  = 100 - i_zoneLevel
+
+// Cloud 3 directional filter gates
+bool ripster_ok_long  = cloud3_allows_long
+bool ripster_ok_short = cloud3_allows_short
+
+// Optional 60-10 D filter
+bool d_ok_long  = not i_use60D or stoch_60_10_d > 20
+bool d_ok_short = not i_use60D or stoch_60_10_d < 80
+
+// --- LONG SETUP STATE MACHINE ---
+// Stage 0: Waiting for 9-3 to enter oversold zone
+// Stage 1: 9-3 in zone, tracking which other stochs confirm
+// On exit from zone: count confirmations -> signal A/B/C
+var int  long_stage = 0
+var int  long_stage1_bar = na
+var bool long_14_seen = false
+var bool long_40_seen = false
+var bool long_60_seen = false
+
+bool long_signal   = false    // A trade (4/4 stochs)
+bool long_signal_b = false    // B trade (3/4 stochs)
+bool long_signal_c = false    // C trade (2/4 + Cloud 3)
+
+if long_stage == 0
+    if stoch_9_3 < crossLow
+        long_stage      := 1
+        long_stage1_bar := bar_index
+        long_14_seen    := stoch_14_3 < zoneLow
+        long_40_seen    := stoch_40_3 < zoneLow
+        long_60_seen    := stoch_60_10 < crossLow
+
+else if long_stage == 1
+    if bar_index - long_stage1_bar > i_stageLookback
+        long_stage := 0
+    else if stoch_9_3 >= crossLow
+        int long_others = (long_14_seen ? 1 : 0) + (long_40_seen ? 1 : 0) + (long_60_seen ? 1 : 0)
+        if long_others == 3 and d_ok_long
+            long_signal := true      // A trade (4/4) -- bypasses Cloud 3 filter (highest conviction reversal)
+        else if long_others >= 2 and i_allowBTrades and ripster_ok_long and d_ok_long
+            long_signal_b := true    // B trade (3/4) -- requires Cloud 3 alignment
+        else if long_14_seen and i_allowCTrades and price_pos == 1
+            long_signal_c := true
+        long_stage := 0
+    else
+        if stoch_14_3 < zoneLow
+            long_14_seen := true
+        if stoch_40_3 < zoneLow
+            long_40_seen := true
+        if stoch_60_10 < crossLow
+            long_60_seen := true
+
+// --- SHORT SETUP STATE MACHINE ---
+// Mirror of long setup with inverted thresholds
+var int  short_stage = 0
+var int  short_stage1_bar = na
+var bool short_14_seen = false
+var bool short_40_seen = false
+var bool short_60_seen = false
+
+bool short_signal   = false
+bool short_signal_b = false
+bool short_signal_c = false
+
+if short_stage == 0
+    if stoch_9_3 > crossHigh
+        short_stage      := 1
+        short_stage1_bar := bar_index
+        short_14_seen    := stoch_14_3 > zoneHigh
+        short_40_seen    := stoch_40_3 > zoneHigh
+        short_60_seen    := stoch_60_10 > crossHigh
+
+else if short_stage == 1
+    if bar_index - short_stage1_bar > i_stageLookback
+        short_stage := 0
+    else if stoch_9_3 <= crossHigh
+        int short_others = (short_14_seen ? 1 : 0) + (short_40_seen ? 1 : 0) + (short_60_seen ? 1 : 0)
+        if short_others == 3 and d_ok_short
+            short_signal := true      // A trade (4/4) -- bypasses Cloud 3 filter
+        else if short_others >= 2 and i_allowBTrades and ripster_ok_short and d_ok_short
+            short_signal_b := true    // B trade (3/4) -- requires Cloud 3 alignment
+        else if short_14_seen and i_allowCTrades and price_pos == -1
+            short_signal_c := true
+        short_stage := 0
+    else
+        if stoch_14_3 > zoneHigh
+            short_14_seen := true
+        if stoch_40_3 > zoneHigh
+            short_40_seen := true
+        if stoch_60_10 > crossHigh
+            short_60_seen := true
+
+// Dashboard helper
+bool others_oversold  = stoch_14_3 < zoneLow and stoch_40_3 < zoneLow and stoch_60_10 < crossLow
+bool others_overbought = stoch_14_3 > zoneHigh and stoch_40_3 > zoneHigh and stoch_60_10 > crossHigh
+
+// =============================================================================
+// SECTION 9: CLOUD 2 RE-ENTRY TRACKING (unchanged from v3.8)
+// Tracks bars since any signal (A/B/C) for re-entry eligibility
+// =============================================================================
+
+var int bars_since_long  = 999
+var int bars_since_short = 999
+
+if long_signal or long_signal_b or long_signal_c
+    bars_since_long := 0
+else
+    bars_since_long := bars_since_long + 1
+
+if short_signal or short_signal_b or short_signal_c
+    bars_since_short := 0
+else
+    bars_since_short := bars_since_short + 1
+
+bool recent_long  = bars_since_long <= i_reentryLookback and bars_since_long > 0
+bool recent_short = bars_since_short <= i_reentryLookback and bars_since_short > 0
+
+bool any_long_signal  = long_signal or long_signal_b or long_signal_c
+bool any_short_signal = short_signal or short_signal_b or short_signal_c
+
+bool cloud2_reentry_long  = i_cloud2Reentry and price_cross_above_cloud2 and recent_long and not any_long_signal
+bool cloud2_reentry_short = i_cloud2Reentry and price_cross_below_cloud2 and recent_short and not any_short_signal
+
+// ADD signals (informational, used for stochastic adds)
+bool add_long_trigger  = ta.crossover(stoch_9_3, i_addZoneLong) and stoch_40_3 > i_addMidLong and stoch_60_10 > i_addMidLong
+bool add_short_trigger = ta.crossunder(stoch_9_3, i_addZoneShort) and stoch_40_3 < i_addMidShort and stoch_60_10 < i_addMidShort
+
+// =============================================================================
+// SECTION 10: ATR CALCULATION
+// =============================================================================
+
+float atr = ta.atr(i_atrLen)
+
+// =============================================================================
+// SECTION 11: POSITION STATE ARRAYS (4 slots, NEW in v3.8.2)
+// Each slot tracks one independent position with its own AVWAP
+// =============================================================================
+
+// -- Position tracking arrays --
+var float[]  pos_entry     = array.new_float(4, na)    // Entry price per slot
+var int[]    pos_bar       = array.new_int(4, 0)       // Entry bar index per slot
+var int[]    pos_dir       = array.new_int(4, 0)       // 1=long, -1=short, 0=empty
+var int[]    pos_stage     = array.new_int(4, 0)       // SL stage: 1, 2, or 3
+var int[]    pos_stage_bar = array.new_int(4, 0)       // Bar when current stage started
+var float[]  pos_sl        = array.new_float(4, na)    // Current SL level
+var string[] pos_id        = array.new_string(4, "")   // Entry ID string ("L1", "S2", etc.)
+var string[] pos_grade     = array.new_string(4, "")   // Trade grade: A, B, C, R
+
+// -- AVWAP accumulators per position (cumulative from entry bar) --
+var float[] pos_cumPV  = array.new_float(4, 0.0)  // Sum of hlc3 * volume
+var float[] pos_cumV   = array.new_float(4, 0.0)  // Sum of volume
+var float[] pos_cumPV2 = array.new_float(4, 0.0)  // Sum of hlc3^2 * volume (for variance)
+
+// -- Computed AVWAP values per position (updated each bar) --
+var float[] pos_avwap  = array.new_float(4, na)    // AVWAP center
+var float[] pos_sigma  = array.new_float(4, na)    // Sigma (stdev with ATR floor)
+
+// -- Pending limit order state (one at a time for adds/re-entries) --
+var int    pending_bar   = na      // Bar when limit order was placed
+var int    pending_dir   = 0       // 1=long pending, -1=short pending, 0=no pending
+var float  pending_limit = na      // Limit price for the pending order
+var string pending_id    = ""      // Entry ID for the pending order
+var int    pending_slot  = -1      // Which position slot this add/re-entry targets
+
+// -- Re-entry state (saved when a position is stopped out) --
+var int    reentry_bar   = na      // Bar when position was stopped out
+var int    reentry_dir   = 0       // Direction of stopped position (1=was long, -1=was short)
+var float  reentry_avwap = na      // AVWAP center at time of stop
+var float  reentry_sigma = na      // Sigma at time of stop
+
+// -- Global position counter (increments forever, never resets) --
+var int next_pos_id = 1
+
+// -- Last entry bar for cooldown tracking --
+var int last_entry_bar = na
+
+// =============================================================================
+// SECTION 12: HELPER FUNCTIONS
+// =============================================================================
+
+// find_empty_slot() -- Find the first empty position slot (dir==0)
+// Returns: slot index (0-3) or -1 if all full
+// Side effects: None
+find_empty_slot() =>
+    int result = -1
+    for i = 0 to 3
+        if array.get(pos_dir, i) == 0 and result == -1
+            result := i
+    result
+
+// count_active_positions() -- Count how many slots have active positions
+// Returns: int 0-4
+// Side effects: None
+count_active_positions() =>
+    int cnt = 0
+    for i = 0 to 3
+        if array.get(pos_dir, i) != 0
+            cnt += 1
+    cnt
+
+// compute_avwap_bands() -- Calculate AVWAP center + sigma for a position slot
+// Uses volume-weighted variance: var = E[X^2] - E[X]^2
+// Applies ATR floor to prevent sigma=0 on first bars after entry
+// Params: slot = position slot index (0-3)
+// Returns: [avwap_val, sigma_val] via tuple
+// Side effects: Updates pos_avwap and pos_sigma arrays
+compute_avwap_bands(int slot) =>
+    float cpv  = array.get(pos_cumPV, slot)
+    float cv   = array.get(pos_cumV, slot)
+    float cpv2 = array.get(pos_cumPV2, slot)
+    float avwap_val = cv > 0 ? cpv / cv : close
+    float variance  = cv > 0 ? math.max((cpv2 / cv) - (avwap_val * avwap_val), 0.0) : 0.0
+    float sigma_raw = math.sqrt(variance)
+    float sigma_val = math.max(sigma_raw, i_sigmaFloor * atr)
+    array.set(pos_avwap, slot, avwap_val)
+    array.set(pos_sigma, slot, sigma_val)
+    [avwap_val, sigma_val]
+
+// init_position_slot() -- Initialize a position slot when a new trade is entered
+// Params: slot=array index, dir=1(long)/-1(short), grade="A"/"B"/"C"/"R", eid=entry ID string
+// Side effects: Sets all arrays for the slot, seeds AVWAP accumulators
+init_position_slot(int slot, int dir, string grade, string eid) =>
+    array.set(pos_entry, slot, close)
+    array.set(pos_bar, slot, bar_index)
+    array.set(pos_dir, slot, dir)
+    array.set(pos_stage, slot, 1)
+    array.set(pos_stage_bar, slot, bar_index)
+    array.set(pos_id, slot, eid)
+    array.set(pos_grade, slot, grade)
+    // Seed AVWAP accumulators with entry bar data
+    array.set(pos_cumPV, slot, hlc3 * volume)
+    array.set(pos_cumV, slot, volume)
+    array.set(pos_cumPV2, slot, hlc3 * hlc3 * volume)
+    // Compute initial AVWAP + sigma (will use ATR floor since only 1 bar of data)
+    float init_avwap = hlc3
+    float init_sigma = i_sigmaFloor * atr
+    array.set(pos_avwap, slot, init_avwap)
+    array.set(pos_sigma, slot, init_sigma)
+    // Set initial SL at AVWAP +/- 2sigma (Stage 1)
+    float init_sl = dir == 1 ? init_avwap - 2 * init_sigma : init_avwap + 2 * init_sigma
+    array.set(pos_sl, slot, init_sl)
+
+// clear_position_slot() -- Reset a position slot when trade is closed
+// Params: slot = array index to clear
+// Side effects: Zeros out all arrays for the slot
+clear_position_slot(int slot) =>
+    array.set(pos_entry, slot, na)
+    array.set(pos_bar, slot, 0)
+    array.set(pos_dir, slot, 0)
+    array.set(pos_stage, slot, 0)
+    array.set(pos_stage_bar, slot, 0)
+    array.set(pos_sl, slot, na)
+    array.set(pos_id, slot, "")
+    array.set(pos_grade, slot, "")
+    array.set(pos_cumPV, slot, 0.0)
+    array.set(pos_cumV, slot, 0.0)
+    array.set(pos_cumPV2, slot, 0.0)
+    array.set(pos_avwap, slot, na)
+    array.set(pos_sigma, slot, na)
+
+// =============================================================================
+// SECTION 13: AVWAP UPDATE + SL STAGE MACHINE (runs FIRST each bar)
+// CRITICAL: Stops are updated BEFORE strategy.exit() is called
+// This fixes the v3.8 bug where exits were checked before stops were updated
+// =============================================================================
+
+for slot = 0 to 3
+    int dir = array.get(pos_dir, slot)
+    if dir == 0
+        continue
+
+    // -- Step A: Accumulate AVWAP data for this bar --
+    float cpv  = array.get(pos_cumPV, slot) + hlc3 * volume
+    float cv   = array.get(pos_cumV, slot) + volume
+    float cpv2 = array.get(pos_cumPV2, slot) + hlc3 * hlc3 * volume
+    array.set(pos_cumPV, slot, cpv)
+    array.set(pos_cumV, slot, cv)
+    array.set(pos_cumPV2, slot, cpv2)
+
+    // -- Step B: Compute AVWAP center + sigma bands --
+    [avwap_val, sigma_val] = compute_avwap_bands(slot)
+    float p2 = avwap_val + 2.0 * sigma_val    // +2 sigma
+    float m2 = avwap_val - 2.0 * sigma_val    // -2 sigma
+
+    // -- Step C: Check SL stage transitions --
+    int stage = array.get(pos_stage, slot)
+    int stage_bar = array.get(pos_stage_bar, slot)
+    int bars_in_stage = bar_index - stage_bar
+    float current_sl = array.get(pos_sl, slot)
+
+    // Stage 1 -> Stage 2: triggered when opposite 2sigma band is hit
+    // For LONG: price reaches AVWAP +2sigma (went in favor)
+    // For SHORT: price reaches AVWAP -2sigma (went in favor)
+    if stage == 1
+        bool transition = false
+        if i_stage1to2 == "opposite_2sigma"
+            if dir == 1 and high >= p2
+                transition := true
+            else if dir == -1 and low <= m2
+                transition := true
+        else if i_stage1to2 == "bars_5" and bars_in_stage >= 5
+            transition := true
+        else if i_stage1to2 == "bars_10" and bars_in_stage >= 10
+            transition := true
+
+        if transition
+            array.set(pos_stage, slot, 2)
+            array.set(pos_stage_bar, slot, bar_index)
+            stage := 2
+            bars_in_stage := 0
+
+    // Stage 2 -> Stage 3: after i_stage2Bars bars in Stage 2
+    if stage == 2 and bars_in_stage >= i_stage2Bars
+        array.set(pos_stage, slot, 3)
+        array.set(pos_stage_bar, slot, bar_index)
+        stage := 3
+
+    // -- Step D: Compute target SL for current stage --
+    float target_sl = current_sl
+
+    if stage == 1
+        // Stage 1: SL at AVWAP +/- 2sigma (dynamic, updates each bar)
+        if dir == 1
+            target_sl := m2    // Long SL below at -2sigma
+        else
+            target_sl := p2    // Short SL above at +2sigma
+
+    else if stage == 2
+        // Stage 2: SL at AVWAP center +/- ATR (tighter)
+        if dir == 1
+            target_sl := avwap_val - (i_slAtrMult * atr)
+        else
+            target_sl := avwap_val + (i_slAtrMult * atr)
+
+    else if stage == 3
+        // Stage 3: SL at Cloud 3 boundary +/- ATR (trailing)
+        if dir == 1
+            target_sl := cloud3_bottom - (i_slAtrMult * atr)
+        else
+            target_sl := cloud3_top + (i_slAtrMult * atr)
+
+    // -- Step E: Ratchet guard -- SL only moves in favorable direction --
+    if not na(target_sl) and not na(current_sl)
+        if dir == 1 and target_sl > current_sl
+            array.set(pos_sl, slot, target_sl)
+        else if dir == -1 and target_sl < current_sl
+            array.set(pos_sl, slot, target_sl)
+    else if na(current_sl) and not na(target_sl)
+        array.set(pos_sl, slot, target_sl)
+
+    // -- Step F: Issue strategy.exit() with updated SL --
+    // This happens AFTER SL is updated (v3.8.2 critical fix)
+    float final_sl = array.get(pos_sl, slot)
+    string eid = array.get(pos_id, slot)
+    if not na(final_sl) and eid != ""
+        strategy.exit("X" + eid, eid, stop=final_sl)
+
+// =============================================================================
+// SECTION 14: POSITION CLEANUP -- Detect closed positions, save re-entry state
+// Checks which slots no longer have matching open trades in strategy engine
+// =============================================================================
+
+for slot = 0 to 3
+    int dir = array.get(pos_dir, slot)
+    if dir == 0
+        continue
+
+    string eid = array.get(pos_id, slot)
+    bool still_open = false
+    for i = 0 to math.max(strategy.opentrades - 1, 0)
+        if strategy.opentrades > 0 and strategy.opentrades.entry_id(i) == eid
+            still_open := true
+            break
+
+    if not still_open and strategy.opentrades >= 0
+        // Position was closed (SL hit) -- save state for re-entry
+        if i_enableReentry
+            reentry_bar   := bar_index
+            reentry_dir   := dir
+            reentry_avwap := nz(array.get(pos_avwap, slot), na)
+            reentry_sigma := nz(array.get(pos_sigma, slot), na)
+        // Clear the slot
+        clear_position_slot(slot)
+
+// =============================================================================
+// SECTION 15: PENDING LIMIT ORDER MANAGEMENT (adds + re-entries)
+// Checks for cancel (3 bars) and fill detection
+// =============================================================================
+
+// -- Cancel unfilled limit orders after i_cancelBars bars --
+if pending_dir != 0 and not na(pending_bar)
+    if bar_index - pending_bar >= i_cancelBars
+        strategy.cancel(pending_id)
+        pending_bar   := na
+        pending_dir   := 0
+        pending_limit := na
+        pending_id    := ""
+        pending_slot  := -1
+
+// -- Fill detection: check if pending order was filled --
+if pending_dir != 0
+    bool filled = false
+    for i = 0 to math.max(strategy.opentrades - 1, 0)
+        if strategy.opentrades > 0 and strategy.opentrades.entry_id(i) == pending_id
+            filled := true
+            break
+
+    if filled
+        int slot = find_empty_slot()
+        if slot >= 0
+            int fill_dir = pending_dir
+            string fill_grade = "ADD"
+            init_position_slot(slot, fill_dir, fill_grade, pending_id)
+            last_entry_bar := bar_index
+        // Clear pending state
+        pending_bar   := na
+        pending_dir   := 0
+        pending_limit := na
+        pending_id    := ""
+        pending_slot  := -1
+
+// =============================================================================
+// SECTION 16: STOCHASTIC ENTRY EXECUTION (v3.8 logic adapted for multi-position)
+// Priority: A flip > A new > BC flip > BC new > Cloud 2 re-entry
+// On entry: allocate slot, initialize AVWAP, issue strategy.entry()
+// =============================================================================
+
+int active_count = count_active_positions()
+bool cooldownOK = na(last_entry_bar) or (bar_index - last_entry_bar >= i_cooldown)
+bool canEnterNew = active_count < i_maxPositions and cooldownOK
+
+// Direction lock: detect which directions are currently open
+// Prevents hedging (long+short simultaneously). Allows pyramiding same direction.
+bool has_longs  = false
+bool has_shorts = false
+for i = 0 to 3
+    int d = array.get(pos_dir, i)
+    if d == 1
+        has_longs := true
+    if d == -1
+        has_shorts := true
+bool isFlat = not has_longs and not has_shorts
+
+// Entry conditions with direction lock:
+// - Longs allowed when: flat OR already long (pyramid). Blocked when shorts exist.
+// - Shorts allowed when: flat OR already short (pyramid). Blocked when longs exist.
+// - A trades: NO Cloud 3 gate (4/4 stochs = highest conviction reversal, overrides trend filter)
+// - B/C/Re-entry: Cloud 3 gate ON (moderate/low conviction, needs trend confirmation)
+// - No flipping: wait for all positions to close before reversing.
+bool can_go_long_a  = not has_shorts and canEnterNew                        // A: no Cloud 3 gate
+bool can_go_short_a = not has_longs and canEnterNew                         // A: no Cloud 3 gate
+bool can_go_long    = not has_shorts and canEnterNew and cloud3_allows_long  // B/C/R: Cloud 3 gated
+bool can_go_short   = not has_longs and canEnterNew and cloud3_allows_short  // B/C/R: Cloud 3 gated
+
+bool enter_long_a  = long_signal and can_go_long_a
+bool enter_short_a = short_signal and can_go_short_a
+
+bool enter_long_bc  = (long_signal_b or long_signal_c) and i_bOpenFresh and can_go_long
+bool enter_short_bc = (short_signal_b or short_signal_c) and i_bOpenFresh and can_go_short
+
+bool enter_long_re  = cloud2_reentry_long and can_go_long
+bool enter_short_re = cloud2_reentry_short and can_go_short
+
+// -- Execute entry with priority chain --
+bool didEnter = false
+
+if enter_long_a and not didEnter
+    int slot = find_empty_slot()
+    if slot >= 0
+        string eid = "L" + str.tostring(next_pos_id)
+        init_position_slot(slot, 1, "A", eid)
+        strategy.entry(eid, strategy.long)
+        last_entry_bar := bar_index
+        next_pos_id += 1
+        didEnter := true
+
+else if enter_short_a and not didEnter
+    int slot = find_empty_slot()
+    if slot >= 0
+        string eid = "S" + str.tostring(next_pos_id)
+        init_position_slot(slot, -1, "A", eid)
+        strategy.entry(eid, strategy.short)
+        last_entry_bar := bar_index
+        next_pos_id += 1
+        didEnter := true
+
+else if enter_long_bc and not didEnter
+    int slot = find_empty_slot()
+    if slot >= 0
+        string grade = long_signal_b ? "B" : "C"
+        string eid = "L" + str.tostring(next_pos_id)
+        init_position_slot(slot, 1, grade, eid)
+        strategy.entry(eid, strategy.long)
+        last_entry_bar := bar_index
+        next_pos_id += 1
+        didEnter := true
+
+else if enter_short_bc and not didEnter
+    int slot = find_empty_slot()
+    if slot >= 0
+        string grade = short_signal_b ? "B" : "C"
+        string eid = "S" + str.tostring(next_pos_id)
+        init_position_slot(slot, -1, grade, eid)
+        strategy.entry(eid, strategy.short)
+        last_entry_bar := bar_index
+        next_pos_id += 1
+        didEnter := true
+
+else if enter_long_re and not didEnter
+    int slot = find_empty_slot()
+    if slot >= 0
+        string eid = "L" + str.tostring(next_pos_id)
+        init_position_slot(slot, 1, "R", eid)
+        strategy.entry(eid, strategy.long)
+        last_entry_bar := bar_index
+        next_pos_id += 1
+        didEnter := true
+
+else if enter_short_re and not didEnter
+    int slot = find_empty_slot()
+    if slot >= 0
+        string eid = "S" + str.tostring(next_pos_id)
+        init_position_slot(slot, -1, "R", eid)
+        strategy.entry(eid, strategy.short)
+        last_entry_bar := bar_index
+        next_pos_id += 1
+        didEnter := true
+
+// =============================================================================
+// SECTION 17: AVWAP ADD LOGIC (NEW in v3.8.2)
+// When price stretches to 2sigma from a position's AVWAP:
+//   LONG: price dips to AVWAP-2sigma -> place LIMIT BUY at AVWAP-1sigma
+//   SHORT: price rises to AVWAP+2sigma -> place LIMIT SELL at AVWAP+1sigma
+// Only one pending limit at a time. Cancel after i_cancelBars bars.
+// =============================================================================
+
+if i_enableAdds and pending_dir == 0 and not didEnter and active_count < i_maxPositions and cooldownOK
+    for slot = 0 to 3
+        int dir = array.get(pos_dir, slot)
+        if dir == 0 or pending_dir != 0
+            continue
+
+        float slot_avwap = array.get(pos_avwap, slot)
+        float slot_sigma = array.get(pos_sigma, slot)
+        if na(slot_avwap) or na(slot_sigma)
+            continue
+
+        // Check AVWAP age -- don't add on stale AVWAPs
+        int slot_bar = array.get(pos_bar, slot)
+        if bar_index - slot_bar > i_maxAvwapAge
+            continue
+
+        float slot_p2 = slot_avwap + 2.0 * slot_sigma    // +2 sigma
+        float slot_m2 = slot_avwap - 2.0 * slot_sigma    // -2 sigma
+        float slot_p1 = slot_avwap + slot_sigma           // +1 sigma
+        float slot_m1 = slot_avwap - slot_sigma           // -1 sigma
+
+        // LONG add: price dips to -2sigma, limit buy at -1sigma
+        if dir == 1 and low <= slot_m2 and cloud3_allows_long
+            string eid = "L" + str.tostring(next_pos_id)
+            pending_bar   := bar_index
+            pending_dir   := 1
+            pending_limit := slot_m1
+            pending_id    := eid
+            pending_slot  := slot
+            strategy.entry(eid, strategy.long, limit=slot_m1)
+            next_pos_id += 1  // Increment on placement, not fill (prevents duplicate IDs)
+            break
+
+        // SHORT add: price rises to +2sigma, limit sell at +1sigma
+        if dir == -1 and high >= slot_p2 and cloud3_allows_short
+            string eid = "S" + str.tostring(next_pos_id)
+            pending_bar   := bar_index
+            pending_dir   := -1
+            pending_limit := slot_p1
+            pending_id    := eid
+            pending_slot  := slot
+            strategy.entry(eid, strategy.short, limit=slot_p1)
+            next_pos_id += 1  // Increment on placement, not fill
+            break
+
+// =============================================================================
+// SECTION 18: AVWAP RE-ENTRY LOGIC (NEW in v3.8.2)
+// After stop-out, for i_reentryWindow bars, if price hits 2sigma on the
+// stopped position's frozen AVWAP: place LIMIT at 1sigma to re-enter.
+// Re-entry state expires after i_reentryWindow bars.
+// =============================================================================
+
+// Direction lock check for re-entry: block if opposite positions now exist
+bool reentry_dir_ok = (reentry_dir == 1 and not has_shorts) or (reentry_dir == -1 and not has_longs) or reentry_dir == 0
+
+if i_enableReentry and reentry_dir != 0 and reentry_dir_ok and pending_dir == 0 and not didEnter
+    // Check if re-entry window has expired
+    if not na(reentry_bar) and bar_index - reentry_bar > i_reentryWindow
+        // Window expired -- clear re-entry state
+        reentry_bar   := na
+        reentry_dir   := 0
+        reentry_avwap := na
+        reentry_sigma := na
+    else if not na(reentry_avwap) and not na(reentry_sigma) and active_count < i_maxPositions and cooldownOK
+        float re_p2 = reentry_avwap + 2.0 * reentry_sigma
+        float re_m2 = reentry_avwap - 2.0 * reentry_sigma
+        float re_p1 = reentry_avwap + reentry_sigma
+        float re_m1 = reentry_avwap - reentry_sigma
+
+        // Re-enter LONG: price dips to -2sigma of old AVWAP
+        if reentry_dir == 1 and low <= re_m2 and cloud3_allows_long
+            string eid = "L" + str.tostring(next_pos_id)
+            pending_bar   := bar_index
+            pending_dir   := 1
+            pending_limit := re_m1
+            pending_id    := eid
+            pending_slot  := -1  // No source slot (re-entry)
+            strategy.entry(eid, strategy.long, limit=re_m1)
+            next_pos_id += 1  // Increment on placement, not fill
+            // Clear re-entry state (only one attempt)
+            reentry_dir := 0
+
+        // Re-enter SHORT: price rises to +2sigma of old AVWAP
+        else if reentry_dir == -1 and high >= re_p2 and cloud3_allows_short
+            string eid = "S" + str.tostring(next_pos_id)
+            pending_bar   := bar_index
+            pending_dir   := -1
+            pending_limit := re_p1
+            pending_id    := eid
+            pending_slot  := -1
+            strategy.entry(eid, strategy.short, limit=re_p1)
+            next_pos_id += 1  // Increment on placement, not fill
+            reentry_dir := 0
+
+// =============================================================================
+// SECTION 19: VISUALS -- AVWAP bands, SL lines, Cloud 3
+// =============================================================================
+
+// Plot first active position's AVWAP bands (primary visual)
+float plot_avwap = na
+float plot_p1 = na
+float plot_p2 = na
+float plot_m1 = na
+float plot_m2 = na
+float plot_sl = na
+
+// Find first active position for plotting
+for slot = 0 to 3
+    if array.get(pos_dir, slot) != 0 and na(plot_avwap)
+        float av = array.get(pos_avwap, slot)
+        float sg = array.get(pos_sigma, slot)
+        if not na(av) and not na(sg)
+            plot_avwap := av
+            plot_p1 := av + sg
+            plot_p2 := av + 2.0 * sg
+            plot_m1 := av - sg
+            plot_m2 := av - 2.0 * sg
+            plot_sl := array.get(pos_sl, slot)
+            break
+
+// AVWAP bands
+plot(i_showAVWAP ? plot_avwap : na, "AVWAP Center", color.new(color.yellow, 20), 2, plot.style_linebr)
+plot(i_showAVWAP ? plot_p1 : na, "AVWAP +1sigma", color.new(color.orange, 50), 1, plot.style_linebr)
+plot(i_showAVWAP ? plot_p2 : na, "AVWAP +2sigma", color.new(color.red, 50), 1, plot.style_linebr)
+plot(i_showAVWAP ? plot_m1 : na, "AVWAP -1sigma", color.new(color.orange, 50), 1, plot.style_linebr)
+plot(i_showAVWAP ? plot_m2 : na, "AVWAP -2sigma", color.new(color.red, 50), 1, plot.style_linebr)
+
+// SL line
+plot(i_showSL ? plot_sl : na, "Stop Loss", color.red, 2, plot.style_linebr)
+
+// Pending limit order line
+plot(pending_dir != 0 ? pending_limit : na, "Pending Limit", color.new(color.aqua, 30), 1, plot.style_linebr)
+
+// Cloud plots
+pC2a = plot(i_showCloud2 ? ema5 : na, "EMA 5", color.new(color.teal, 70))
+pC2b = plot(i_showCloud2 ? ema12 : na, "EMA 12", color.new(color.teal, 70))
+fill(pC2a, pC2b, cloud2_bull ? color.new(color.teal, 85) : color.new(color.maroon, 85))
+
+pC3a = plot(i_showCloud3 ? ema34 : na, "EMA 34", color.new(color.blue, 70))
+pC3b = plot(i_showCloud3 ? ema50 : na, "EMA 50", color.new(color.blue, 70))
+fill(pC3a, pC3b, cloud3_bull ? color.new(color.green, 85) : color.new(color.red, 85))
+
+pC4a = plot(i_showCloud4 ? ema72 : na, "EMA 72", color.new(color.purple, 70))
+pC4b = plot(i_showCloud4 ? ema89 : na, "EMA 89", color.new(color.purple, 70))
+fill(pC4a, pC4b, cloud4_bull ? color.new(color.green, 90) : color.new(color.red, 90))
+
+// =============================================================================
+// SECTION 20: DASHBOARD
+// 3-column table: stochastics, position grid, AVWAP levels, pending, stats
+// =============================================================================
+
+var table dash = table.new(position.top_right, 3, 16, bgcolor=color.new(#1e222d, 10))
+
+if i_showDash and barstate.islast
+    // Row 0: Title + position count
+    string status_str = str.tostring(count_active_positions()) + " POS"
+    table.cell(dash, 0, 0, "4P v3.8.2", text_color=color.white, text_size=size.small)
+    table.cell(dash, 1, 0, "AVWAP-TS", text_color=color.yellow, text_size=size.small)
+    table.cell(dash, 2, 0, status_str, text_color=color.aqua, text_size=size.small)
+
+    // Rows 1-4: Stochastics
+    table.cell(dash, 0, 1, "9-3", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 1, str.tostring(stoch_9_3, "#.0"), text_color=stoch_9_3 < crossLow ? color.lime : stoch_9_3 > crossHigh ? color.red : color.white, text_size=size.tiny)
+    table.cell(dash, 2, 1, "", text_size=size.tiny)
+
+    table.cell(dash, 0, 2, "14-3", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 2, str.tostring(stoch_14_3, "#.0"), text_color=stoch_14_3 < zoneLow ? color.lime : stoch_14_3 > zoneHigh ? color.red : color.white, text_size=size.tiny)
+    table.cell(dash, 2, 2, "", text_size=size.tiny)
+
+    table.cell(dash, 0, 3, "40-3", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 3, str.tostring(stoch_40_3, "#.0"), text_color=stoch_40_3 < zoneLow ? color.lime : stoch_40_3 > zoneHigh ? color.red : color.white, text_size=size.tiny)
+    table.cell(dash, 2, 3, "", text_size=size.tiny)
+
+    table.cell(dash, 0, 4, "60-10", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 4, str.tostring(stoch_60_10, "#.0"), text_color=stoch_60_10 < zoneLow ? color.lime : stoch_60_10 > zoneHigh ? color.red : color.white, text_size=size.tiny)
+    table.cell(dash, 2, 4, "", text_size=size.tiny)
+
+    // Row 5: Zone status
+    string allInZone = others_oversold ? "ALL < " + str.tostring(zoneLow, "#") : others_overbought ? "ALL > " + str.tostring(zoneHigh, "#") : "---"
+    color zoneColor = others_oversold ? color.lime : others_overbought ? color.red : color.gray
+    table.cell(dash, 0, 5, "Zone", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 5, allInZone, text_color=zoneColor, text_size=size.tiny)
+    table.cell(dash, 2, 5, "", text_size=size.tiny)
+
+    // Row 6: Cloud 3 direction
+    string c3_label = cloud3_direction == 1 ? "BULL" : cloud3_direction == -1 ? "BEAR" : "CHOP"
+    color c3_color = cloud3_direction == 1 ? color.lime : cloud3_direction == -1 ? color.red : color.orange
+    table.cell(dash, 0, 6, "Cloud3", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 6, c3_label, text_color=c3_color, text_size=size.tiny)
+    table.cell(dash, 2, 6, "ATR " + str.tostring(atr, "#.#####"), text_color=color.gray, text_size=size.tiny)
+
+    // Rows 7-10: Position grid (4 slots)
+    for slot = 0 to 3
+        int s_dir = array.get(pos_dir, slot)
+        string s_id = array.get(pos_id, slot)
+        int s_stage = array.get(pos_stage, slot)
+        float s_sl = array.get(pos_sl, slot)
+        float s_avwap = array.get(pos_avwap, slot)
+        string s_grade = array.get(pos_grade, slot)
+
+        int row = 7 + slot
+        table.cell(dash, 0, row, "POS " + str.tostring(slot + 1), text_color=color.gray, text_size=size.tiny)
+
+        if s_dir != 0
+            string dir_str = s_dir == 1 ? "L" : "S"
+            string pos_info = s_id + " " + s_grade + " AV:" + str.tostring(nz(s_avwap, 0), "#.#####")
+            string sl_info = "SL" + str.tostring(s_stage) + " " + str.tostring(nz(s_sl, 0), "#.#####")
+            color pos_color = s_dir == 1 ? color.lime : color.red
+            table.cell(dash, 1, row, pos_info, text_color=pos_color, text_size=size.tiny)
+            table.cell(dash, 2, row, sl_info, text_color=color.orange, text_size=size.tiny)
+        else
+            table.cell(dash, 1, row, "---", text_color=color.gray, text_size=size.tiny)
+            table.cell(dash, 2, row, "", text_size=size.tiny)
+
+    // Row 11: Pending limit order
+    table.cell(dash, 0, 11, "Pending", text_color=color.gray, text_size=size.tiny)
+    if pending_dir != 0
+        string pend_info = pending_id + " lim " + str.tostring(nz(pending_limit, 0), "#.#####")
+        int pend_bars_left = i_cancelBars - (bar_index - nz(pending_bar, bar_index))
+        string pend_timer = str.tostring(math.max(pend_bars_left, 0)) + "/" + str.tostring(i_cancelBars)
+        table.cell(dash, 1, 11, pend_info, text_color=color.aqua, text_size=size.tiny)
+        table.cell(dash, 2, 11, pend_timer, text_color=color.aqua, text_size=size.tiny)
+    else
+        table.cell(dash, 1, 11, "---", text_color=color.gray, text_size=size.tiny)
+        table.cell(dash, 2, 11, "", text_size=size.tiny)
+
+    // Row 12: Re-entry state
+    table.cell(dash, 0, 12, "Re-entry", text_color=color.gray, text_size=size.tiny)
+    if reentry_dir != 0 and not na(reentry_bar)
+        int re_bars_left = i_reentryWindow - (bar_index - reentry_bar)
+        string re_info = (reentry_dir == 1 ? "LONG" : "SHORT") + " " + str.tostring(math.max(re_bars_left, 0)) + " bars"
+        table.cell(dash, 1, 12, re_info, text_color=color.yellow, text_size=size.tiny)
+        table.cell(dash, 2, 12, "AV:" + str.tostring(nz(reentry_avwap, 0), "#.#####"), text_color=color.yellow, text_size=size.tiny)
+    else
+        table.cell(dash, 1, 12, "---", text_color=color.gray, text_size=size.tiny)
+        table.cell(dash, 2, 12, "", text_size=size.tiny)
+
+    // Row 13: Trade count + commission
+    float totalComm = strategy.closedtrades * 16.0
+    table.cell(dash, 0, 13, "Trades", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 13, str.tostring(strategy.closedtrades), text_color=color.white, text_size=size.tiny)
+    table.cell(dash, 2, 13, "Comm$ " + str.tostring(totalComm, "#"), text_color=color.orange, text_size=size.tiny)
+
+    // Row 14: 60-10 D-line
+    string dStr = str.tostring(stoch_60_10_d, "#.0")
+    color dColor = stoch_60_10_d > 20 and stoch_60_10_d < 80 ? color.lime : color.orange
+    table.cell(dash, 0, 14, "60 D", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 14, dStr, text_color=dColor, text_size=size.tiny)
+    table.cell(dash, 2, 14, "", text_size=size.tiny)
+
+    // Row 15: Cloud 2
+    table.cell(dash, 0, 15, "Cloud2", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 15, cloud2_bull ? "BULL" : "BEAR", text_color=cloud2_bull ? color.lime : color.red, text_size=size.tiny)
+    table.cell(dash, 2, 15, "", text_size=size.tiny)

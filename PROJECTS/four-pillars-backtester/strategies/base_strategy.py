@@ -1,0 +1,42 @@
+from abc import ABC, abstractmethod
+import pandas as pd
+
+class BaseStrategy(ABC):
+    """
+    Abstract base class for all trading strategies.
+
+    Methods:
+        calculate_indicators(df): Calculate technical indicators.
+        generate_signals(df): Generate buy/sell signals based on indicators.
+        get_sl_tp(entry_price, atr_value): Determine stop loss and take profit levels.
+        get_name(): Return the name of the strategy.
+    """
+
+    @abstractmethod
+    def calculate_indicators(self, df: pd.DataFrame) -> None:
+        """Calculate technical indicators for the given DataFrame."""
+        pass
+
+    @abstractmethod
+    def generate_signals(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Generate buy/sell signals based on calculated indicators."""
+        pass
+
+    @abstractmethod
+    def get_sl_tp(self, entry_price: float, atr_value: float) -> tuple[float, float]:
+        """
+        Determine stop loss and take profit levels.
+
+        Args:
+            entry_price (float): The price at which the position was entered.
+            atr_value (float): The Average True Range value.
+
+        Returns:
+            tuple[float, float]: A tuple containing the stop loss and take profit prices.
+        """
+        pass
+
+    @abstractmethod
+    def get_name(self) -> str:
+        """Return the name of the strategy."""
+        pass

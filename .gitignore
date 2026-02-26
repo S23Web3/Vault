@@ -1,0 +1,75 @@
+# ============================================================
+# Obsidian Vault — .gitignore
+# Excludes ~33GB of data, secrets, runtime artifacts
+# Keeps: .md, .py, .yaml, .json configs, requirements.txt
+# ============================================================
+
+# --- Credentials & secrets ---
+.env
+*.env
+Tv.md
+
+# --- Obsidian workspace (user-specific, not needed on VPS) ---
+.obsidian/
+
+# --- Large data directories (backtester ~33GB) ---
+PROJECTS/four-pillars-backtester/data/
+trading-tools/data/cache/
+
+# --- Books (PDF/EPUB binaries) ---
+Books/
+
+# --- Postgres installer ---
+postgres/
+
+# --- Python cache ---
+**/__pycache__/
+*.pyc
+*.pyo
+**/.pytest_cache/
+
+# --- Virtual environments ---
+**/venv/
+
+# --- Runtime logs (environment-specific, regenerated) ---
+**/logs/
+
+# --- Bot runtime state ---
+state.json
+state.json.tmp
+trades.csv
+
+# --- ML model binaries ---
+*.pkl
+*.h5
+*.onnx
+
+# --- Data files (outside data/ dirs) ---
+*.parquet
+*.csv
+*.meta
+*.joblib
+
+# --- Backup / temp files ---
+*.backup
+*.bak
+*.pre_bugfix_bak
+*.tmp
+
+# --- Claude Code / Aider temp files ---
+tmpclaude-*
+.aider*
+
+# --- Python build artifacts ---
+dist/
+build/
+*.egg
+*.egg-info/
+
+# --- Windows reserved device names ---
+nul
+
+# --- OS junk ---
+.DS_Store
+Thumbs.db
+desktop.ini

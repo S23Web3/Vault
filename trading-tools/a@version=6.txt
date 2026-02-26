@@ -1,0 +1,220 @@
+//@version=6
+// Four Pillars v3 - Clean Quad Rotation Logic
+// Entry: 9-3 crosses zone, ALL others in zone
+// Exit: If stochastics don't follow within 5 bars
+
+indicator("Four Pillars v3", shorttitle="4Pv3", overlay=true)
+
+// ═══════════════════════════════════════════════════════════════════════════
+// INPUTS
+// ═══════════════════════════════════════════════════════════════════════════
+
+grp1 = "═══ STOCHASTIC SETTINGS ═══"
+i_zoneLevel = input.int(25, "Zone Level (25/75)", minval=10, maxval=40, group=grp1)
+i_rotationBars = input.int(5, "Rotation Check Bars", minval=3, maxval=10, group=grp1)
+
+grp2 = "═══ RIPSTER EMAs ═══"
+i_ema34 = input.int(34, "EMA 34", group=grp2)
+i_ema50 = input.int(50, "EMA 50", group=grp2)
+
+grp3 = "═══ POSITION MANAGEMENT ═══"
+i_atrLen = input.int(14, "ATR Length", group=grp3)
+i_slMult = input.float(2.0, "Stop Loss ATR Mult", group=grp3)
+i_tpMult = input.float(4.0, "Take Profit ATR Mult", group=grp3)
+
+grp4 = "═══ VISUALS ═══"
+i_showDash = input.bool(true, "Show Dashboard", group=grp4)
+
+// ═══════════════════════════════════════════════════════════════════════════
+// STOCHASTIC CALCULATIONS
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Fast stochastic (single smooth)
+stoch_k(int k_len, int smooth) =>
+    float lowest = ta.lowest(low, k_len)
+    float highest = ta.highest(high, k_len)
+    float raw = highest - lowest == 0 ? 50.0 : 100.0 * (close - lowest) / (highest - lowest)
+    ta.sma(raw, smooth)
+
+// Full stochastic (double smooth)
+stoch_full(int k_len, int smooth) =>
+    float lowest = ta.lowest(low, k_len)
+    float highest = ta.highest(high, k_len)
+    float raw = highest - lowest == 0 ? 50.0 : 100.0 * (close - lowest) / (highest - lowest)
+    float k1 = ta.sma(raw, smooth)
+    ta.sma(k1, smooth)
+
+// Calculate all 4 stochastics
+float stoch_9_3 = stoch_k(9, 3)
+float stoch_14_3 = stoch_k(14, 3)
+float stoch_40_3 = stoch_k(40, 3)
+float stoch_60_10 = stoch_full(60, 10)
+
+// ═══════════════════════════════════════════════════════════════════════════
+// RIPSTER CLOUD
+// ═══════════════════════════════════════════════════════════════════════════
+
+float ema34 = ta.ema(close, i_ema34)
+float ema50 = ta.ema(close, i_ema50)
+bool cloud_bull = ema34 > ema50
+float cloud_top = math.max(ema34, ema50)
+float cloud_bottom = math.min(ema34, ema50)
+int price_pos = close > cloud_top ? 1 : close < cloud_bottom ? -1 : 0
+
+// ═══════════════════════════════════════════════════════════════════════════
+// QUAD ROTATION ENTRY LOGIC
+// ═══════════════════════════════════════════════════════════════════════════
+
+float upperZone = 100 - i_zoneLevel  // 75 by default
+float lowerZone = i_zoneLevel         // 25 by default
+
+// 9-3 crossing the zone (THE TRIGGER)
+bool cross_up = ta.crossover(stoch_9_3, lowerZone)
+bool cross_down = ta.crossunder(stoch_9_3, upperZone)
+
+// ALL others must be in zone when 9-3 triggers
+bool others_oversold = stoch_14_3 < 30 and stoch_40_3 < 30 and stoch_60_10 < 30
+bool others_overbought = stoch_14_3 > 70 and stoch_40_3 > 70 and stoch_60_10 > 70
+
+// Ripster filter (loose - just not against the trade)
+bool ripster_ok_long = cloud_bull or price_pos >= 0
+bool ripster_ok_short = not cloud_bull or price_pos <= 0
+
+// ENTRY SIGNALS
+bool long_signal = cross_up and others_oversold and ripster_ok_long
+bool short_signal = cross_down and others_overbought and ripster_ok_short
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ROTATION TRACKING (are stochastics following?)
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Check if stochastics are moving in the right direction
+bool stochs_rising = stoch_14_3 > stoch_14_3[1] and stoch_40_3 > stoch_40_3[1]
+bool stochs_falling = stoch_14_3 < stoch_14_3[1] and stoch_40_3 < stoch_40_3[1]
+
+// ═══════════════════════════════════════════════════════════════════════════
+// POSITION MANAGEMENT
+// ═══════════════════════════════════════════════════════════════════════════
+
+float atr = ta.atr(i_atrLen)
+
+var bool inPosition = false
+var string posDir = "FLAT"
+var float entryPrice = na
+var float stopLoss = na
+var float takeProfit = na
+var int entryBar = na
+
+// Check exits first
+bool hitStop = false
+bool hitTP = false
+bool rotationFailed = false
+
+if inPosition
+    hitStop := posDir == "LONG" ? low <= stopLoss : high >= stopLoss
+    hitTP := posDir == "LONG" ? high >= takeProfit : low <= takeProfit
+
+    // Check rotation after 3-5 bars
+    int bars = bar_index - entryBar
+    if bars >= 3 and bars <= i_rotationBars
+        if posDir == "LONG" and not stochs_rising
+            rotationFailed := true
+        if posDir == "SHORT" and not stochs_falling
+            rotationFailed := true
+
+    if hitStop or hitTP or rotationFailed
+        inPosition := false
+        posDir := "FLAT"
+        entryPrice := na
+        stopLoss := na
+        takeProfit := na
+        entryBar := na
+
+// New entries
+if long_signal and not inPosition
+    inPosition := true
+    posDir := "LONG"
+    entryPrice := close
+    entryBar := bar_index
+    stopLoss := close - (i_slMult * atr)
+    takeProfit := close + (i_tpMult * atr)
+
+else if short_signal and not inPosition
+    inPosition := true
+    posDir := "SHORT"
+    entryPrice := close
+    entryBar := bar_index
+    stopLoss := close + (i_slMult * atr)
+    takeProfit := close - (i_tpMult * atr)
+
+// ═══════════════════════════════════════════════════════════════════════════
+// VISUALS
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Entry markers
+plotshape(long_signal and not inPosition[1], "Long", shape.triangleup, location.belowbar, color.lime, size=size.normal)
+plotshape(short_signal and not inPosition[1], "Short", shape.triangledown, location.abovebar, color.red, size=size.normal)
+
+// Position lines
+plot(inPosition ? stopLoss : na, "Stop", color.red, 2, plot.style_linebr)
+plot(inPosition ? takeProfit : na, "TP", color.green, 1, plot.style_linebr)
+
+// Cloud
+p1 = plot(ema34, "EMA34", color.new(color.blue, 80))
+p2 = plot(ema50, "EMA50", color.new(color.blue, 80))
+fill(p1, p2, cloud_bull ? color.new(color.green, 90) : color.new(color.red, 90))
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════════════════════
+
+if i_showDash and barstate.islast
+    var table dash = table.new(position.top_right, 2, 8, bgcolor=color.new(#1e222d, 10))
+
+    table.cell(dash, 0, 0, "4P v3", text_color=color.white, text_size=size.small)
+    table.cell(dash, 1, 0, posDir, text_color=posDir == "LONG" ? color.lime : posDir == "SHORT" ? color.red : color.gray)
+
+    table.cell(dash, 0, 1, "9-3", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 1, str.tostring(stoch_9_3, "#.0"), text_color=stoch_9_3 < 30 ? color.lime : stoch_9_3 > 70 ? color.red : color.white, text_size=size.tiny)
+
+    table.cell(dash, 0, 2, "14-3", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 2, str.tostring(stoch_14_3, "#.0"), text_color=stoch_14_3 < 30 ? color.lime : stoch_14_3 > 70 ? color.red : color.white, text_size=size.tiny)
+
+    table.cell(dash, 0, 3, "40-3", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 3, str.tostring(stoch_40_3, "#.0"), text_color=stoch_40_3 < 30 ? color.lime : stoch_40_3 > 70 ? color.red : color.white, text_size=size.tiny)
+
+    table.cell(dash, 0, 4, "60-10", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 4, str.tostring(stoch_60_10, "#.0"), text_color=stoch_60_10 < 30 ? color.lime : stoch_60_10 > 70 ? color.red : color.white, text_size=size.tiny)
+
+    string allInZone = others_oversold ? "ALL < 30" : others_overbought ? "ALL > 70" : "---"
+    color zoneColor = others_oversold ? color.lime : others_overbought ? color.red : color.gray
+    table.cell(dash, 0, 5, "Zone", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 5, allInZone, text_color=zoneColor, text_size=size.tiny)
+
+    table.cell(dash, 0, 6, "Cloud", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 6, cloud_bull ? "BULL" : "BEAR", text_color=cloud_bull ? color.lime : color.red, text_size=size.tiny)
+
+    string followStr = inPosition ? (posDir == "LONG" ? (stochs_rising ? "YES" : "NO") : (stochs_falling ? "YES" : "NO")) : "---"
+    color followColor = followStr == "YES" ? color.lime : followStr == "NO" ? color.red : color.gray
+    table.cell(dash, 0, 7, "Follow", text_color=color.gray, text_size=size.tiny)
+    table.cell(dash, 1, 7, followStr, text_color=followColor, text_size=size.tiny)
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ALERTS
+// ═══════════════════════════════════════════════════════════════════════════
+
+alertcondition(long_signal, "Long Entry", "4Pv3: LONG - All stochs oversold, 9-3 crossing up")
+alertcondition(short_signal, "Short Entry", "4Pv3: SHORT - All stochs overbought, 9-3 crossing down")
+alertcondition(rotationFailed, "Rotation Failed", "4Pv3: Exit - stochastics not following")
+
+// ═══════════════════════════════════════════════════════════════════════════
+// HIDDEN PLOTS
+// ═══════════════════════════════════════════════════════════════════════════
+
+plot(stoch_9_3, "stoch_9_3", display=display.none)
+plot(stoch_14_3, "stoch_14_3", display=display.none)
+plot(stoch_40_3, "stoch_40_3", display=display.none)
+plot(stoch_60_10, "stoch_60_10", display=display.none)
+plot(others_oversold ? 1 : 0, "all_oversold", display=display.none)
+plot(others_overbought ? 1 : 0, "all_overbought", display=display.none)
+plot(inPosition ? 1 : 0, "in_position", display=display.none)
