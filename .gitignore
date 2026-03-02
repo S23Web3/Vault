@@ -53,12 +53,18 @@ trades.csv
 # --- Backup / temp files ---
 *.backup
 *.bak
+*.bak.*
 *.pre_bugfix_bak
 *.tmp
 
 # --- Claude Code / Aider temp files ---
 tmpclaude-*
 .aider*
+.playwright-mcp/
+.claude/settings.local.json
+
+# --- YT analyzer generated output ---
+PROJECTS/yt-transcript-analyzer/output/
 
 # --- Python build artifacts ---
 dist/

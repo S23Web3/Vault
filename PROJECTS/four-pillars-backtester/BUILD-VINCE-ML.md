@@ -1,7 +1,9 @@
 # VINCE ML Training Pipeline
-**Build Specification for Four Pillars Backtester**  
-**Version:** 2.0  
+**Build Specification for Four Pillars Backtester**
+**Version:** 2.0
 **Date:** 2026-02-17
+
+**ARCHIVED** — This build spec covers the v1 classifier pipeline (XGBoost + PyTorch). The v2 concept (`docs/VINCE-V2-CONCEPT-v2.md`) replaces this approach. Do not build from this spec.
 
 ---
 

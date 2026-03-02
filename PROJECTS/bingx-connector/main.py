@@ -8,6 +8,7 @@ import sys
 import time
 import yaml
 import logging
+import queue
 import threading
 import signal as signal_mod
 import requests
@@ -23,11 +24,13 @@ from risk_gate import RiskGate
 from executor import Executor
 from signal_engine import StrategyAdapter
 from position_monitor import PositionMonitor
+from ws_listener import WSListener
 
 logger = logging.getLogger(__name__)
 
 LEVERAGE_PATH = "/openApi/swap/v2/trade/leverage"
 MARGIN_TYPE_PATH = "/openApi/swap/v2/trade/marginType"
+COMMISSION_RATE_PATH = "/openApi/swap/v2/user/commissionRate"
 
 
 def setup_logging():
@@ -108,6 +111,22 @@ def set_leverage_and_margin(auth, symbols, leverage, margin_mode):
         time.sleep(0.2)  # throttle: 200ms between coins to avoid rate limits
 
 
+def fetch_commission_rate(auth):
+    """Fetch taker commission rate from BingX. Returns float or default 0.0016."""
+    req = auth.build_signed_request("GET", COMMISSION_RATE_PATH)
+    try:
+        resp = requests.get(req["url"], headers=req["headers"], timeout=10)
+        data = resp.json()
+        if data.get("code", 0) == 0:
+            rate = float(data["data"]["commission"]["takerCommissionRate"])
+            logger.info("Commission rate from API: %.6f (%.4f%%)", rate, rate * 100)
+            return rate * 2  # round-trip (open + close)
+        logger.warning("Commission rate API error %s — using default", data.get("code"))
+    except Exception as e:
+        logger.warning("Commission rate fetch failed: %s — using default", e)
+    return 0.001  # fallback: 0.05% x 2 sides (BingX taker rate)
+
+
 def market_loop(feed, adapter, shutdown_event, poll_interval):
     """Market data polling loop (daemon thread)."""
     logger.info("Market loop started: %ds", poll_interval)
@@ -126,6 +145,7 @@ def monitor_loop(monitor, shutdown_event, check_interval):
     while not shutdown_event.is_set():
         try:
             monitor.check()
+            monitor.check_breakeven()
             monitor.check_daily_reset()
             monitor.check_hourly_metrics()
         except Exception as e:
@@ -187,16 +207,21 @@ def main():
         notifier=notifier,
         plugin_config=config,
     )
-    monitor_cfg = dict(risk_cfg)
-    monitor_cfg["daily_summary_utc_hour"] = notif_cfg.get(
-        "daily_summary_utc_hour", 17)
-    monitor = PositionMonitor(
-        auth, state_mgr, notifier, monitor_cfg)
     logger.info("Setting leverage and margin mode...")
     set_leverage_and_margin(
         auth, symbols,
         pos_cfg.get("leverage", 10),
         pos_cfg.get("margin_mode", "ISOLATED"))
+    commission_rate = fetch_commission_rate(auth)
+    fill_queue = queue.Queue()
+    ws_thread = WSListener(auth=auth, fill_queue=fill_queue, ws_logger=logger)
+    monitor_cfg = dict(risk_cfg)
+    monitor_cfg["daily_summary_utc_hour"] = notif_cfg.get(
+        "daily_summary_utc_hour", 17)
+    monitor = PositionMonitor(
+        auth, state_mgr, notifier, monitor_cfg,
+        commission_rate=commission_rate,
+        fill_queue=fill_queue)
     logger.info("Reconciling state with exchange...")
     req = auth.build_signed_request(
         "GET", "/openApi/swap/v2/user/positions")
@@ -215,10 +240,10 @@ def main():
     logger.info("Warming up market data...")
     feed.warmup()
     open_count = len(state_mgr.get_open_positions())
-    start_msg = ("Bot started: "
-                 + str(len(symbols)) + " coins, "
-                 + str(open_count) + " open, "
-                 + ("DEMO" if demo_mode else "LIVE"))
+    start_msg = ("<b>BOT STARTED</b>"
+                 + "\nCoins: " + str(len(symbols))
+                 + "\nOpen: " + str(open_count)
+                 + "\nMode: " + ("DEMO" if demo_mode else "LIVE"))
     notifier.send(start_msg)
     logger.info(start_msg)
     shutdown_event = threading.Event()
@@ -240,20 +265,22 @@ def main():
         daemon=True, name="MonitorLoop")
     t1.start()
     t2.start()
-    logger.info("Threads started: MarketLoop + MonitorLoop")
+    ws_thread.start()
+    logger.info("Threads started: MarketLoop + MonitorLoop + WSListener")
     try:
         while not shutdown_event.is_set():
             shutdown_event.wait(1.0)
     except KeyboardInterrupt:
         logger.info("KeyboardInterrupt — shutting down")
         shutdown_event.set()
-    notifier.send("Bot shutting down — waiting for in-flight ops...")
+    ws_thread.stop()
+    notifier.send("<b>BOT STOPPING</b>\nWaiting for in-flight ops...")
     logger.info("Waiting for threads to finish (max 15s)...")
     t1.join(timeout=15)
     t2.join(timeout=15)
     if t1.is_alive() or t2.is_alive():
         logger.warning("Threads did not stop cleanly within 15s")
-    notifier.send("Bot stopped")
+    notifier.send("<b>BOT STOPPED</b>")
     logger.info("=== BingX Connector Stopped ===")
 
 

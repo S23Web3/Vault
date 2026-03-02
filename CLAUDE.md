@@ -8,3 +8,14 @@ When in plan mode, always write plans to TWO locations:
 
 Name the vault copy with today's date and a short kebab-case description of what the plan covers.
 Both files should have identical content.
+
+## UI Interactivity Rule
+
+- **"Management" = interactive. "Monitor/view/display" = read-only. Ambiguous = ASK before planning.**
+- Plans for any UI must explicitly list what actions ARE included. Anything not listed is OUT — not silently added, not silently assumed excluded.
+- Never assume a dashboard is read-only unless the user says "monitor", "view only", or "display only".
+- LESSON (2026-02-28): User said "position management" — I built read-only twice. Logs confirmed user never said read-only. Rule violation.
+
+## Skill Loading Rules
+
+- **DASH SKILL MANDATORY** — Before writing ANY Dash code (vince/app.py, vince/layout.py, vince/pages/*.py), ALWAYS load the Dash skill first. No exceptions. Triggers: any file in vince/ directory, `dash.Dash`, `@app.callback`, "Vince dashboard", "B6", `register_page`, `dcc.Store`, `dag.AgGrid`.

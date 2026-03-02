@@ -57,6 +57,9 @@ def compute_signals(df: pd.DataFrame, params: dict = None) -> pd.DataFrame:
         reentry_lookback=params.get("reentry_lookback", 10),
         use_ripster=params.get("use_ripster", False),
         use_60d=params.get("use_60d", False),
+        require_stage2=params.get("require_stage2", False),
+        rot_level=params.get("rot_level", 80),
+        cloud3_window=params.get("cloud3_window", 5),
     )
 
     # Run bar-by-bar

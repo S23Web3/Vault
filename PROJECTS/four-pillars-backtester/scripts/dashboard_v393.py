@@ -292,7 +292,7 @@ def compute_params_hash(signal_params, bt_params, timeframe, date_range=None):
 
 
 def apply_date_filter(df, date_range):
-    """Filter DataFrame to date range. Returns original if too few bars after filter."""
+    """Filter DataFrame to date range. Always returns filtered result."""
     if date_range is None or len(date_range) != 2:
         return df
     start_dt, end_dt = date_range
@@ -305,8 +305,6 @@ def apply_date_filter(df, date_range):
     elif isinstance(df.index, pd.DatetimeIndex):
         df_filtered = df[start_ts:end_ts].reset_index(drop=True)
     else:
-        return df
-    if len(df_filtered) < 100:
         return df
     return df_filtered
 
@@ -724,6 +722,9 @@ elif mode == "single":
             st.error(f"No data for {symbol}")
             st.stop()
         df = apply_date_filter(df, date_range)
+        if len(df) < 200 and date_range:
+            st.warning("Date range " + str(date_range[0]) + " to " + str(date_range[1]) + " has only " + str(len(df)) + " bars (need 200+). Try a wider range or 'All'.")
+            st.stop()
         t0 = time.time()
         results, df_sig = run_backtest(df, signal_params, bt_params)
         m = results["metrics"]
@@ -1536,6 +1537,8 @@ elif mode == "sweep":
             df = load_data(sym, timeframe)
             if df is not None and len(df) >= 200:
                 df = apply_date_filter(df, date_range)
+                if len(df) < 200:
+                    raise ValueError("Insufficient bars after date filter")
                 result, df_sig_sweep = run_backtest(df, signal_params, bt_params)
                 ms = result["metrics"]
                 if ms["total_trades"] > 0:
@@ -1635,6 +1638,9 @@ elif mode == "sweep_detail":
             st.error(f"No data for {detail_sym}")
             st.stop()
         df = apply_date_filter(df, date_range)
+        if len(df) < 200 and date_range:
+            st.warning("Date range " + str(date_range[0]) + " to " + str(date_range[1]) + " has only " + str(len(df)) + " bars (need 200+). Try a wider range or 'All'.")
+            st.stop()
         results, df_sig = run_backtest(df, signal_params, bt_params)
         m = results["metrics"]
         if m["total_trades"] == 0:
@@ -1940,6 +1946,11 @@ elif mode == "portfolio":
             status.text(f"Done: {len(coin_results)}/{len(port_symbols)} coins with trades")
             st.session_state["timing_records"] = _timing_acc.records[:]
 
+            if not coin_results:
+                if date_range:
+                    st.warning("No coins had enough data in " + str(date_range[0]) + " to " + str(date_range[1]) + ". Try a wider date range or 'All'.")
+                else:
+                    st.warning("No coins produced trades.")
             if coin_results:
                 pf = align_portfolio_equity(coin_results, margin_per_pos=margin, max_positions=max_positions)
                 # Apply unified capital constraints if enabled (Phase 4)

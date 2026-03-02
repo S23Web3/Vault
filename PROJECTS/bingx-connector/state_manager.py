@@ -30,6 +30,8 @@ class StateManager:
         self.state_path = Path(state_path)
         self.trades_path = Path(trades_path)
         self.lock = threading.Lock()
+        self._last_exit_time = {}
+        self._session_blocked = set()
         self.state = self._load_state()
 
     def _load_state(self):
@@ -82,6 +84,18 @@ class StateManager:
             self._save_state()
             logger.info("Position opened: %s", key)
 
+    def update_position(self, key, updates):
+        """Merge updates dict into an existing open position record."""
+        with self.lock:
+            pos = self.state["open_positions"].get(key)
+            if pos is None:
+                logger.warning("update_position: key %s not found", key)
+                return False
+            pos.update(updates)
+            self._save_state()
+            logger.info("Position updated: %s fields=%s", key, list(updates.keys()))
+            return True
+
     def close_position(self, key, exit_price, exit_reason, pnl_net):
         """Close position, update daily_pnl, append to trades.csv."""
         with self.lock:
@@ -90,6 +104,7 @@ class StateManager:
                 logger.warning("close_position: key %s not found", key)
                 return None
             self.state["daily_pnl"] += pnl_net
+            self._last_exit_time[key] = datetime.now(timezone.utc)
             self._save_state()
             self._append_trade(pos, exit_price, exit_reason, pnl_net)
             logger.info(
@@ -173,3 +188,16 @@ class StateManager:
                 logger.info(
                     "Reconcile: state matches exchange (%d positions)",
                     len(state_keys))
+
+    def get_last_exit_time(self, key):
+        """Return last exit time for a key, or None if no exit recorded."""
+        return self._last_exit_time.get(key)
+
+    def add_session_blocked(self, symbol):
+        """Add a symbol to the session-blocked set."""
+        self._session_blocked.add(symbol)
+        logger.info("Session-blocked: %s", symbol)
+
+    def is_session_blocked(self, symbol):
+        """Check if a symbol is blocked for this session."""
+        return symbol in self._session_blocked

@@ -30,8 +30,11 @@ class Executor:
             "sl_working_type", "MARK_PRICE")
         self.tp_working_type = position_config.get(
             "tp_working_type", "MARK_PRICE")
-        logger.info("Executor: margin=%.0f leverage=%d",
-                     self.margin_usd, self.leverage)
+        self.trailing_rate = position_config.get("trailing_rate", None)
+        self.trailing_activation_atr_mult = position_config.get(
+            "trailing_activation_atr_mult", None)
+        logger.info("Executor: margin=%.0f leverage=%d trail_rate=%s",
+                     self.margin_usd, self.leverage, self.trailing_rate)
 
     def _safe_get(self, url, headers=None):
         """Execute GET with error handling. Returns dict or None."""
@@ -59,15 +62,11 @@ class Executor:
             return None
 
     def _safe_post(self, url, headers=None):
-        """Execute POST with error handling. Returns dict or None."""
+        """Execute POST with error handling. Returns dict (check code) or None."""
         try:
             resp = requests.post(url, headers=headers, timeout=10)
             resp.raise_for_status()
             data = resp.json()
-            if data.get("code", 0) != 0:
-                logger.error("API error %s: %s",
-                             data.get("code"), data.get("msg"))
-                return None
             return data
         except requests.exceptions.Timeout:
             logger.error("Timeout: POST %s", url[:100])
@@ -126,6 +125,36 @@ class Executor:
             return value
         return math.floor(value / step) * step
 
+    def _place_trailing_order(self, symbol, direction, quantity, activation_price):
+        """Place TRAILING_STOP_MARKET order. Returns order_id str or None."""
+        close_side = "SELL" if direction == "LONG" else "BUY"
+        params = {
+            "symbol": symbol,
+            "side": close_side,
+            "positionSide": direction,
+            "type": "TRAILING_STOP_MARKET",
+            "quantity": str(quantity),
+            "priceRate": str(self.trailing_rate),
+            "activationPrice": str(round(activation_price, 8)),
+            "workingType": self.sl_working_type,
+        }
+        req = self.auth.build_signed_request("POST", ORDER_PATH, params)
+        result = self._safe_post(req["url"], headers=req["headers"])
+        if result is None:
+            logger.error("Trailing order failed (no response): %s", symbol)
+            return None
+        if result.get("code", 0) != 0:
+            logger.error("Trailing order API error %s: %s %s",
+                         result.get("code"), result.get("msg"), symbol)
+            return None
+        order_data = result.get("data", {})
+        order_id = str(order_data.get(
+            "orderId", order_data.get("order", {}).get("orderId", "unknown")))
+        logger.info("Trailing order placed: %s %s act=%.6f rate=%.4f id=%s",
+                    symbol, direction, activation_price,
+                    self.trailing_rate, order_id)
+        return order_id
+
     def execute(self, signal, symbol):
         """Execute trade: price, qty, order+SL+TP. Returns dict or None."""
         mark_price = self.fetch_mark_price(symbol)
@@ -136,6 +165,17 @@ class Executor:
         if step_size is None:
             logger.error("Cannot execute %s: no step size", symbol)
             return None
+        
+        # FIX-3: SL direction validation
+        if signal.direction == "LONG" and signal.sl_price >= mark_price:
+            logger.error("SL invalid LONG: sl=%.6f >= mark=%.6f %s", signal.sl_price, mark_price, symbol)
+            self.notifier.send("<b>SL REJECTED</b>\n" + symbol + " LONG sl above entry")
+            return None
+        if signal.direction == "SHORT" and signal.sl_price <= mark_price:
+            logger.error("SL invalid SHORT: sl=%.6f <= mark=%.6f %s", signal.sl_price, mark_price, symbol)
+            self.notifier.send("<b>SL REJECTED</b>\n" + symbol + " SHORT sl below entry")
+            return None
+
         notional = self.margin_usd * self.leverage
         raw_qty = notional / mark_price
         quantity = self._round_down(raw_qty, step_size)
@@ -173,10 +213,51 @@ class Executor:
             side, symbol, quantity, mark_price, notional)
         result = self._safe_post(req["url"], headers=req["headers"])
         if result is None:
-            logger.error("Order failed: %s", symbol)
-            self.notifier.send("ORDER FAILED: " + side + " " + symbol)
+            logger.error("Order failed (no response): %s", symbol)
+            self.notifier.send("<b>ORDER FAILED</b>\n" + side + " " + symbol)
             return None
+        error_code = result.get("code", 0)
+        if error_code != 0:
+            if error_code == 101209:
+                # Max position value exceeded — retry with halved qty
+                halved_qty = self._round_down(quantity / 2, step_size)
+                logger.warning("101209: %s max value, retrying qty=%.6f",
+                               symbol, halved_qty)
+                if halved_qty > 0:
+                    order_params["quantity"] = str(halved_qty)
+                    req2 = self.auth.build_signed_request(
+                        "POST", ORDER_PATH, order_params)
+                    result = self._safe_post(
+                        req2["url"], headers=req2["headers"])
+                    if result and result.get("code", 0) == 0:
+                        quantity = halved_qty
+                        notional = quantity * mark_price
+                        logger.info("101209 retry OK: %s qty=%.6f",
+                                    symbol, halved_qty)
+                    else:
+                        logger.error("101209 retry failed: %s", symbol)
+                        self.state.add_session_blocked(symbol)
+                        self.notifier.send(
+                            "<b>SESSION BLOCKED</b>\n" + symbol
+                            + "\nError 101209 (max position value)")
+                        return None
+                else:
+                    self.state.add_session_blocked(symbol)
+                    self.notifier.send(
+                        "<b>SESSION BLOCKED</b>\n" + symbol
+                        + "\nError 101209 (halved qty=0)")
+                    return None
+            else:
+                logger.error("API error %s: %s",
+                             error_code, result.get("msg"))
+                self.notifier.send(
+                    "<b>ORDER FAILED</b>\n" + side + " " + symbol)
+                return None
         order_data = result.get("data", {})
+        
+        # FIX-2: use actual fill price
+        fill_price = float(order_data.get("avgPrice", 0) or 0)
+        
         order_id = str(order_data.get("orderId",
                        order_data.get("order", {}).get(
                            "orderId", "unknown")))
@@ -185,14 +266,14 @@ class Executor:
                 "Order returned unknown ID for %s — not recording"
                 " position", symbol)
             self.notifier.send(
-                "ORDER ID UNKNOWN: " + side + " " + symbol
-                + " — position NOT tracked")
+                "<b>ORDER ID UNKNOWN</b>\n" + side + " " + symbol
+                + "\nPosition NOT tracked")
             return None
         position_record = {
             "symbol": symbol,
             "direction": signal.direction,
             "grade": signal.grade,
-            "entry_price": mark_price,
+            "entry_price": fill_price if fill_price > 0 else mark_price,
             "sl_price": signal.sl_price,
             "tp_price": signal.tp_price,
             "quantity": quantity,
@@ -203,13 +284,29 @@ class Executor:
         }
         key = symbol + "_" + signal.direction
         self.state.record_open_position(key, position_record)
-        entry_msg = ("ENTRY: " + side + " " + symbol
-                     + " qty=" + str(round(quantity, 6))
-                     + " price=" + str(round(mark_price, 6))
-                     + " SL=" + str(round(signal.sl_price, 6))
-                     + " grade=" + signal.grade)
+        act_price = None
+        if self.trailing_rate and self.trailing_activation_atr_mult and signal.atr:
+            effective_entry = fill_price if fill_price > 0 else mark_price
+            offset = signal.atr * self.trailing_activation_atr_mult
+            act_price = (effective_entry + offset if signal.direction == "LONG"
+                         else effective_entry - offset)
+            trail_id = self._place_trailing_order(
+                symbol, signal.direction, quantity, act_price)
+            if trail_id and trail_id != "unknown":
+                self.state.update_position(key, {
+                    "trailing_order_id": trail_id,
+                    "trailing_activation_price": act_price,
+                })
+        entry_msg = ("<b>ENTRY</b>  " + side + " " + symbol
+                     + "\nGrade: " + signal.grade
+                     + "\nQty: " + str(round(quantity, 6))
+                     + "  Price: " + str(round(mark_price, 6))
+                     + "\nSL: " + str(round(signal.sl_price, 6)))
         if signal.tp_price is not None:
-            entry_msg += " TP=" + str(round(signal.tp_price, 6))
+            entry_msg += "  TP: " + str(round(signal.tp_price, 6))
+        if act_price is not None:
+            entry_msg += ("  Trail: act=" + str(round(act_price, 6))
+                          + " @" + str(int(self.trailing_rate * 100)) + "%")
         self.notifier.send(entry_msg)
         logger.info("Order placed: %s id=%s", key, order_id)
         return result

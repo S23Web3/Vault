@@ -42,12 +42,16 @@ class FourPillarsV384:
             "zone_level":     cfg.get("zone_level", 30),
             "allow_b_trades": self.allow_b,
             "allow_c_trades": self.allow_c,
+            "require_stage2": cfg.get("require_stage2", False),
+            "rot_level":      cfg.get("rot_level", 80),
         }
         logger.info(
             "FourPillarsV384: allow_a=%s allow_b=%s allow_c=%s "
-            "sl=%.1f tp=%s backtester=%s",
+            "sl=%.1f tp=%s stage2=%s rot=%d backtester=%s",
             self.allow_a, self.allow_b, self.allow_c,
-            self.sl_mult, str(self.tp_mult), str(_BACKTESTER),
+            self.sl_mult, str(self.tp_mult),
+            cfg.get("require_stage2", False), cfg.get("rot_level", 80),
+            str(_BACKTESTER),
         )
 
     def get_signal(self, ohlcv_df: pd.DataFrame) -> Optional[Signal]:

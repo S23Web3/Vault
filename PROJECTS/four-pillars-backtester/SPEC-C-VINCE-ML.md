@@ -1,5 +1,7 @@
 # SPEC C: VINCE ML Architecture -- Unified Model + Training Infrastructure
 
+**SUPERSEDED** — This spec describes the v1 classifier architecture (XGBoost + PyTorch TAKE/SKIP). The v2 concept (`docs/VINCE-V2-CONCEPT-v2.md`) replaces this approach. Vince is NOT a classifier — see v2 for current direction. Kept as reference for PyTorch architecture and coin pool methodology.
+
 **Version:** P2/P4 from pending builds
 **Date:** 2026-02-13
 **Depends on:** Spec B (backtester v385 produces the training data)

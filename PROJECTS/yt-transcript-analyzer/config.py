@@ -8,8 +8,9 @@ try:
 except ImportError:
     pass
 
-# Output root — override via OUTPUT_PATH env var or .env
-OUTPUT_PATH = Path(os.getenv("OUTPUT_PATH", "output"))
+# Output root — always relative to project dir, override via OUTPUT_PATH env var or .env
+_DEFAULT_OUTPUT = Path(__file__).parent / "output"
+OUTPUT_PATH = Path(os.getenv("OUTPUT_PATH", str(_DEFAULT_OUTPUT)))
 
 # Sub-directories
 DATA_PATH     = OUTPUT_PATH / "data"
@@ -17,7 +18,8 @@ RAW_PATH      = OUTPUT_PATH / "raw"
 CLEAN_PATH    = OUTPUT_PATH / "clean"
 CHUNKS_PATH   = OUTPUT_PATH / "chunks"
 FINDINGS_PATH = OUTPUT_PATH / "findings"
-REPORTS_PATH  = OUTPUT_PATH / "reports"
+REPORTS_PATH    = OUTPUT_PATH / "reports"
+SUMMARIES_PATH  = OUTPUT_PATH / "summaries"
 
 # Data files
 ARCHIVE_PATH         = DATA_PATH / "archive.txt"

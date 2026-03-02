@@ -1,0 +1,208 @@
+/* ===================================================================
+   BingX Live Dashboard v1-3 -- Dark Theme CSS
+   Comprehensive dark theme for all Dash, AG Grid, and form components
+   Tab styling handled via inline style props -- CSS here is backup only
+   =================================================================== */
+
+/* === Base === */
+body {
+    background-color: #0d1117;
+    color: #c9d1d9;
+    font-family: 'Consolas', 'Monaco', monospace;
+    margin: 0;
+}
+
+/* === AG Grid row highlighting === */
+.row-long  { background-color: rgba(63, 185, 80, 0.05) !important; }
+.row-short { background-color: rgba(248, 81, 73, 0.05) !important; }
+
+/* === Warning banner === */
+.warning-banner {
+    background-color: rgba(248, 81, 73, 0.10);
+    border: 1px solid #f85149;
+    padding: 12px 16px;
+    border-radius: 4px;
+    color: #c9d1d9;
+}
+
+/* === Dash tab styling (backup for inline styles) === */
+.dash-tabs, .tab-parent, .tab-container,
+div[class*="tab-parent"], div[class*="TabContainer"] {
+    background-color: #0d1117 !important;
+    border-bottom: 1px solid #21262d !important;
+}
+
+.dash-tab, .tab, .custom-tab,
+div[class*="Tab--"] {
+    background-color: #161b22 !important;
+    color: #8b949e !important;
+    border: 1px solid #21262d !important;
+    border-bottom: none !important;
+    padding: 10px 20px !important;
+    cursor: pointer !important;
+}
+
+.dash-tab--selected, .tab--selected, .custom-tab--selected,
+div[class*="Tab--selected"] {
+    background-color: #0d1117 !important;
+    color: #58a6ff !important;
+    border-bottom: 2px solid #58a6ff !important;
+    font-weight: bold !important;
+}
+
+/* === Loading spinner === */
+._dash-loading { background-color: rgba(13, 17, 23, 0.8); }
+
+/* === Form inputs (visible contrast) === */
+input[type="number"],
+input[type="text"],
+input[type="search"],
+textarea,
+.dash-input {
+    background-color: #21262d !important;
+    color: #c9d1d9 !important;
+    border: 1px solid #484f58 !important;
+    border-radius: 4px;
+    padding: 6px 8px;
+}
+
+input:focus, textarea:focus {
+    border-color: #58a6ff !important;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2) !important;
+}
+
+/* Number input spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    filter: invert(0.8);
+}
+
+/* === Labels === */
+label { color: #c9d1d9 !important; }
+.dash-radio label, .dash-checklist label { color: #c9d1d9 !important; }
+
+/* === Dash Dropdown (React-Select) === */
+.Select-control, .Select .Select-control {
+    background-color: #21262d !important;
+    border-color: #484f58 !important;
+    color: #c9d1d9 !important;
+}
+.Select-value-label, .Select-placeholder, .Select-input > input {
+    color: #c9d1d9 !important;
+}
+.Select-menu-outer, .Select-menu {
+    background-color: #21262d !important;
+    border-color: #484f58 !important;
+}
+.Select-option { background-color: #21262d !important; color: #c9d1d9 !important; }
+.Select-option.is-focused, .Select-option.is-selected {
+    background-color: #30363d !important;
+}
+.Select-arrow { border-color: #c9d1d9 transparent transparent !important; }
+.Select-clear-zone { color: #8b949e !important; }
+.dash-dropdown .VirtualizedSelectFocusedOption { background-color: #30363d !important; }
+
+/* === DatePickerRange === */
+.DateRangePickerInput, .DateRangePickerInput__withBorder,
+.SingleDatePickerInput, .SingleDatePickerInput__withBorder {
+    background-color: #21262d !important;
+    border: 1px solid #484f58 !important;
+    border-radius: 4px !important;
+}
+.DateInput { background-color: #21262d !important; }
+.DateInput_input {
+    background-color: #21262d !important;
+    color: #c9d1d9 !important;
+    border-bottom: none !important;
+    font-family: 'Consolas', 'Monaco', monospace !important;
+    font-size: 13px !important;
+    padding: 6px 8px !important;
+}
+.DateInput_input__focused { border-bottom: 2px solid #58a6ff !important; }
+.DateRangePickerInput_arrow { color: #8b949e !important; }
+.DateRangePickerInput_arrow svg { fill: #8b949e !important; }
+.DateRangePickerInput_clearDates { background-color: transparent !important; }
+.DateRangePickerInput_clearDates svg { fill: #8b949e !important; }
+
+/* Calendar popup */
+.DayPicker, .DayPicker__withBorder {
+    background: #161b22 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+}
+.CalendarMonth { background: #161b22 !important; }
+.CalendarMonth_caption { color: #c9d1d9 !important; }
+.CalendarDay__default {
+    background: #161b22 !important; color: #c9d1d9 !important;
+    border: 1px solid #21262d !important;
+}
+.CalendarDay__default:hover { background: #30363d !important; }
+.CalendarDay__selected, .CalendarDay__selected:hover {
+    background: #58a6ff !important; color: #0d1117 !important;
+    border: 1px solid #58a6ff !important;
+}
+.CalendarDay__selected_span {
+    background: rgba(88, 166, 255, 0.2) !important;
+    border: 1px solid #21262d !important;
+}
+.CalendarDay__blocked_out_of_range { color: #484f58 !important; }
+.DayPickerNavigation_button__default {
+    background: #21262d !important; border: 1px solid #30363d !important;
+}
+.DayPickerNavigation_button__default:hover { background: #30363d !important; }
+.DayPickerNavigation_svg__horizontal { fill: #c9d1d9 !important; }
+.DayPickerKeyboardShortcuts_buttonReset { display: none !important; }
+
+/* === AG Grid === */
+.ag-root-wrapper { background-color: #0d1117 !important; }
+.ag-overlay-no-rows-wrapper { background-color: #0d1117 !important; color: #8b949e !important; }
+.ag-header { background-color: #161b22 !important; border-bottom: 1px solid #21262d !important; }
+.ag-header-cell { color: #8b949e !important; }
+.ag-row { border-bottom: 1px solid #21262d !important; }
+.ag-row:hover { background-color: #161b22 !important; }
+.ag-cell { color: #c9d1d9 !important; }
+.ag-paging-panel {
+    background-color: #0d1117 !important; color: #8b949e !important;
+    border-top: 1px solid #21262d !important;
+}
+.ag-paging-button { color: #c9d1d9 !important; }
+.ag-popup, .ag-filter { background-color: #161b22 !important; }
+.ag-text-field-input {
+    background-color: #21262d !important; color: #c9d1d9 !important;
+    border: 1px solid #484f58 !important;
+}
+
+/* === Scrollbar === */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #0d1117; }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+/* === DatePickerRange forced dark by component ID === */
+#hist-date-range input,
+#analytics-date-range input {
+    background-color: #21262d !important;
+    color: #c9d1d9 !important;
+    border: none !important;
+    font-family: 'Consolas', 'Monaco', monospace !important;
+    font-size: 13px !important;
+}
+#hist-date-range > div,
+#analytics-date-range > div,
+#hist-date-range > div > div,
+#analytics-date-range > div > div {
+    background-color: #21262d !important;
+    border-color: #484f58 !important;
+}
+
+/* === AG Grid theme variables (force dark rows for ALL grids inc. grade + coin summary) === */
+.ag-theme-alpine-dark {
+    --ag-background-color: #0d1117;
+    --ag-odd-row-background-color: #0d1117;
+    --ag-row-hover-color: #161b22;
+    --ag-header-background-color: #161b22;
+    --ag-header-foreground-color: #8b949e;
+    --ag-foreground-color: #c9d1d9;
+    --ag-border-color: #21262d;
+    --ag-secondary-border-color: #21262d;
+}

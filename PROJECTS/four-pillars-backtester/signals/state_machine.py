@@ -51,6 +51,9 @@ class FourPillarsStateMachine:
         add_zone_long: int = 30,
         add_mid_short: float = 52.0,
         add_mid_long: float = 48.0,
+        require_stage2: bool = False,
+        rot_level: int = 80,
+        cloud3_window: int = 5,
     ):
         # Settings
         self.cross_level = cross_level
@@ -67,6 +70,9 @@ class FourPillarsStateMachine:
         self.add_zone_long = add_zone_long
         self.add_mid_short = add_mid_short
         self.add_mid_long = add_mid_long
+        self.require_stage2 = require_stage2
+        self.rot_level = rot_level
+        self.cloud3_window = cloud3_window
 
         # Persistent state — long setup
         self.long_stage = 0
@@ -74,6 +80,9 @@ class FourPillarsStateMachine:
         self.long_14_seen = False
         self.long_40_seen = False
         self.long_60_seen = False
+        self.long_40_rot = False   # Stoch40 crossed above (100-rot_level) during Stage 1
+        self.long_60_rot = False   # Stoch60 crossed above (100-rot_level) during Stage 1
+        self.long_cloud3_bars_since = 999  # bars since price was last at/above Cloud 3
 
         # Persistent state — short setup
         self.short_stage = 0
@@ -81,6 +90,9 @@ class FourPillarsStateMachine:
         self.short_14_seen = False
         self.short_40_seen = False
         self.short_60_seen = False
+        self.short_40_rot = False  # Stoch40 crossed below rot_level during Stage 1
+        self.short_60_rot = False  # Stoch60 crossed below rot_level during Stage 1
+        self.short_cloud3_bars_since = 999  # bars since price was last at/below Cloud 3
 
         # Re-entry tracking
         self.bars_since_long = 999
@@ -127,16 +139,25 @@ class FourPillarsStateMachine:
                 self.long_14_seen = stoch_14 < zone_low
                 self.long_40_seen = stoch_40 < zone_low
                 self.long_60_seen = stoch_60 < cross_low
+                self.long_40_rot = stoch_40 > (100 - self.rot_level)
+                self.long_60_rot = stoch_60 > (100 - self.rot_level)
+                self.long_cloud3_bars_since = 0 if price_pos >= 0 else 999
 
         elif self.long_stage == 1:
             if bar_index - self.long_stage1_bar > self.stage_lookback:
                 self.long_stage = 0
             elif stoch_9 >= cross_low:
                 others = (1 if self.long_14_seen else 0) + (1 if self.long_40_seen else 0) + (1 if self.long_60_seen else 0)
-                if others == 3 and cloud3_ok_long and d_ok_long:
+                stage2_ok_long = (not self.require_stage2) or (
+                    self.long_40_rot and self.long_60_rot
+                    and self.long_cloud3_bars_since <= self.cloud3_window
+                )
+                if others == 3 and cloud3_ok_long and d_ok_long and stage2_ok_long:
                     long_signal = True
                 elif others >= 2 and self.allow_b and cloud3_ok_long and d_ok_long:
-                    long_signal_b = True
+                    # Don't fire Grade B if Grade A was blocked by Stage 2
+                    if not (self.require_stage2 and others == 3 and not stage2_ok_long):
+                        long_signal_b = True
                 elif self.long_14_seen and self.allow_c and price_pos == 1:
                     long_signal_c = True
                 self.long_stage = 0
@@ -147,6 +168,14 @@ class FourPillarsStateMachine:
                     self.long_40_seen = True
                 if stoch_60 < cross_low:
                     self.long_60_seen = True
+                if stoch_40 > (100 - self.rot_level):
+                    self.long_40_rot = True
+                if stoch_60 > (100 - self.rot_level):
+                    self.long_60_rot = True
+                if price_pos >= 0:
+                    self.long_cloud3_bars_since = 0
+                else:
+                    self.long_cloud3_bars_since = min(self.long_cloud3_bars_since + 1, 999)
 
         # ─── SHORT SETUP STATE MACHINE ───
         short_signal = False
@@ -160,16 +189,25 @@ class FourPillarsStateMachine:
                 self.short_14_seen = stoch_14 > zone_high
                 self.short_40_seen = stoch_40 > zone_high
                 self.short_60_seen = stoch_60 > cross_high
+                self.short_40_rot = stoch_40 < self.rot_level
+                self.short_60_rot = stoch_60 < self.rot_level
+                self.short_cloud3_bars_since = 0 if price_pos <= 0 else 999
 
         elif self.short_stage == 1:
             if bar_index - self.short_stage1_bar > self.stage_lookback:
                 self.short_stage = 0
             elif stoch_9 <= cross_high:
                 others = (1 if self.short_14_seen else 0) + (1 if self.short_40_seen else 0) + (1 if self.short_60_seen else 0)
-                if others == 3 and cloud3_ok_short and d_ok_short:
+                stage2_ok_short = (not self.require_stage2) or (
+                    self.short_40_rot and self.short_60_rot
+                    and self.short_cloud3_bars_since <= self.cloud3_window
+                )
+                if others == 3 and cloud3_ok_short and d_ok_short and stage2_ok_short:
                     short_signal = True
                 elif others >= 2 and self.allow_b and cloud3_ok_short and d_ok_short:
-                    short_signal_b = True
+                    # Don't fire Grade B if Grade A was blocked by Stage 2
+                    if not (self.require_stage2 and others == 3 and not stage2_ok_short):
+                        short_signal_b = True
                 elif self.short_14_seen and self.allow_c and price_pos == -1:
                     short_signal_c = True
                 self.short_stage = 0
@@ -180,6 +218,14 @@ class FourPillarsStateMachine:
                     self.short_40_seen = True
                 if stoch_60 > cross_high:
                     self.short_60_seen = True
+                if stoch_40 < self.rot_level:
+                    self.short_40_rot = True
+                if stoch_60 < self.rot_level:
+                    self.short_60_rot = True
+                if price_pos <= 0:
+                    self.short_cloud3_bars_since = 0
+                else:
+                    self.short_cloud3_bars_since = min(self.short_cloud3_bars_since + 1, 999)
 
         # ─── RE-ENTRY TRACKING ───
         any_long = long_signal or long_signal_b or long_signal_c

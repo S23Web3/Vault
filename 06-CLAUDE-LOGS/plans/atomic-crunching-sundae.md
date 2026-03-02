@@ -1,0 +1,267 @@
+# Plan: Vince v2 Concept Doc Update + Plugin Interface Spec Start
+
+**Date:** 2026-02-27
+**Session context:** Post-YT-analysis session. 202 videos analyzed. 7 ML findings identified for Vince.
+
+---
+
+## Context
+
+The previous session analyzed 202 YT transcripts from an algo trading channel and the FreeCodeCamp ML course. The output is `06-CLAUDE-LOGS/plans/2026-02-27-yt-channel-ml-findings-for-vince.md` — a ranked list of 7 findings applicable to Vince v2.
+
+The Vince v2 concept doc (`PROJECTS/four-pillars-backtester/docs/VINCE-V2-CONCEPT-v2.md`) was written 2026-02-23, has not been approved for build, and does not yet reflect these findings. This plan updates it with all 7 findings, leaving approval status unchanged (user still researching).
+
+After the concept doc update, this plan also begins P1.7: formal plugin interface spec — the first concrete Vince build artifact.
+
+---
+
+## Scope
+
+### In scope
+1. Edit `VINCE-V2-CONCEPT-v2.md` with 7 ML findings (specific edits below)
+2. Create `VINCE-PLUGIN-INTERFACE-SPEC-v1.md` — formal spec for the `StrategyPlugin` ABC
+
+### NOT in scope
+- Approving concept doc for build (user still researching)
+- Writing any Python code
+- Updating P1.7 backlog status (stays WAITING until concept approved)
+
+---
+
+## Task 1: Edit VINCE-V2-CONCEPT-v2.md
+
+**File:** `C:\Users\User\Documents\Obsidian Vault\PROJECTS\four-pillars-backtester\docs\VINCE-V2-CONCEPT-v2.md`
+
+### Edit 1 — "What Changed from v1" section
+Add two new items to the numbered list (items 15 and 16):
+
+```
+15. Panel 2 (PnL Reversal Analysis) elevated as highest-priority build artifact —
+    research finding (2026-02-27): random entry + ATR stops = 160% return. Exit
+    optimization contributes more alpha than entry filtering. [video 4BaMwwJeKEA]
+16. RL Exit Policy Optimizer added as new component — sits between Enricher and
+    Dashboard. Enhances Panel 2 without touching entries or reducing trade count.
+    Research source: [oW4hgB1vIoY], [BznJQMi35sQ]. See section "RL Exit Policy
+    Optimizer" below.
+```
+
+### Edit 2 — Mode 2 Auto-Discovery (rewrite the section)
+Replace current Mode 2 description block with expanded version that adds:
+- **Pre-step 1**: XGBoost feature importance (label=win/loss on enriched trades). Ranks which indicator dimensions have the most predictive signal. High-signal dimensions swept first. Ranked list shown as Mode 2 setup screen.
+- **Pre-step 2**: Unsupervised clustering (k-means on entry-state feature vectors). Groups naturally occurring trade constellations. Each cluster = one candidate pattern. Cluster labels become Mode 2 query dimensions. Eliminates the dimensional explosion from grid search.
+- **Held-out partition**: Time-based 80/20 split enforced before Mode 2 runs. Mode 2 discovers patterns on first 80% of the date range. Mode 1 constellation queries can validate against the held-out 20%. This prevents overfitting discoveries to the same data used to find them. Partition point stored with every session.
+- **Reflexivity caution**: N shown prominently on all discovered patterns. High-N patterns (widely tradeable) carry a flag: "High-N pattern. If publicly known, edge may be front-run. Prefer low-N coin/regime-specific patterns for durable alpha."
+- The existing permutation significance gate remains unchanged.
+
+### Edit 3 — New section "RL Exit Policy Optimizer"
+Add after "Three Operating Modes" and before "Performance Metrics":
+
+```markdown
+## RL Exit Policy Optimizer
+
+**Status:** Architecture addition (2026-02-27). Sits between Enricher and Dashboard.
+Enhances Panel 2 without changing entries or reducing trade count.
+
+### What it does
+Trains a reinforcement learning agent on historical enriched trade data to learn
+WHEN to exit a winning position, given the current state of indicators after entry.
+The agent does not make entry decisions — entries come from the strategy plugin unchanged.
+
+### Architecture
+- Environment: trade lifecycle (entry bar to exit bar)
+- Episode: one trade
+- State: [bars_since_entry, current_pnl_in_atr, k1_now, k2_now, k3_now, k4_now, cloud_state_now, bbw_now]
+- Action: HOLD or EXIT
+- Reward: net_pnl_at_exit minus commission (deducted only when EXIT is chosen)
+- Train on enriched trade data (first 80% of date range, same partition as Mode 2)
+- Test on held-out 20% of date range
+
+### Constraint satisfaction
+- Does NOT reduce trade count (entries unchanged)
+- Does NOT change signal logic (plugin compute_signals() unchanged)
+- Does NOT require LLM (Layer 1 component)
+- Layer 2 LLM (Panel 8) interprets the learned policy in plain language:
+  "The agent learned to exit when K1 crosses below 60 AND BBW is contracting"
+
+### Dashboard integration
+RL policy output overlays on Panel 2 as an additional curve:
+- Original Panel 2: fixed-TP sweep (static curves, historical best-TP)
+- RL overlay: dynamic exit signal per trade (state-conditional policy)
+- Comparison visible: TP sweep baseline vs RL policy outcome
+
+### Why this fits Vince
+PnL Reversal Analysis (Panel 2) currently answers: "what TP multiple worked best?"
+The RL policy answers: "given where indicators are RIGHT NOW after entry, should I exit?"
+These are complementary. RL does not replace the static TP sweep — it adds the dynamic layer.
+
+### Separation of concerns
+RL Exit Policy Optimizer is NOT Mode 3 (Settings Optimizer). Mode 3 sweeps entry
+parameters. RL Exit Policy learns exit timing. They are independent components and
+do not interact at build time.
+```
+
+### Edit 4 — Process Flow Overview diagram
+Update the mermaid flowchart to add the RL Exit Policy Optimizer node:
+
+Add `J["RL EXIT POLICY\nOllama / sklearn\nHOLD/EXIT policy\n(Panel 2 overlay)"] --> F` to the existing diagram. Connects from the Enricher output (same source as Analyzer).
+
+### Edit 5 — Stage 4 Dashboard Panels section
+In the mermaid diagram and prose for Panel 2, add:
+- RL Exit Policy feeds into Panel 2 as an overlay
+- Label Panel 2 explicitly as "HIGHEST BUILD PRIORITY (v1)"
+
+### Edit 6 — Constraints section
+Add two new bullet points:
+
+```
+- Survivorship bias: pattern results must state which coins and date range are
+  included. Coins that delisted or lost liquidity before the analysis period are
+  absent from the dataset. All auto-discovery output includes: "N=[count] coins
+  active [date range]. Delisted coins not included."
+- Reflexivity: high-N patterns are more likely to be discovered and traded by
+  others. Large sample size is NOT a proxy for edge durability. Mode 2 surfaces
+  N prominently and flags high-N patterns with a reflexivity caution.
+```
+
+### Edit 7 — Open Questions section
+Add new open question:
+
+```
+7. RL Exit Policy Optimizer — training methodology, hyperparameters, and whether
+   to use a simple Q-learning agent, PPO, or a simpler rule-extraction approach.
+   Separate scoping session needed before build.
+```
+
+### Edit 8 — Mode 3 Optimizer (rolling walk-forward)
+The ML findings doc (Tier 2, item 5) notes Mode 3 currently uses a single train/test split. A rolling walk-forward approach (multiple training windows, each validated forward) is more robust. Add to Mode 3 description:
+
+```
+Walk-forward methodology: Mode 3 supports rolling window validation in addition
+to single train/test split. In rolling mode: slide the training window forward
+by N days, re-optimize, validate on the next N days. Best N candidates are the
+intersection of high-scoring runs across all windows — not just the best single
+split. Research finding (2026-02-27): single-split optimization overfits to the
+training period regime.
+```
+
+### Edit 9 — Random Dataset Sampling Strategy (Mode 2 + Mode 3)
+
+Add new subsection to Mode 2 and Mode 3 descriptions.
+
+Motivation: 399 coins x full date range = one large dataset. The user has 2+ years of 5m OHLCV across ~400 coins — enough to generate many statistically independent 1-3 month x N-coin draws. Training on a single fixed dataset risks regime-specific overfitting.
+
+Dataset sampling approach:
+- Time window: random 1-3 month slice from the full date range (uniform draw)
+- Coin subset: random N coins from the full universe (stratified by tier if tier labels exist)
+- Each draw is independent. Random seed stored with session — draws are reproducible.
+
+Mode 2 (Auto-Discovery) application: Clustering and permutation sweep run on K random draws. A pattern is surfaced only if it appears consistently across at least M of K draws (user-set threshold). Bootstrap validation — not just a single discovery run.
+
+Mode 3 (Optimizer) application: Each Optuna trial evaluates parameters on a fresh random draw rather than the same fixed training window. Forces the optimizer to find parameters that work across diverse regimes. Testing period is always a held-out draw with no overlap to any training draw.
+
+Relationship to walk-forward (Edit 8): Walk-forward = sequential windows. Random sampling = independent random windows. Both modes supported. User selects which to use.
+
+### Edit 10 — RL Exit Policy: Expanded Action Space + Intra-Candle Timing
+
+Expand the "RL Exit Policy Optimizer" section (added in Edit 3).
+
+Action space expansion (from 2 to 4 actions):
+- HOLD — do nothing at this bar
+- EXIT — close position (does not reduce trade count — entries unchanged)
+- RAISE_SL — move stop-loss up to lock in partial profit (only valid if PnL > threshold)
+- SET_BE — move stop-loss to break-even entry price (only valid if PnL > commission cost)
+
+State expansion (add intra-candle context to existing state vector):
+- candle_body_pct: (close - open) / ATR — direction + magnitude of current bar
+- price_vs_entry_atr: mark price distance from entry in ATR units
+- sl_distance_atr: current SL distance from mark price in ATR units (shrinks as SL is raised)
+- be_already_set: bool — whether BE has been applied this trade
+
+Why intra-candle matters: In the 5m backtester, SL/TP hits occur intra-candle (at high/low of the bar), not always at close. A trade can enter and hit TP in the same 5m bar. Adding candle_body_pct gives the agent directional context about the forming bar.
+
+Enricher expansion: At each critical bar (entry, MFE, exit), capture OHLC tuple in addition to close-based indicator state. This allows Exit State Analysis (Panel 4) to classify: was the SL hit intra-candle (price crossed level via high/low) or at close? Adds entry_ohlc, mfe_ohlc, exit_ohlc tuples to EnrichedTrade.
+
+Exit State Analysis (Panel 4) expansion:
+- % of SL hits that were intra-candle vs at-close
+- % of BE raises that happened too early (price reversed before next TP zone)
+- Histogram: bars-since-entry distribution for SL raise, BE set, and final exit
+
+Constraint check: RAISE_SL and SET_BE do NOT change entries, do NOT reduce trade count. All 4 actions are post-entry management. Vince constraint satisfied.
+
+---
+
+## Task 2: Plugin Interface Spec (P1.7) — Two Deliverables
+
+### 2a. Create VINCE-PLUGIN-INTERFACE-SPEC-v1.md (markdown)
+
+**New file:** `C:\Users\User\Documents\Obsidian Vault\PROJECTS\four-pillars-backtester\docs\VINCE-PLUGIN-INTERFACE-SPEC-v1.md`
+
+This is the prose spec. Formalizes the `StrategyPlugin` ABC so that the FourPillarsPlugin can be built without ambiguity.
+
+#### Document sections
+
+1. **Purpose** — why this spec exists, what it enables
+2. **Abstract Base Class** — full `StrategyPlugin(ABC)` with complete type signatures and docstrings
+3. **Method Contracts** (one subsection per method):
+   - `compute_signals(ohlcv_df)`: input DataFrame column requirements, output DataFrame guarantees (which columns must be added, naming convention, types, NaN handling policy)
+   - `parameter_space()`: full dict schema, valid type strings (`"float"`, `"int"`, `"bool"`), required keys per entry, optional keys (`"log"` for log-scale)
+   - `trade_schema()`: full dict schema, required fields (entry_bar, exit_bar, pnl, commission, direction), optional strategy-specific fields
+   - `run_backtest(params, start, end, symbols)`: parameter types, date format, symbols list format, return value (Path to trade CSV), error contract (raises on missing data)
+   - `strategy_document` property: required format (markdown only), what happens if PDF (convert first)
+4. **OHLCV DataFrame Contract** — the canonical input to `compute_signals()`: required columns, dtypes, timezone assumptions, index type
+5. **Enricher Contract** — what the Enricher expects from the plugin: which column names it will look for after `compute_signals()`, naming convention for indicator snapshot columns (`k1_at_entry`, `k2_at_entry`, etc.)
+6. **Compliance Checklist** — the test requirements a plugin must pass to be considered Vince-compatible
+7. **FourPillarsPlugin — compliance mapping** — how the existing `signals/four_pillars_v383_v2.py` maps to each method
+
+### 2b. Create strategies/base_v2.py (Python stub)
+
+**IMPORTANT:** `strategies/base.py` already exists and is from the REJECTED v1 architecture (methods: `extract_features`, `label_trades`, `get_feature_names` — the old XGBoost TAKE/SKIP classifier). Per HARD RULE: do NOT overwrite. New file must be `strategies/base_v2.py`.
+
+**New file:** `C:\Users\User\Documents\Obsidian Vault\PROJECTS\four-pillars-backtester\strategies\base_v2.py`
+
+**Python skill MUST be loaded before implementation begins.**
+
+#### File contents
+- Module docstring explaining this is the Vince v2 interface (replaces base.py concept; base.py kept as archive)
+- `from abc import ABC, abstractmethod`
+- `from pathlib import Path`
+- `import pandas as pd`
+- `class StrategyPlugin(ABC):` with all 5 methods + property:
+  - `compute_signals(self, ohlcv_df: pd.DataFrame) -> pd.DataFrame:` — full docstring
+  - `parameter_space(self) -> dict:` — full docstring with example return format
+  - `trade_schema(self) -> dict:` — full docstring with required fields
+  - `run_backtest(self, params: dict, start: str, end: str, symbols: list[str]) -> Path:` — full docstring
+  - `strategy_document` property `-> Path:` — full docstring
+- All methods raise `NotImplementedError` (abstract stubs)
+- py_compile validation required after write
+
+---
+
+## Files Modified / Created
+
+| File | Action |
+|------|--------|
+| `PROJECTS/four-pillars-backtester/docs/VINCE-V2-CONCEPT-v2.md` | Edit (7 specific edits) |
+| `PROJECTS/four-pillars-backtester/docs/VINCE-PLUGIN-INTERFACE-SPEC-v1.md` | Create (new) |
+| `06-CLAUDE-LOGS/plans/2026-02-27-vince-concept-doc-update.md` | Create (vault plan copy) |
+| `memory/TOPIC-vince-v2.md` | Edit (update status + new files) |
+
+---
+
+## Files NOT Modified
+
+| File | Reason |
+|------|--------|
+| `PRODUCT-BACKLOG.md` | P1.7 stays WAITING — concept doc not yet approved |
+| `LIVE-SYSTEM-STATUS.md` | No system deployed |
+| `06-CLAUDE-LOGS/INDEX.md` | Only updated if a session log is written |
+
+---
+
+## Verification
+
+After implementation:
+1. Open `VINCE-V2-CONCEPT-v2.md` — confirm 7 additions are present, status header still says "NOT YET APPROVED FOR BUILD"
+2. Open `VINCE-PLUGIN-INTERFACE-SPEC-v1.md` — confirm all 7 sections exist, method contracts are unambiguous
+3. Open `TOPIC-vince-v2.md` — confirm new files referenced
+4. Run `python -c "import ast; ast.parse(open('...').read())"` on any Python code snippets in the spec to confirm they are syntactically valid (the ABC class definition)

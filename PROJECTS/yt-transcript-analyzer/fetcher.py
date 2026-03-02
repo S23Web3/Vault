@@ -1,6 +1,7 @@
 """Fetches YouTube subtitles via yt-dlp. Handles all channel URL formats."""
 import json
 import logging
+import re
 import subprocess
 from datetime import datetime, timezone
 
@@ -68,11 +69,12 @@ def prescan_channel(url: str) -> list:
 def fetch_subtitles(url: str) -> None:
     """Download auto-generated English VTT subtitles for all videos in a channel or playlist URL."""
     channel_name = extract_channel_name(url)
-    log.info("Channel: %s", channel_name)
-
     videos = prescan_channel(url)
-    log.info("Total: %d videos", len(videos))
+    download_subtitles(url, channel_name, videos)
 
+
+def download_subtitles(url: str, channel_name: str, videos: list, on_progress=None, on_process_started=None) -> dict:
+    """Download VTT subtitles with progress callback. Returns stats dict."""
     _write_manifest_videos(videos, channel_name, url)
 
     RAW_PATH.mkdir(parents=True, exist_ok=True)
@@ -95,12 +97,41 @@ def fetch_subtitles(url: str) -> None:
         url,
     ]
 
-    log.info("Downloading subtitles (%d videos)...", len(videos))
-    result = subprocess.run(cmd, text=True)
-    if result.returncode != 0:
-        log.error("yt-dlp exited with code %d", result.returncode)
+    total = len(videos)
+    stats = {"downloaded": 0, "skipped": 0, "archived": 0, "errors": 0}
+    log.info("Downloading subtitles (%d videos)...", total)
+    process = subprocess.Popen(cmd, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    if on_process_started:
+        on_process_started(process)
+    current = 0
+    for line in process.stdout:
+        line = line.strip()
+        if not line:
+            continue
+        item_match = re.search(r"Downloading item (\d+) of (\d+)", line)
+        if item_match:
+            current = int(item_match.group(1))
+            if on_progress:
+                on_progress(current, total, "Downloading video " + str(current) + "/" + str(total))
+        elif "Writing video subtitles" in line:
+            stats["downloaded"] += 1
+            short = line.split("to: ")[-1] if "to: " in line else line
+            if on_progress:
+                on_progress(current, total, "Saving: " + short)
+        elif "has already been recorded" in line:
+            stats["archived"] += 1
+        elif "has no subtitles" in line.lower() or "no subtitles" in line.lower():
+            stats["skipped"] += 1
+        elif "ERROR" in line:
+            stats["errors"] += 1
+    process.wait()
+    if process.returncode != 0:
+        log.error("yt-dlp exited with code %d", process.returncode)
     else:
         log.info("yt-dlp completed")
+    log.info("Stats: %d downloaded, %d skipped, %d archived, %d errors",
+             stats["downloaded"], stats["skipped"], stats["archived"], stats["errors"])
+    return stats
 
 
 def _write_manifest_videos(videos: list, channel_name: str, url: str) -> None:

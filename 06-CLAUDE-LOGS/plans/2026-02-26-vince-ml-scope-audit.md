@@ -49,7 +49,42 @@ Backtester v3.8.4, signal pipeline v383 (Numba JIT), BBW pipeline (Layers 1-5), 
 
 ---
 
-## 2. What's Reusable from v1 in v2
+## 2. v1 vs v2 — Side-by-Side Comparison
+
+| Dimension | v1 (XGBoost/PyTorch Classifier) | v2 (Trade Research Engine) |
+|-----------|--------------------------------|---------------------------|
+| **Core question** | "Will this trade win or lose?" | "What patterns exist in my trades?" |
+| **Role** | Predictive filter — TAKE/SKIP on each signal | Research tool — surfaces findings, user decides |
+| **Output** | Win probability (0-1), position size, exit bar | Metric tables, deltas, significance scores, pattern rankings |
+| **Trade count impact** | REDUCES (skips low-probability trades) | NEVER REDUCES (volume = rebate, non-negotiable) |
+| **ML model** | PyTorch 3-branch unified model (tabular + LSTM + context) + XGBoost auditor | None. Frequency counting + permutation statistics. No trained model. |
+| **Learning method** | Supervised classification on labeled trade data | Statistical frequency counting across constellation dimensions |
+| **Strategy coupling** | Hardcoded to Four Pillars (indicator names, params in code) | Strategy-agnostic plugin interface (any strategy works) |
+| **Plugin interface** | `extract_features()`, `label_trades()`, `get_backtester_params()` | `compute_signals()`, `parameter_space()`, `trade_schema()`, `run_backtest()`, `strategy_document` |
+| **Operating modes** | Single: train model -> predict on new signals | Three: (1) User Query, (2) Auto-Discovery, (3) Settings Optimizer |
+| **Dashboard** | 5-tab ML dashboard (staging, never deployed) | 8-panel research dashboard (not built) |
+| **LLM involvement** | None | Layer 2 (optional): fine-tuned trading LLM interprets quantitative findings |
+| **Validation** | Purged CV + walk-forward + SHAP + XGBoost adversarial audit | Permutation significance gate (Mode 2) + Monte Carlo (Mode 3) + candle bootstrap |
+| **Bet sizing** | Yes — Kelly/linear/binary from win probability | No — Vince does not size positions |
+| **Live pipeline** | WebSocket -> signals -> ML filter -> execution | Not applicable — Vince is offline research, not real-time |
+| **Build status** | 19 files, 2,643 lines, 37/37 tests, staging ready | Concept doc only. Zero code. |
+| **Conceptual status** | REJECTED — "TAKE/SKIP is Vicky's job, not Vince's" | WRITTEN, NOT YET APPROVED FOR BUILD |
+
+### Why v1 Was Rejected
+
+The fundamental problem: v1 reduces trade count. Every skipped trade = lost rebate income. With $1.49B annual notional and 70% rebate, trade volume is directly tied to revenue. A classifier that says "skip this C trade" costs money even if the individual trade would have lost, because the system-level rebate economics outweigh individual trade losses.
+
+v2 flips the approach: instead of filtering trades out, it surfaces *why* some constellations work better than others and lets the user adjust strategy parameters (Mode 3) or understand patterns (Modes 1/2) while keeping all trades flowing.
+
+### What Carries Over
+
+6 of 19 v1 modules are directly reusable in v2 (features_v3, triple_barrier, purged_cv, walk_forward, loser_analysis, coin_features). The FourPillarsPlugin internals (enrich_ohlcv, compute_signals) carry over — only the abstract contract changes.
+
+7 v1 modules are NOT reusable (vince_model, training_pipeline, meta_label, bet_sizing, xgboost_trainer, staging files) — these are classifier-specific.
+
+---
+
+## 3. What's Reusable from v1 in v2 (detail)
 
 | v1 Module | v2 Use | Confidence |
 |-----------|--------|------------|

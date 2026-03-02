@@ -64,7 +64,8 @@ class StrategyAdapter:
                      signal.grade, signal.entry_price)
         state_dict = self.state_manager.get_state()
         approved, reason = self.risk_gate.evaluate(
-            signal, symbol, state_dict, self.allowed_grades)
+            signal, symbol, state_dict, self.allowed_grades,
+            state_manager=self.state_manager)
         if not approved:
             logger.info("Blocked: %s %s — %s",
                          signal.direction, symbol, reason)

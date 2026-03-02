@@ -3,7 +3,7 @@ connector:
   position_check_sec: 60
   timeframe: "5m"
   ohlcv_buffer_bars: 201
-  demo_mode: true
+  demo_mode: false
 
 coins:
   # 47 coins: 14 high-Exp originals + 33 low-DD additions from v384 sweep
@@ -69,20 +69,26 @@ four_pillars:
   allow_b: true
   allow_c: false
   sl_atr_mult: 2.0
-  tp_atr_mult: 4.0   # 4x ATR TP on every trade (was null = no TP)
+  tp_atr_mult: null      # no fixed TP — SL at 2x ATR, let winners run
+  require_stage2: true   # Stoch40+60 must rotate before Grade A fires
+  rot_level: 80
 
 risk:
-  max_positions: 25       # 47 coins, allow up to 25 concurrent (25 * $75 = $1875 margin, well within 102k VST)
-  max_daily_trades: 200   # scaled for 53 coins
-  daily_loss_limit_usd: 2000.0  # demo mode, let it run
+  max_positions: 8        # $110 account, 8 * $5 margin = $40 max margin used
+  max_daily_trades: 50
+  daily_loss_limit_usd: 15.0   # ~14% of $110 account
   min_atr_ratio: 0.003
+  cooldown_bars: 3        # bars to wait before re-entering same symbol+direction
+  bar_duration_sec: 300   # 5m = 300s
 
 position:
-  margin_usd: 75.0
-  leverage: 20
+  margin_usd: 5.0
+  leverage: 10
   margin_mode: "ISOLATED"
   sl_working_type: "MARK_PRICE"
   tp_working_type: "MARK_PRICE"
+  trailing_activation_atr_mult: 2.0   # activate trail when price reaches entry +/- 2xATR
+  trailing_rate: 0.02                  # 2% callback from peak once activation hit
 
 notification:
   daily_summary_utc_hour: 17

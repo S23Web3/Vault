@@ -33,6 +33,8 @@ def main():
                         help="Hours of history (overrides --months for testing)")
     parser.add_argument("--symbols", nargs="+", default=None,
                         help="Specific symbols to fetch (overrides config)")
+    parser.add_argument("--all", action="store_true",
+                        help="Fetch all symbols found in cache (ignores config list)")
     parser.add_argument("--force", action="store_true",
                         help="Force re-fetch even if cached")
     parser.add_argument("--rate", type=float, default=0.1,
@@ -41,9 +43,17 @@ def main():
 
     config = load_config()
 
+    # Cache dir
+    cache_dir = Path(__file__).resolve().parent.parent / config.get("data", {}).get("cache_dir", "data/cache")
+
     # Determine symbols
     if args.symbols:
         symbols = args.symbols
+    elif args.all:
+        symbols = sorted(f.stem.replace("_1m", "") for f in cache_dir.glob("*_1m.parquet"))
+        if not symbols:
+            print("ERROR: --all specified but no cached parquets found in", cache_dir)
+            sys.exit(1)
     else:
         symbols = config.get("coins", ["BTCUSDT"])
 
@@ -58,9 +68,6 @@ def main():
     else:
         start_time = end_time - timedelta(days=args.months * 30)
         range_desc = f"last {args.months} months"
-
-    # Cache dir
-    cache_dir = Path(__file__).resolve().parent.parent / config.get("data", {}).get("cache_dir", "data/cache")
 
     print("=" * 60)
     print("Four Pillars — Bybit Data Fetcher")

@@ -1,9 +1,9 @@
 # Dashboard File Index
 ## Four Pillars Trading System
 
-**Last Updated:** 2026-02-26
-**Current Production:** `scripts/dashboard_v392.py` (v3.9.2, 2500 lines) -- STABLE
-**Next Version:** `scripts/dashboard_v393.py` (v3.9.3, BLOCKED -- IndentationError at line 1972)
+**Last Updated:** 2026-02-28
+**Current Production:** `scripts/dashboard_v393.py` (v3.9.3, 2385 lines) -- STABLE
+**Prior Version:** `scripts/dashboard_v392.py` (v3.9.2, 2371 lines) -- fallback
 
 ---
 
@@ -11,8 +11,8 @@
 
 | File | Lines | Version | Status | Description |
 |------|-------|---------|--------|-------------|
-| `scripts/dashboard_v392.py` | 2500 | v3.9.2 | PRODUCTION | Current stable dashboard. All v3.9 features + equity curve date filter fix + capital model v2 integration. |
-| `scripts/dashboard_v393.py` | ~2500 | v3.9.3 | BLOCKED | Equity curve date filter session state fix. IndentationError at line 1972. Do NOT use yet. |
+| `scripts/dashboard_v393.py` | 2385 | v3.9.3 | PRODUCTION | Stale cache fix (clear portfolio on settings change) + silent date filter fallback fixed. |
+| `scripts/dashboard_v392.py` | 2371 | v3.9.2 | PRIOR STABLE | All v3.9 features + equity curve date filter fix + capital model v2 integration. Fallback if v3.9.3 regresses. |
 | `scripts/dashboard_v391.py` | 2338 | v3.9.1 | PRIOR STABLE | 14 patches, PDF export, combined CSV. Superseded by v3.9.2. |
 
 ## What's New in v3.9
@@ -62,9 +62,9 @@ v3.9    scripts/dashboard_v39.py (~2200L)      -- SUPERSEDED: portfolio enhancem
   |
 v3.9.1  scripts/dashboard_v391.py (2338L)     -- 14 patches, PDF export, combined CSV
   |
-v3.9.2  scripts/dashboard_v392.py (2500L)     -- PRODUCTION: equity curve fix, capital model v2
+v3.9.2  scripts/dashboard_v392.py (2371L)     -- PRIOR STABLE: equity curve fix, capital model v2
   |
-v3.9.3  scripts/dashboard_v393.py (~2500L)    -- BLOCKED: IndentationError at line 1972
+v3.9.3  scripts/dashboard_v393.py (2385L)     -- PRODUCTION: stale cache fix + date filter fallback fix
 ```
 
 ## Utils Modules
