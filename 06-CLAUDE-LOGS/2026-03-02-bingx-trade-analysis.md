@@ -1,6 +1,6 @@
 # BingX Phase 3 — Live Account Report
 
-**Generated**: 2026-03-02 10:27 UTC  |  **Account**: $110.0  |  **Notional/trade**: $50 (5x margin x 10x leverage)
+**Generated**: 2026-03-02 12:51 UTC  |  **Account**: $110.0  |  **Notional/trade**: $50 (5x margin x 10x leverage)
 
 ---
 
@@ -8,16 +8,16 @@
 
 ```
   Account size : $110.0
-  Margin in use: $30.0  (6 open positions x $5.0)
+  Margin in use: $0.0  (0 open positions x $5.0)
   Run period   : 2026-02-27 15:20 UTC  to  2026-02-28 12:18 UTC
-  Closed trades: 46   Open: 6
+  Closed trades: 46   Open: 0
 ```
 
 | Scenario | Closed | Open Positions | **TOTAL** | **% of $110** |
 |----------|--------|----------------|-----------|------------|
-| Worst case — all SLs hit | $-8.49 | $-1.1 | **$-9.59** | **-8.7%** |
-| Current — mark-to-market | $-8.49 | $-7.5 | **$-15.99** | **-14.5%** |
-| Best case — all trailing TPs hit | $-8.49 | $-1.4 | **$-9.9** | **-9.0%** |
+| Worst case — all SLs hit | $-8.49 | +$0.0 | **$-8.49** | **-7.7%** |
+| Current — mark-to-market | $-8.49 | +$0.0 | **$-8.49** | **-7.7%** |
+| Best case — all trailing TPs hit | $-8.49 | +$0.0 | **$-8.49** | **-7.7%** |
 
 > Trailing TP estimate: 2% callback from current mark price.
 > Commission: 0.05% taker per side. Rebate 50% next day.
@@ -26,40 +26,14 @@
 
 ## 2. Open Positions
 
-**Open Positions at Bot Stop**
-
-| Symbol | Dir | Entry | Mark | Move% | Net PnL | Margin ROI | BE |
-|--------|-----|-------|------|-------|---------|------------|----|
-| VIRTUAL-USDT | SHORT | 0.6923 | 0.6988 | -0.9% | $-0.51 | -10.1% of $5.0 | Y |
-| SUSHI-USDT | SHORT | 0.2035 | 0.2007 | +1.4% | +$0.62 | +12.4% of $5.0 | Y |
-| ATOM-USDT | SHORT | 1.82 | 1.8 | +1.1% | +$0.5 | +10.0% of $5.0 | Y |
-| MUBARAK-USDT | LONG | 0.01285 | 0.01322 | +2.9% | +$1.35 | +27.1% of $5.0 | Y |
-| ZKP-USDT | SHORT | 0.07864 | 0.08755 | -11.3% | $-5.56 | -111.1% of $5.0 | n |
-| PENDLE-USDT | SHORT | 1.1865 | 1.2783 | -7.7% | $-3.91 | -78.1% of $5.0 | n |
-
-**Position Scenarios** (SL floor / TP target per position)
-
-```
-  VIRTUAL-USDT SHORT  |  SL: 0.6923 (BE) -> floor $-0.05  |  Trail 2.0% -> target ~ 0.684824 -> +$0.48
-  SUSHI-USDT SHORT  |  SL: 0.2035 (BE) -> floor $-0.05  |  Trail 2.0% -> target ~ 0.196686 -> +$1.59
-  ATOM-USDT SHORT  |  SL: 1.82 (BE) -> floor $-0.05  |  Trail 2.0% -> target ~ 1.764 -> +$1.49
-  MUBARAK-USDT LONG  |  SL: 0.01285 (BE) -> floor $-0.05  |  Trail 2.0% -> target ~ 0.013484 -> +$2.35
-  ZKP-USDT SHORT  |  SL: 0.079225 -> floor $-0.41  |  Trail 2.0% -> target ~ 0.085799 -> $-4.47
-  PENDLE-USDT SHORT  |  SL: 1.196881 -> floor $-0.49  |  Trail 2.0% -> target ~ 1.252734 -> $-2.83
-```
-
-- **Open positions**: 6 | BE raised: 4/6
-- **Total margin at risk**: $30.0 | notional: $300.0 | entry commission paid: $0.15
-- **Unrealized net (mark-to-market)**: $-7.5
-- **SL floor net (worst case, all SLs hit)**: $-1.1
-- **TP target net (best case, all TPs hit)**: $-1.4
+No open positions at bot stop.
 
 ---
 
 ## 3. Closed Trade Analysis
 
 > **Context**: The strategy profits via trailing TP — positions must stay open to win.
-> 0 of 46 closed trades hit TP. The profitable trades are in the 6 still-open positions above.
+> 0 of 46 closed trades hit TP. The profitable trades are in the 0 still-open positions above.
 
 **Outcome breakdown**
 
@@ -128,10 +102,10 @@ Total cost of 17 SL-at-entry exits: $-0.91 gross  /  $-0.45 net after rebate
 
 ## 5. Key Findings
 
-1. Closed P&L: $-8.49 across 46 trades. Current total (mark-to-market): $-15.99 (-14.5% of account).
-2. 0 TP_HIT exits from 46 closed trades — the trailing TP mechanism was not triggered before bot stopped. All unrealized gains ($-7.5) are in the 6 open positions.
+1. Closed P&L: $-8.49 across 46 trades. Current total (mark-to-market): $-8.49 (-7.7% of account).
+2. 0 TP_HIT exits from 46 closed trades — the trailing TP mechanism was not triggered before bot stopped. All unrealized gains (+$0.0) are in the 6 open positions.
 3. 17 SL-at-entry exits cost +$0.45 net after rebate — avoidable with BE+fees SL (now fixed in bot).
-4. If all 6 open trailing TPs hit: total = $-9.9 (-9.0% of $110 account). Worst case (all SLs hit): $-9.59 (-8.7%).
+4. If all 6 open trailing TPs hit: total = $-8.49 (-7.7% of $110 account). Worst case (all SLs hit): $-8.49 (-7.7%).
 5. Worst single loss: AIXBT-USDT SHORT B $-0.87 (SL_HIT). Best open position: VIRTUAL-USDT SHORT at +57% margin ROI (unrealized).
 
 ---

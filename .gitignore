@@ -30,6 +30,8 @@ postgres/
 
 # --- Virtual environments ---
 **/venv/
+**/.venv/
+**/.venv*/
 
 # --- Runtime logs (environment-specific, regenerated) ---
 **/logs/
@@ -38,6 +40,8 @@ postgres/
 state.json
 state.json.tmp
 trades.csv
+PROJECTS/bingx-connector/bot.pid
+PROJECTS/bingx-connector/bot-status.json
 
 # --- ML model binaries ---
 *.pkl

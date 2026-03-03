@@ -1,15 +1,31 @@
 # Session Log Index
-**Last Updated:** 2026-02-28
-**Total:** 142 markdown files, 2 JSON manifests, 1 Python script
+**Last Updated:** 2026-03-03
+**Total:** 144 markdown files, 2 JSON manifests, 1 Python script
 
 ---
 
 ## By Date (newest first)
 
+### 2026-03-03
+| File | Summary |
+| ---- | ------- |
+| `2026-03-03-cuda-dashboard-v394-build.md` | CUDA dashboard v394 build session. Audited spec (4 issues found: engine version mismatch, column names, reentry cloud3 gate, v393 claim). Wrote build_cuda_engine.py (py_compile PASS). Discovered Python 3.13 CUDA blocker (Numba access violation). Wrote PowerShell Python 3.12 install script. Build script creates cuda_sweep.py + jit_backtest.py + dashboard_v394.py. |
+| `2026-03-03-cuda-dashboard-v394-planning.md` | CUDA dashboard v394 spec planning. No code written. Identified 4 pre-audit errors in existing vault plan (column names, param_grid shape, tp sentinel, missing cloud3 arrays). Wrote corrected dashboard-focused handover spec: plans/2026-03-03-cuda-dashboard-v394-spec.md. Supersedes 2026-03-03-cuda-sweep-engine.md (which had errors). |
+| `2026-03-03-bingx-dashboard-v1-4-patches.md` | BingX dashboard v1-4: diagnosed doubled Activity Log (patch7 ran twice on main.py), IndexError (CB-T3 initial_duplicate + CB-S1 conflict), Activity Log height cap. Wrote build_dashboard_v1_4_patch2.py (13 patches: dedup main.py, toggle button, OFFLINE header, 360px log height). Browser cache KeyError at session end — requires Ctrl+Shift+R after dashboard restart. |
+| `2026-03-03-session-handoff.md` | Context switch session. No new builds. Verified B2 artefacts intact. Identified B1 spec conflict (build spec says v383_v2, plan mode plan says v386 — v386 is correct). Wrote next-steps roadmap: plans/2026-03-03-next-steps-roadmap.md. |
+| `2026-03-03-ttp-integration-plan.md` | TTP engine integration planning session. Audited initial mark-price approach, found 5 critical gaps, revised to hybrid architecture (TTP evaluates in market_loop on real OHLC, closes execute in monitor_loop). Plan finalized with full pseudocode and file-by-file change lists. |
+| `2026-03-03-ttp-integration-build.md` | TTP engine build session. Wrote build_ttp_integration.py (6 patches: ttp_engine.py, signal_engine.py, position_monitor.py, main.py, config.yaml, test_ttp_engine.py) and build_dashboard_v1_4_patch3.py (5 patches: TTP columns, build_positions_df, Controls layout, CB-11, CB-12). Both py_compile PASS. |
+
+### 2026-03-03
+| File | Summary |
+| ---- | ------- |
+| `2026-03-03-signal-rename-architecture-session.md` | Signal rename session: A→Quad, B→Rotation (TBC), C→ADD. ADD is engine classification not state machine signal. Pine C (2/4) logic identified as wrong by design. Full gap analysis: Pine vs Python backtester vs intended behaviour. Pending: Q2/Q3/Q4/Q5 unanswered. No code written. |
+
 ### 2026-03-02
 | File | Summary |
 | ---- | ------- |
-| `2026-03-02-bingx-dashboard-v1-3-audit-and-patches.md` | Dashboard v1-3 full audit (1805 lines). Found 6 bugs (B1-B6). Patch 1 fixed B1+B2+B4. Patch 2 written for visual fixes (Equity card, CSS date pickers, AG Grid dark vars, equity curve unrealized). Data discrepancy explained (all trades vs Phase 3 only). |
+| `2026-03-02-b2-api-types-build.md` | B2 built: vince/ package created (\_\_init\_\_.py, types.py, api.py, audit.py). 8 dataclasses, 8 API stubs, 13-check codebase auditor. All py_compile PASS. Audit finds: bot runs v1 signal (not v386), BBW orphaned, ExitManager likely dead code, trailing stop divergence, BE raise missing from bot. Strategy analysis report also built (scripts/build_strategy_analysis.py). |
+| `2026-03-02-bingx-dashboard-v1-3-audit-and-patches.md` | Dashboard v1-3 full audit. Patches 1-5 applied: balance from API, position reconciliation, date filter (>=Feb27), stale session detection, coin detail on click. Root cause found for white backgrounds: Dash 2.x CSS custom properties (--Dash-Fill-Inverse-Strong: #fff). Fix is :root variable overrides in dashboard.css. Patch 6 pending. |
 
 ### 2026-02-28
 | File | Summary |

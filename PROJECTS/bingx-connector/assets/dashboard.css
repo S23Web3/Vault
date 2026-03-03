@@ -206,3 +206,132 @@ label { color: #c9d1d9 !important; }
     --ag-border-color: #21262d;
     --ag-secondary-border-color: #21262d;
 }
+
+/* === COMPREHENSIVE DARK FIX (Patch 5) ===================================
+   Targets ALL white-background components by ID and descendant selectors.
+   This section is the final authority on dark styling.
+   ======================================================================== */
+
+/* --- Dropdown controls (History tab filters) --- */
+#hist-dir-filter div,
+#hist-grade-filter div,
+#hist-exit-filter div {
+    background-color: #21262d !important;
+    background: #21262d !important;
+    border-color: #484f58 !important;
+    color: #c9d1d9 !important;
+}
+#hist-dir-filter input,
+#hist-grade-filter input,
+#hist-exit-filter input,
+#hist-dir-filter span,
+#hist-grade-filter span,
+#hist-exit-filter span {
+    color: #c9d1d9 !important;
+}
+#hist-dir-filter svg,
+#hist-grade-filter svg,
+#hist-exit-filter svg {
+    fill: #8b949e !important;
+}
+
+/* --- Dropdown menu (portaled to body, not inside component wrapper) --- */
+.Select-menu-outer,
+.Select-menu,
+.VirtualizedSelectOption,
+div[class*="menu"] {
+    background-color: #21262d !important;
+    border-color: #484f58 !important;
+}
+.Select-option,
+div[class*="option"] {
+    background-color: #21262d !important;
+    color: #c9d1d9 !important;
+}
+.Select-option.is-focused,
+.Select-option.is-selected,
+div[class*="option"]:hover {
+    background-color: #30363d !important;
+}
+
+/* --- DatePickerRange (nuclear -- ALL descendants) --- */
+#hist-date-range *,
+#analytics-date-range * {
+    background-color: #21262d !important;
+    background: #21262d !important;
+    border-color: #484f58 !important;
+    color: #c9d1d9 !important;
+}
+/* Restore calendar popup selected day color */
+.CalendarDay__selected,
+.CalendarDay__selected:hover,
+.CalendarDay__selected_span {
+    background-color: #58a6ff !important;
+    background: #58a6ff !important;
+    color: #0d1117 !important;
+}
+.CalendarDay__default:hover {
+    background: #30363d !important;
+}
+
+/* --- AG Grid pagination dropdown --- */
+.ag-paging-panel select,
+.ag-page-size select,
+.ag-page-size .ag-select,
+.ag-page-size .ag-select .ag-picker-field-wrapper {
+    background-color: #21262d !important;
+    color: #c9d1d9 !important;
+    border-color: #484f58 !important;
+}
+
+/* --- RadioItems (Coin Summary period filter) --- */
+.dash-radioitems label,
+.dash-radioitems input[type="radio"] {
+    color: #c9d1d9 !important;
+}
+#coin-period-filter label {
+    color: #c9d1d9 !important;
+    cursor: pointer;
+}
+
+/* --- Catch-all for any remaining white form elements --- */
+select, option {
+    background-color: #21262d !important;
+    color: #c9d1d9 !important;
+}
+
+/* === Patch 6: Override Dash 2.x :root CSS variables (dark theme) === */
+:root {
+    --Dash-Fill-Inverse-Strong: #21262d !important;
+    --Dash-Fill-Inverse-Weak: rgba(33, 38, 45, 0.9) !important;
+    --Dash-Fill-Interactive-Weak: rgba(33, 38, 45, 0.5) !important;
+    --Dash-Fill-Primary-Hover: rgba(88, 166, 255, 0.1) !important;
+    --Dash-Fill-Primary-Active: rgba(88, 166, 255, 0.2) !important;
+    --Dash-Text-Primary: #c9d1d9 !important;
+    --Dash-Text-Weak: #8b949e !important;
+    --Dash-Stroke-Strong: #484f58 !important;
+    --Dash-Stroke-Weak: rgba(72, 79, 88, 0.3) !important;
+    --Dash-Fill-Interactive-Strong: #58a6ff !important;
+    --Dash-Text-Disabled: #484f58 !important;
+}
+
+/* === Patch 7: Bot status feed panel === */
+.status-feed-panel {
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-family: monospace;
+    font-size: 12px;
+    max-height: 360px;
+    overflow-y: auto;
+    color: #c9d1d9;
+}
+.status-feed-panel p {
+    margin: 2px 0;
+    line-height: 1.5;
+}
+.status-ts {
+    color: #484f58;
+    margin-right: 8px;
+}

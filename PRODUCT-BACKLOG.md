@@ -1,5 +1,5 @@
 # Product Backlog
-**Last updated:** 2026-02-28 (v386 scoping DONE, B1 unblocked)
+**Last updated:** 2026-03-02 (B2 DONE — vince/ package created, auditor live)
 
 ---
 
@@ -25,7 +25,7 @@
 | P1.5 | WEEX Screener build (3 files) | SCOPED | Scope: `C:\Users\User\Documents\Obsidian Vault\06-CLAUDE-LOGS\2026-02-24-weex-screener-scope.md` |
 | P1.6 | Four Pillars Strategy Scoping (Step 2) | BLOCKED | 19 unknowns from `C:\Users\User\Documents\Obsidian Vault\06-CLAUDE-LOGS\2026-02-23-four-pillars-strategy-scoping.md` |
 | P1.7 | Vince v2 concept lock + build plan | DONE | Concept locked 2026-02-27. GUI (Dash) + architecture skeleton added. Build plan: B1-B10. Next: B1 FourPillarsPlugin. |
-| P1.8 | Vince B2 — API layer + types | READY after B1 | Research done 2026-02-28. Spec: `BUILD-VINCE-B2-API.md`. Files: `vince/types.py`, `vince/api.py`. |
+| P1.8 | Vince B2 — API layer + types | DONE | Built 2026-03-02. Files: `vince/__init__.py`, `vince/types.py`, `vince/api.py`, `vince/audit.py`, `tests/test_b2_api.py`, `scripts/build_b2_api.py`. All py_compile PASS. Includes full codebase auditor (13 checks, CRITICAL/WARNING/INFO). |
 | P1.9 | Vince B3 — Enricher | BLOCKED on v386 signal file | All 8 design decisions locked (2026-02-28). Spec updated: `BUILD-VINCE-B3-ENRICHER.md`. Unblocks when `signals/four_pillars_v386.py` exists. |
 
 ## P2 — Medium Priority
@@ -47,6 +47,7 @@
 | P3.1 | 24/7 executor framework | NOT BUILT | trading-tools/executor/ |
 | P3.2 | UI/UX research for dashboard workflow | BACKLOG | |
 | P3.3 | Ollama code review integration | BACKLOG | qwen2.5-coder:32b |
+| P3.4 | VPS autostart for BingX bot | NOT BUILT | Windows Task Scheduler (bingx-bot-task.xml + start_bot.bat) only works on local machine. VPS needs Linux autostart: systemd service or tmux/screen on-reboot. 2026-03-02: code pulled to VPS via git, but no autostart configured. |
 
 ## Completed
 

@@ -14,8 +14,6 @@ ORDER_PATH = "/openApi/swap/v2/trade/order"
 OPEN_ORDERS_PATH = "/openApi/swap/v2/trade/openOrders"
 ALL_ORDERS_PATH = "/openApi/swap/v2/trade/allOrders"
 PRICE_PATH = "/openApi/swap/v2/quote/price"
-BE_TRIGGER = 1.0016  # 0.16% move from entry triggers breakeven raise (2x commission RT)
-
 
 class PositionMonitor:
     """Monitor open positions and detect SL/TP exits."""
@@ -28,6 +26,7 @@ class PositionMonitor:
         self.notifier = notifier
         self.commission_rate = commission_rate
         self.fill_queue = fill_queue or queue.Queue()
+        self.config = config
         self.daily_loss_limit = config.get(
             "daily_loss_limit_usd", 75.0)
         self.daily_summary_hour = config.get(
@@ -94,6 +93,12 @@ class PositionMonitor:
         was hit (and vice versa). Cancels the orphaned remaining order.
         Returns (exit_price, exit_reason) or (None, None) on failure.
         """
+        # TTP exit: if ttp_exit_pending flag is set, return trail level as exit price
+        if pos_data.get("ttp_exit_pending"):
+            trail = pos_data.get("ttp_trail_level")
+            if trail is not None:
+                return float(trail), "TTP_EXIT"
+            return None, "TTP_EXIT"
         try:
             req = self.auth.build_signed_request(
                 "GET", OPEN_ORDERS_PATH, {"symbol": symbol})
@@ -433,33 +438,29 @@ class PositionMonitor:
             return None
 
     def check_breakeven(self):
-        """Raise SL to breakeven for positions where mark has moved BE_TRIGGER from entry.
+        """Auto-raise SL to breakeven when TTP activates, if be_auto is enabled in config.
 
-        LONG: triggers when mark >= entry * BE_TRIGGER (default 1.0016 = +0.16%).
-        SHORT: triggers when mark <= entry * (2 - BE_TRIGGER) (i.e. -0.16%).
+        Trigger: ttp_state == "ACTIVATED" written to position state by signal_engine each bar.
         Runs once per position (be_raised persists in state.json).
+        No-op if be_auto is False or TTP is disabled (state never reaches ACTIVATED).
         """
+        be_auto = self.config.get("position", {}).get("be_auto", True)
+        if not be_auto:
+            return
         positions = self.state.get_open_positions()
         for key, pos_data in positions.items():
             if pos_data.get("be_raised"):
+                continue
+            if pos_data.get("ttp_state") != "ACTIVATED":
                 continue
             entry_price = float(pos_data.get("entry_price", 0) or 0)
             direction = pos_data.get("direction", "")
             symbol = pos_data.get("symbol", key.rsplit("_", 1)[0])
             if not entry_price or direction not in ("LONG", "SHORT") or not symbol:
                 continue
-            mark = self._fetch_mark_price_pm(symbol)
-            if mark is None or mark <= 0:
-                continue
-            if direction == "LONG":
-                triggered = mark >= entry_price * BE_TRIGGER
-            else:
-                triggered = mark <= entry_price * (2.0 - BE_TRIGGER)
-            if not triggered:
-                continue
             logger.info(
-                "BE trigger: %s mark=%.6f entry=%.6f direction=%s",
-                key, mark, entry_price, direction)
+                "BE trigger (TTP activated): %s entry=%.6f direction=%s",
+                key, entry_price, direction)
             self._cancel_open_sl_orders(symbol, direction)
             be_price = self._place_be_sl(symbol, pos_data)
             if be_price is not None:
@@ -469,24 +470,139 @@ class PositionMonitor:
                 })
                 notional = pos_data.get("notional_usd", 0)
                 commission_usd = round(notional * self.commission_rate, 4)
-                msg = ("<b>BE+FEES RAISED</b>  " + key
+                msg = ("<b>BE+FEES RAISED (TTP)</b>  " + key
                        + "\nEntry:  " + str(round(entry_price, 8))
                        + "\nSL -> " + str(round(be_price, 8))
                        + "  (+" + str(round(self.commission_rate * 100, 3))
                        + "% covers $" + str(commission_usd) + " RT commission)"
-                       + "\nMark:  " + str(round(mark, 6)))
+                       + "\nTTP activated at ~0.5% from entry")
                 self.notifier.send(msg)
                 logger.info(
-                    "BE+fees raised: %s entry=%.8f be_price=%.8f"
+                    "BE+fees raised (TTP): %s entry=%.8f be_price=%.8f"
                     " (+%.4f%%) covers=$%.4f RT commission",
                     key, entry_price, be_price,
                     self.commission_rate * 100, commission_usd)
             else:
-                logger.error("BE raise failed: %s — old SL cancelled, new SL NOT placed",
-                             key)
+                logger.error(
+                    "BE SL place FAILED for %s -- old SL cancelled, check manually", key)
                 self.notifier.send(
-                    "<b>BE RAISE ERROR</b>  " + key
-                    + "\nOld SL cancelled but new SL FAILED — check manually")
+                    "<b>BE RAISE FAILED</b>  " + key
+                    + "\nOld SL cancelled but new SL FAILED -- check manually")
+
+
+    def check_ttp_closes(self):
+        """Process TTP close flags set by signal_engine. Executes market close on exchange."""
+        positions = self.state.get_open_positions()
+        for key, pos in positions.items():
+            if not pos.get("ttp_close_pending"):
+                continue
+            symbol = pos.get("symbol", key.rsplit("_", 1)[0])
+            direction = pos.get("direction", "LONG")
+            quantity = pos.get("quantity", 0)
+            # Race guard: verify position still exists on exchange
+            live = self._fetch_single_position(symbol, direction)
+            if not live:
+                # SL/TP already filled on exchange -- clear flag
+                self.state.update_position(key, {"ttp_close_pending": False})
+                logger.info("TTP close skipped (position gone): %s", key)
+                continue
+            # Cancel all pending orders (SL + TP) then market close
+            self._cancel_all_orders_for_symbol(symbol, direction)
+            ok = self._place_market_close(symbol, direction, quantity)
+            if ok:
+                self.state.update_position(key, {
+                    "ttp_close_pending": False,
+                    "ttp_exit_pending": True,
+                })
+                logger.info("TTP close executed: %s", key)
+            else:
+                # Failed to place market close -- leave flag for retry
+                logger.error("TTP close FAILED: %s -- will retry next loop", key)
+
+    def _cancel_all_orders_for_symbol(self, symbol, direction):
+        """Cancel ALL pending orders for symbol+direction (SL, TP, any type)."""
+        try:
+            req = self.auth.build_signed_request(
+                "GET", OPEN_ORDERS_PATH, {"symbol": symbol})
+            resp = requests.get(
+                req["url"], headers=req["headers"], timeout=10)
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("code", 0) != 0:
+                logger.warning("TTP cancel orders error %s: %s",
+                               data.get("code"), data.get("msg"))
+                return
+            orders = data.get("data", {}).get("orders", [])
+            if isinstance(data.get("data"), list):
+                orders = data["data"]
+            cancelled = 0
+            for o in orders:
+                pos_side = o.get("positionSide", "")
+                if pos_side == direction:
+                    self._cancel_order(symbol, o.get("orderId"))
+                    cancelled += 1
+            if cancelled:
+                logger.info("TTP cancelled %d orders for %s %s",
+                            cancelled, symbol, direction)
+        except Exception as e:
+            logger.warning("TTP cancel_all_orders failed %s: %s", symbol, e)
+
+    def _place_market_close(self, symbol, direction, quantity):
+        """Place MARKET reduceOnly close order. Returns True on success."""
+        side = "SELL" if direction == "LONG" else "BUY"
+        order_params = {
+            "symbol": symbol,
+            "side": side,
+            "positionSide": direction,
+            "type": "MARKET",
+            "quantity": str(quantity),
+        }
+        req = self.auth.build_signed_request("POST", ORDER_PATH, order_params)
+        try:
+            resp = requests.post(
+                req["url"], headers=req["headers"], timeout=10)
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("code", 0) == 0:
+                order_id = str(data.get("data", {}).get("orderId", "?"))
+                logger.info("TTP market close placed: %s %s orderId=%s",
+                            symbol, side, order_id)
+                return True
+            logger.error("TTP market close failed %s: code=%s msg=%s",
+                         symbol, data.get("code"), data.get("msg"))
+            return False
+        except Exception as e:
+            logger.error("TTP market close error %s: %s", symbol, e)
+            return False
+
+    def _fetch_single_position(self, symbol, direction):
+        """Fetch a single position from exchange. Returns position dict or None."""
+        try:
+            req = self.auth.build_signed_request(
+                "GET", POSITIONS_PATH)
+            resp = requests.get(
+                req["url"], headers=req["headers"], timeout=10)
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("code", 0) != 0:
+                return None
+            for pos in data.get("data", []):
+                if pos.get("symbol") != symbol:
+                    continue
+                amt = float(pos.get("positionAmt", 0))
+                if amt == 0:
+                    continue
+                side = pos.get("positionSide", "")
+                if side == direction:
+                    return pos
+                if side not in ("LONG", "SHORT"):
+                    inferred = "LONG" if amt > 0 else "SHORT"
+                    if inferred == direction:
+                        return pos
+            return None
+        except Exception as e:
+            logger.warning("TTP fetch_single_position %s: %s", symbol, e)
+            return None
 
     def check_daily_reset(self):
         """Check if 17:00 UTC has passed and trigger reset."""

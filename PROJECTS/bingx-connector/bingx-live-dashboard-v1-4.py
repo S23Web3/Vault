@@ -1,18 +1,18 @@
 """
-BingX Live Dashboard v1-3
+BingX Live Dashboard v1-4
 
 Plotly Dash app — monitors and controls a live BingX futures trading bot.
-5 tabs: Operational | History | Analytics | Coin Summary | Bot Controls
+6 tabs: Live Trades | Bot Terminal | Strategy Parameters | History | Analytics | Coin Summary
 Data sources: state.json, trades.csv, config.yaml
 Position actions: Raise Breakeven, Move SL (via BingX REST API)
 
 Run:
     cd "C:\\Users\\User\\Documents\\Obsidian Vault\\PROJECTS\\bingx-connector"
-    python bingx-live-dashboard-v1-3.py
+    python bingx-live-dashboard-v1-4.py
     # Opens at http://localhost:8051
 
 Production:
-    gunicorn -w 1 -b 0.0.0.0:8051 bingx_live_dashboard_v1_3:server
+    gunicorn -w 1 -b 0.0.0.0:8051 bingx_live_dashboard_v1_4:server
 
 Dependencies:
     pip install dash dash-ag-grid plotly pandas pyyaml requests python-dotenv
@@ -20,6 +20,7 @@ Dependencies:
 
 import hashlib
 import math
+import subprocess
 import threading
 import webbrowser
 import hmac
@@ -52,6 +53,7 @@ STATE_PATH = BASE_DIR / "state.json"
 TRADES_PATH = BASE_DIR / "trades.csv"
 CONFIG_PATH = BASE_DIR / "config.yaml"
 LOG_DIR = BASE_DIR / "logs"
+BOT_PID_PATH = BASE_DIR / "bot.pid"
 
 BINGX_PRICE_URL = "https://open-api.bingx.com/openApi/swap/v2/quote/price"
 
@@ -134,6 +136,52 @@ def setup_logging() -> logging.Logger:
 
 LOG = setup_logging()
 LOG.info("Dashboard starting on port 8051")
+
+
+# ---------------------------------------------------------------------------
+# Bot process helpers (v1-4)
+# ---------------------------------------------------------------------------
+
+def _is_bot_running() -> bool:
+    """Check if bot process is alive via PID file + tasklist."""
+    if not BOT_PID_PATH.exists():
+        return False
+    try:
+        pid = int(BOT_PID_PATH.read_text(encoding="utf-8").strip())
+        result = subprocess.run(
+            ["tasklist", "/FI", "PID eq " + str(pid), "/NH"],
+            capture_output=True, text=True, timeout=5,
+        )
+        return str(pid) in result.stdout
+    except Exception:
+        return False
+
+
+def _start_bot_process() -> int:
+    """Launch main.py in a new console window. Returns PID."""
+    proc = subprocess.Popen(
+        ["python", str(BASE_DIR / "main.py")],
+        cwd=str(BASE_DIR),
+        creationflags=subprocess.CREATE_NEW_CONSOLE,
+    )
+    BOT_PID_PATH.write_text(str(proc.pid), encoding="utf-8")
+    LOG.info("Bot started: PID %d", proc.pid)
+    return proc.pid
+
+
+def _stop_bot_process() -> bool:
+    """Kill bot by PID from pid file. Returns True on success."""
+    if not BOT_PID_PATH.exists():
+        return False
+    try:
+        pid = int(BOT_PID_PATH.read_text(encoding="utf-8").strip())
+        subprocess.run(["taskkill", "/F", "/PID", str(pid)], timeout=10)
+        BOT_PID_PATH.unlink(missing_ok=True)
+        LOG.info("Bot stopped: PID %d", pid)
+        return True
+    except Exception as e:
+        LOG.error("Stop bot failed: %s", e)
+        return False
 
 # ---------------------------------------------------------------------------
 # BingX API signing + request helper
@@ -395,6 +443,8 @@ def build_positions_df(state: dict, mark_prices: dict) -> pd.DataFrame:
             "BE Raised": "Yes" if pos.get("be_raised") else "No",
             "Unreal PnL": unreal_pnl,
             "Dist SL %": dist_to_sl_pct,
+            "TTP": "TRAILING" if pos.get("ttp_state") == "ACTIVATED" else (pos.get("ttp_state") or "\u2014"),
+            "Trail Lvl": pos.get("ttp_trail_level"),
             "Duration": fmt_duration(entry_dt, now),
             "Qty": float(qty),  # raw contract quantity for API order placement
             "Notional": round(float(pos.get("notional_usd", 0)), 2),
@@ -654,6 +704,10 @@ POSITION_COLUMNS = [
      'valueFormatter': {'function': "params.value != null ? params.value.toFixed(4) : '\u2014'"}},
     {'field': 'Dist SL %',  'width': 90, 'type': 'numericColumn',
      'valueFormatter': {'function': 'params.value != null ? params.value.toFixed(2)+"%" : "\u2014"'}},
+    {'field': 'TTP',        'width': 95,
+     'cellStyle': {'function': "(p) => p.value==='TRAILING' ? {color:'#3fb950',fontWeight:'bold'} : p.value==='ACTIVATED' ? {color:'#e3b341'} : {color:'#8b949e'}"}},
+    {'field': 'Trail Lvl',  'width': 110, 'type': 'numericColumn',
+     'valueFormatter': {'function': "params.value != null ? params.value.toFixed(6) : '\u2014'"}},
     {'field': 'Duration',   'width': 90},
     {'field': 'Notional',   'width': 90, 'type': 'numericColumn',
      'valueFormatter': {'function': 'params.value.toFixed(2)'}},
@@ -705,8 +759,8 @@ COIN_COLUMNS = [
 # ---------------------------------------------------------------------------
 
 
-def make_operational_tab() -> html.Div:
-    """Build layout for Operational tab -- positions grid + action panel."""
+def make_live_trades_tab() -> html.Div:
+    """Build layout for Live Trades tab -- positions grid + action panel."""
     return html.Div([
         html.H3("Open Positions"),
         dcc.Loading(id='positions-loading', type='circle', children=[
@@ -730,13 +784,50 @@ def make_operational_tab() -> html.Div:
         html.Div(id='selected-pos-info'),   # shows selected row info + action buttons
         html.Div(id='pos-action-status',    # shows success/error from actions
                  style={'marginTop': '8px', 'color': COLORS['green']}),
-        # Bot status feed (Patch 7)
+    ])
+
+
+def make_bot_terminal_tab() -> html.Div:
+    """Build layout for Bot Terminal tab -- start/stop bot + lifecycle messages."""
+    return html.Div([
+        html.H3("Bot Terminal"),
+        html.P(
+            "Launch and monitor the trading bot. Activity updates every 5 seconds.",
+            style={'color': COLORS['muted'], 'marginBottom': '16px'},
+        ),
         html.Div([
-            html.H4('Bot Status',
-                    style={'color': COLORS['muted'], 'fontSize': '13px',
-                           'marginTop': '20px', 'marginBottom': '6px'}),
-            html.Div(id='status-feed', className='status-feed-panel'),
-        ]),
+            html.Button(
+                "Start Bot", id='bot-toggle-btn', n_clicks=0,
+                style={
+                    'marginRight': '16px',
+                    'background': COLORS['green'],
+                    'color': 'white',
+                    'border': 'none',
+                    'padding': '8px 20px',
+                    'borderRadius': '4px',
+                    'cursor': 'pointer',
+                    'fontWeight': 'bold',
+                },
+            ),
+            html.Div(
+                id='bot-run-status',
+                children="Checking...",
+                style={
+                    'display': 'inline-block',
+                    'padding': '6px 12px',
+                    'background': COLORS['panel'],
+                    'borderRadius': '4px',
+                    'fontFamily': 'monospace',
+                    'fontSize': '13px',
+                    'color': COLORS['muted'],
+                },
+            ),
+        ], style={'display': 'flex', 'alignItems': 'center', 'marginBottom': '20px'}),
+        html.H4(
+            "Activity Log",
+            style={'color': COLORS['muted'], 'fontSize': '13px', 'marginBottom': '6px'},
+        ),
+        html.Div(id='status-feed', className='status-feed-panel'),
     ])
 
 
@@ -825,8 +916,8 @@ def make_coin_summary_tab() -> html.Div:
     ])
 
 
-def make_bot_controls_tab() -> html.Div:
-    """Build layout for Bot Controls tab -- config editor and halt/resume."""
+def make_strategy_params_tab() -> html.Div:
+    """Build layout for Strategy Parameters tab -- config editor and halt/resume."""
     return html.Div([
         # Warning banner
         html.Div([
@@ -883,6 +974,24 @@ def make_bot_controls_tab() -> html.Div:
             dcc.Input(id='ctrl-margin-usd', type='number', min=1, step=1),
             html.Label("Leverage"),
             dcc.Input(id='ctrl-leverage', type='number', min=1, max=125, step=1),
+        ], style={'display': 'grid', 'gridTemplateColumns': '200px 1fr', 'gap': '8px',
+                  'alignItems': 'center', 'maxWidth': '500px', 'marginBottom': '16px'}),
+
+        # TTP Exit section
+        html.H4("Trailing Take Profit (TTP)"),
+        html.Div([
+            html.Label("TTP Enabled"),
+            dcc.Checklist(id='ctrl-ttp-enabled',
+                          options=[{'label': ' Enable', 'value': 'on'}], value=[]),
+            html.Label("Activation %"),
+            dcc.Input(id='ctrl-ttp-act', type='number', step=0.1, min=0.1, max=5.0,
+                      value=0.5),
+            html.Label("Trail Distance %"),
+            dcc.Input(id='ctrl-ttp-dist', type='number', step=0.05, min=0.05, max=2.0,
+                      value=0.2),
+            html.Label("Auto BE on TTP Activate"),
+            dcc.Checklist(id='ctrl-be-auto',
+                          options=[{'label': ' Enabled', 'value': 'on'}], value=['on']),
         ], style={'display': 'grid', 'gridTemplateColumns': '200px 1fr', 'gap': '8px',
                   'alignItems': 'center', 'maxWidth': '500px', 'marginBottom': '16px'}),
 
@@ -988,7 +1097,7 @@ def _write_state(state: dict) -> None:
 app = dash.Dash(
     __name__,
     suppress_callback_exceptions=True,  # Still needed -- CB-5 creates action buttons dynamically
-    title='BingX Live Dashboard v1-3',
+    title='BingX Live Dashboard v1-4',
 )
 server = app.server  # Expose Flask server for gunicorn
 
@@ -1013,23 +1122,26 @@ app.layout = html.Div([
              parent_style={'backgroundColor': '#0d1117'},
              style={'borderBottom': '1px solid #21262d'},
              children=[
-        dcc.Tab(label='Operational',  value='tab-ops', style=TAB_STYLE, selected_style=TAB_SELECTED_STYLE),
-        dcc.Tab(label='History',      value='tab-hist', style=TAB_STYLE, selected_style=TAB_SELECTED_STYLE),
-        dcc.Tab(label='Analytics',    value='tab-analytics', style=TAB_STYLE, selected_style=TAB_SELECTED_STYLE),
-        dcc.Tab(label='Coin Summary', value='tab-coins', style=TAB_STYLE, selected_style=TAB_SELECTED_STYLE),
-        dcc.Tab(label='Bot Controls', value='tab-controls', style=TAB_STYLE, selected_style=TAB_SELECTED_STYLE),
+        dcc.Tab(label='Live Trades',         value='tab-ops',      style=TAB_STYLE, selected_style=TAB_SELECTED_STYLE),
+        dcc.Tab(label='Bot Terminal',        value='tab-terminal', style=TAB_STYLE, selected_style=TAB_SELECTED_STYLE),
+        dcc.Tab(label='Strategy Parameters', value='tab-controls', style=TAB_STYLE, selected_style=TAB_SELECTED_STYLE),
+        dcc.Tab(label='History',             value='tab-hist',     style=TAB_STYLE, selected_style=TAB_SELECTED_STYLE),
+        dcc.Tab(label='Analytics',           value='tab-analytics',style=TAB_STYLE, selected_style=TAB_SELECTED_STYLE),
+        dcc.Tab(label='Coin Summary',        value='tab-coins',    style=TAB_STYLE, selected_style=TAB_SELECTED_STYLE),
     ]),
 
     # ALL tab content rendered at startup -- visibility toggled by clientside callback
-    html.Div(id='tab-content-ops',       children=make_operational_tab(),
+    html.Div(id='tab-content-ops',       children=make_live_trades_tab(),
              style={'padding': '16px', 'display': 'block'}),
+    html.Div(id='tab-content-terminal',  children=make_bot_terminal_tab(),
+             style={'padding': '16px', 'display': 'none'}),
+    html.Div(id='tab-content-controls',  children=make_strategy_params_tab(),
+             style={'padding': '16px', 'display': 'none'}),
     html.Div(id='tab-content-hist',      children=make_history_tab(),
              style={'padding': '16px', 'display': 'none'}),
     html.Div(id='tab-content-analytics', children=make_analytics_tab(),
              style={'padding': '16px', 'display': 'none'}),
     html.Div(id='tab-content-coins',     children=make_coin_summary_tab(),
-             style={'padding': '16px', 'display': 'none'}),
-    html.Div(id='tab-content-controls',  children=make_bot_controls_tab(),
              style={'padding': '16px', 'display': 'none'}),
 ], style={'background': COLORS['bg'], 'minHeight': '100vh'})
 
@@ -1080,9 +1192,10 @@ def load_all_data(n_intervals):
 app.clientside_callback(
     """
     function(tab_value) {
-        var tabs = ['tab-content-ops', 'tab-content-hist', 'tab-content-analytics',
-                    'tab-content-coins', 'tab-content-controls'];
-        var values = ['tab-ops', 'tab-hist', 'tab-analytics', 'tab-coins', 'tab-controls'];
+        var tabs = ['tab-content-ops', 'tab-content-terminal', 'tab-content-controls',
+                    'tab-content-hist', 'tab-content-analytics', 'tab-content-coins'];
+        var values = ['tab-ops', 'tab-terminal', 'tab-controls',
+                      'tab-hist', 'tab-analytics', 'tab-coins'];
         var styles = [];
         for (var i = 0; i < tabs.length; i++) {
             if (values[i] === tab_value) {
@@ -1095,10 +1208,11 @@ app.clientside_callback(
     }
     """,
     [Output('tab-content-ops',       'style'),
+     Output('tab-content-terminal',  'style'),
+     Output('tab-content-controls',  'style'),
      Output('tab-content-hist',      'style'),
      Output('tab-content-analytics', 'style'),
-     Output('tab-content-coins',     'style'),
-     Output('tab-content-controls',  'style')],
+     Output('tab-content-coins',     'style')],
     Input('main-tabs', 'value'),
 )
 
@@ -1112,8 +1226,9 @@ app.clientside_callback(
     Input('store-state',  'data'),
     Input('store-config', 'data'),
     Input('store-unrealized', 'data'),
+    Input('status-interval', 'n_intervals'),
 )
-def update_status_bar(state_json, config_json, unrealized_json):
+def update_status_bar(state_json, config_json, unrealized_json, _n_intervals):
     """Render top status bar with bot mode, daily PnL, positions, risk usage."""
     try:
         if not state_json or not config_json:
@@ -1156,6 +1271,8 @@ def update_status_bar(state_json, config_json, unrealized_json):
         # Determine status label and color
         if halt_flag:
             status_label, status_color = "HALTED", COLORS['red']
+        elif not _is_bot_running():
+            status_label, status_color = "OFFLINE", COLORS['muted']
         elif demo_mode:
             status_label, status_color = "DEMO", COLORS['blue']
         else:
@@ -1731,6 +1848,10 @@ def update_coin_summary(period_filter, trades_json):
     Output('ctrl-cooldown-bars',      'value'),
     Output('ctrl-margin-usd',         'value'),
     Output('ctrl-leverage',           'value'),
+    Output('ctrl-ttp-enabled',        'value'),
+    Output('ctrl-ttp-act',            'value'),
+    Output('ctrl-ttp-dist',           'value'),
+    Output('ctrl-be-auto',            'value'),
     Input('store-config', 'data'),
     prevent_initial_call=True,  # Do not fire on page load — stores not yet populated
 )
@@ -1757,6 +1878,10 @@ def load_config_into_controls(config_json):
             risk.get("cooldown_bars", 3),
             pos.get("margin_usd", 5.0),
             pos.get("leverage", 10),
+            ['on'] if pos.get('ttp_enabled', False) else [],
+            pos.get('ttp_act', 0.005) * 100,
+            pos.get('ttp_dist', 0.002) * 100,
+            ['on'] if pos.get('be_auto', True) else [],
         )
     except PreventUpdate:
         raise  # Re-raise PreventUpdate before outer except
@@ -1785,11 +1910,16 @@ def load_config_into_controls(config_json):
     State('ctrl-cooldown-bars',      'value'),
     State('ctrl-margin-usd',         'value'),
     State('ctrl-leverage',           'value'),
+    State('ctrl-ttp-enabled',        'value'),
+    State('ctrl-ttp-act',            'value'),
+    State('ctrl-ttp-dist',           'value'),
+    State('ctrl-be-auto',            'value'),
     prevent_initial_call=True,  # Do not fire on page load
 )
 def save_config(n_clicks, sl_mult, tp_mult, req_s2, rot_lvl,
                 allow_a, allow_b, max_pos, max_trades,
-                loss_limit, min_atr, cooldown, margin, leverage):
+                loss_limit, min_atr, cooldown, margin, leverage,
+                ttp_enabled_val, ttp_act_val, ttp_dist_val, be_auto_val):
     """Validate inputs and write updated values to config.yaml atomically."""
     try:
         if not n_clicks:
@@ -1831,6 +1961,10 @@ def save_config(n_clicks, sl_mult, tp_mult, req_s2, rot_lvl,
         cfg["risk"]["cooldown_bars"] = int(cooldown)
         cfg["position"]["margin_usd"] = float(margin)
         cfg["position"]["leverage"] = int(leverage)
+        cfg["position"]["ttp_enabled"] = 'on' in (ttp_enabled_val or [])
+        cfg["position"]["ttp_act"] = (ttp_act_val or 0.5) / 100
+        cfg["position"]["ttp_dist"] = (ttp_dist_val or 0.2) / 100
+        cfg["position"]["be_auto"] = 'on' in (be_auto_val or [])
 
         # Atomic write — prevents partial reads by bot
         tmp = CONFIG_PATH.with_suffix('.yaml.tmp')
@@ -2075,6 +2209,79 @@ def render_status_feed(messages):
             ], style={'margin': '1px 0'})
         )
     return rows
+
+
+# ---------------------------------------------------------------------------
+# CB-T1: Toggle bot start/stop
+# ---------------------------------------------------------------------------
+
+_BTN_START_STYLE = {
+    'marginRight': '16px', 'background': COLORS['green'], 'color': 'white',
+    'border': 'none', 'padding': '8px 20px', 'borderRadius': '4px',
+    'cursor': 'pointer', 'fontWeight': 'bold',
+}
+_BTN_STOP_STYLE = {
+    'marginRight': '16px', 'background': COLORS['red'], 'color': 'white',
+    'border': 'none', 'padding': '8px 20px', 'borderRadius': '4px',
+    'cursor': 'pointer', 'fontWeight': 'bold',
+}
+
+
+@callback(
+    Output('bot-run-status', 'children', allow_duplicate=True),
+    Output('bot-toggle-btn', 'children', allow_duplicate=True),
+    Output('bot-toggle-btn', 'style', allow_duplicate=True),
+    Input('bot-toggle-btn', 'n_clicks'),
+    prevent_initial_call=True,
+)
+def toggle_bot_cb(n_clicks):
+    """Toggle bot: stop if running, start if offline."""
+    if _is_bot_running():
+        ok = _stop_bot_process()
+        if ok:
+            try:
+                import json as _j
+                from datetime import datetime as _dt, timezone as _tz
+                sp = BASE_DIR / "bot-status.json"
+                d = {}
+                if sp.exists():
+                    d = _j.loads(sp.read_text(encoding="utf-8"))
+                d.setdefault("messages", [])
+                d["messages"].append({"ts": _dt.now(_tz.utc).isoformat(),
+                                      "msg": "Bot stopped by dashboard"})
+                tmp = sp.with_suffix(".tmp")
+                tmp.write_text(_j.dumps(d, indent=2), encoding="utf-8")
+                os.replace(tmp, sp)
+            except Exception:
+                pass
+            return "Bot stopped", "Start Bot", _BTN_START_STYLE
+        return "Stop failed", "Stop Bot", _BTN_STOP_STYLE
+    else:
+        try:
+            pid = _start_bot_process()
+            return "Bot started (PID " + str(pid) + ")", "Stop Bot", _BTN_STOP_STYLE
+        except Exception as e:
+            LOG.error("Start bot failed: %s", e)
+            return "Error: " + str(e), "Start Bot", _BTN_START_STYLE
+
+
+# ---------------------------------------------------------------------------
+# CB-T3: Poll bot running status every 5s
+# ---------------------------------------------------------------------------
+
+@callback(
+    Output('bot-run-status', 'children', allow_duplicate=True),
+    Output('bot-toggle-btn', 'children', allow_duplicate=True),
+    Output('bot-toggle-btn', 'style', allow_duplicate=True),
+    Input('status-interval', 'n_intervals'),
+    prevent_initial_call=True,
+)
+def poll_bot_running(n_intervals):
+    """Check bot process status on each 5s tick; update toggle button state."""
+    running = _is_bot_running()
+    if running:
+        return "RUNNING", "Stop Bot", _BTN_STOP_STYLE
+    return "Offline", "Start Bot", _BTN_START_STYLE
 
 
 # ---------------------------------------------------------------------------

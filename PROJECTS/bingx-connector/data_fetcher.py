@@ -129,9 +129,10 @@ class MarketDataFeed:
             return True
         return False
 
-    def warmup(self):
+    def warmup(self, progress_callback=None):
         """Initial fetch for all symbols at startup."""
-        for symbol in self.symbols:
+        total = len(self.symbols)
+        for i, symbol in enumerate(self.symbols):
             df = self._fetch_klines(symbol)
             if df is not None:
                 self.buffers[symbol] = df
@@ -140,6 +141,8 @@ class MarketDataFeed:
                 logger.info("Warmup %s: %d bars", symbol, len(df))
             else:
                 logger.warning("Warmup failed for %s", symbol)
+            if progress_callback and (i + 1) % 5 == 0:
+                progress_callback(i + 1, total)
 
     def tick(self, callback):
         """One polling cycle: fetch all symbols, fire on new bars."""

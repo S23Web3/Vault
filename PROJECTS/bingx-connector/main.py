@@ -146,6 +146,7 @@ def monitor_loop(monitor, shutdown_event, check_interval):
         try:
             monitor.check()
             monitor.check_breakeven()
+            monitor.check_ttp_closes()
             monitor.check_daily_reset()
             monitor.check_hourly_metrics()
         except Exception as e:
@@ -154,10 +155,42 @@ def monitor_loop(monitor, shutdown_event, check_interval):
     logger.info("Monitor loop stopped")
 
 
+
+# ---------------------------------------------------------------------------
+# Bot status file writer (Patch 7)
+# ---------------------------------------------------------------------------
+BOT_ROOT = Path(__file__).resolve().parent
+STATUS_PATH = BOT_ROOT / "bot-status.json"
+
+
+def write_bot_status(msg):
+    """Append a timestamped message to bot-status.json. Atomic write."""
+    import json as _json
+    now = datetime.now(timezone.utc).isoformat()
+    data = {"bot_start": now, "messages": []}
+    if STATUS_PATH.exists():
+        try:
+            data = _json.loads(STATUS_PATH.read_text(encoding="utf-8"))
+        except (_json.JSONDecodeError, OSError):
+            pass
+    if "messages" not in data:
+        data["messages"] = []
+    data["messages"].append({"ts": now, "msg": msg})
+    tmp = STATUS_PATH.with_suffix(".tmp")
+    tmp.write_text(_json.dumps(data, indent=2), encoding="utf-8")
+    os.replace(tmp, STATUS_PATH)
+
+
 def main():
     """Load config, init components, run loops."""
     setup_logging()
     logger.info("=== BingX Connector Starting ===")
+    # Clear status file from previous run
+    import json as _json_init
+    STATUS_PATH.write_text(
+        _json_init.dumps({"bot_start": datetime.now(timezone.utc).isoformat(),
+                          "messages": []}, indent=2),
+        encoding="utf-8")
     utc4 = timezone(timedelta(hours=4))
     ts = datetime.now(utc4).strftime("%Y-%m-%d %H:%M:%S UTC+4")
     logger.info("Startup: %s", ts)
@@ -183,6 +216,7 @@ def main():
     buffer_bars = conn.get("ohlcv_buffer_bars", 200)
     logger.info("Config: demo=%s coins=%s tf=%s poll=%ds",
                 demo_mode, str(symbols), timeframe, poll_interval)
+    write_bot_status("Config loaded: " + str(len(symbols)) + " coins, " + timeframe)
     auth = BingXAuth(api_key, secret_key, demo_mode=demo_mode)
     notifier = Notifier(tg_token, tg_chat, enabled=bool(tg_token))
     root_dir = Path(__file__).resolve().parent
@@ -206,18 +240,22 @@ def main():
         state_manager=state_mgr,
         notifier=notifier,
         plugin_config=config,
+        ttp_config=pos_cfg,
     )
+    write_bot_status("Strategy loaded: " + strat_cfg.get("plugin", "mock_strategy"))
     logger.info("Setting leverage and margin mode...")
     set_leverage_and_margin(
         auth, symbols,
         pos_cfg.get("leverage", 10),
         pos_cfg.get("margin_mode", "ISOLATED"))
     commission_rate = fetch_commission_rate(auth)
+    write_bot_status("Connected to BingX API")
     fill_queue = queue.Queue()
     ws_thread = WSListener(auth=auth, fill_queue=fill_queue, ws_logger=logger)
-    monitor_cfg = dict(risk_cfg)
-    monitor_cfg["daily_summary_utc_hour"] = notif_cfg.get(
-        "daily_summary_utc_hour", 17)
+    monitor_cfg = dict(config)  # full config — PositionMonitor needs position.be_auto etc.
+    # Hoist flat keys that PositionMonitor.__init__ reads directly from config
+    monitor_cfg["daily_loss_limit_usd"] = risk_cfg.get("daily_loss_limit_usd", 75.0)
+    monitor_cfg["daily_summary_utc_hour"] = notif_cfg.get("daily_summary_utc_hour", 17)
     monitor = PositionMonitor(
         auth, state_mgr, notifier, monitor_cfg,
         commission_rate=commission_rate,
@@ -237,8 +275,13 @@ def main():
             state_mgr.reconcile(live_pos)
     except Exception as e:
         logger.error("Reconcile failed: %s — using local state", e)
+    write_bot_status("Positions reconciled")
     logger.info("Warming up market data...")
-    feed.warmup()
+    write_bot_status("Warming up " + str(len(symbols)) + " symbols...")
+    feed.warmup(
+        progress_callback=lambda i, n: write_bot_status(
+            "Warmup " + str(i) + "/" + str(n)))
+    write_bot_status("Warmup complete (" + str(len(symbols)) + " symbols)")
     open_count = len(state_mgr.get_open_positions())
     start_msg = ("<b>BOT STARTED</b>"
                  + "\nCoins: " + str(len(symbols))
@@ -267,6 +310,7 @@ def main():
     t2.start()
     ws_thread.start()
     logger.info("Threads started: MarketLoop + MonitorLoop + WSListener")
+    write_bot_status("Bot running")
     try:
         while not shutdown_event.is_set():
             shutdown_event.wait(1.0)
@@ -282,7 +326,14 @@ def main():
         logger.warning("Threads did not stop cleanly within 15s")
     notifier.send("<b>BOT STOPPED</b>")
     logger.info("=== BingX Connector Stopped ===")
+    input("\nBot stopped. Press Enter to close this window...")
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        print(f"\nFATAL ERROR: {e}")
+        import traceback
+        traceback.print_exc()
+        input("\nBot crashed. Press Enter to close this window...")
