@@ -1,5 +1,5 @@
 # Product Backlog
-**Last updated:** 2026-03-02 (B2 DONE — vince/ package created, auditor live)
+**Last updated:** 2026-03-03 (Daily Bybit updater built, Dashboard v3.9.4 audit fixes + UX, BingX bot live)
 
 ---
 
@@ -79,3 +79,6 @@
 | C.24 | BingX Live Screener | 2026-02-27 | Headless loop, FourPillarsV384 signal detection, Telegram A/B alerts, dedup by bar_ts. File: screener/bingx_screener.py |
 | C.25 | BingX Daily P&L Report | 2026-02-27 | Reads trades.csv, computes today P&L+win rate+best/worst, Telegram report. Schedule via Task Scheduler at 21:00. File: scripts/daily_report.py |
 | C.26 | Dashboard v3.9.3 | 2026-02-28 | Stale cache fix (clear portfolio when settings change) + silent date filter fallback fixed (7d no longer shows full year). 4 edits. Promoted to production. |
+| C.27 | Dashboard v3.9.4 (CUDA) | 2026-03-03 | GPU Sweep + Portfolio mode. S1-S3: build, CUDA toolkit, portfolio sweep. S4: audit fixes (commission split, pnl_sum, win_rate%, saw_green, WSListener, reduceOnly). S5: UX (coin reset, stop/reset, random week/month, volume & rebates, est. trade duration). |
+| C.28 | BingX bot live deployment | 2026-03-03 | Bot running live. TTP integration, dashboard v1.4 patches, WSListener resilience. Monitoring overnight. |
+| C.29 | Daily Bybit Data Updater | 2026-03-03 | Build script: `scripts/build_daily_updater.py`. Creates `scripts/daily_update.py`. Discovers all USDT perps from Bybit, incremental fetch + 5m resample. Flags: --dry-run, --skip-new, --max-new, --skip-resample. Not yet executed. |

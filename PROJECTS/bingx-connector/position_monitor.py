@@ -68,6 +68,19 @@ class PositionMonitor:
             resp.raise_for_status()
             data = resp.json()
             if data.get("code", 0) != 0:
+                if data.get("code") == 109400:
+                    from time_sync import get_time_sync
+                    _ts = get_time_sync()
+                    _ts.force_resync()
+                    req = self.auth.build_signed_request(
+                        "GET", POSITIONS_PATH)
+                    resp = requests.get(
+                        req["url"], headers=req["headers"], timeout=10)
+                    resp.raise_for_status()
+                    data = resp.json()
+                    if data.get("code", 0) == 0:
+                        logger.info("109400 retry succeeded for positions")
+                        return data.get("data", [])
                 logger.error("Positions API error %s: %s",
                              data.get("code"), data.get("msg"))
                 return None
@@ -232,7 +245,7 @@ class PositionMonitor:
             logger.warning("Cancel order %s error: %s", order_id, e)
 
     def check(self):
-        """Poll positions and detect closes."""
+        """Poll positions and detect closes. Skips API call if no open positions in state."""
         # Drain WebSocket fill events first (instant detection path)
         while not self.fill_queue.empty():
             try:
@@ -249,6 +262,9 @@ class PositionMonitor:
                             key, pos, event["avg_price"], event["reason"])
             except queue.Empty:
                 break
+        state_positions = self.state.get_open_positions()
+        if not state_positions:
+            return
         live_raw = self._fetch_positions()
         if live_raw is None:
             return
@@ -400,10 +416,12 @@ class PositionMonitor:
         if not direction or not entry_price or not quantity:
             logger.error("BE SL: missing data for %s", symbol)
             return None
+        # 0.1% slippage buffer on top of commission to prevent negative fills
+        be_buffer = 0.001
         if direction == "LONG":
-            be_price = entry_price * (1 + self.commission_rate)
+            be_price = entry_price * (1 + self.commission_rate + be_buffer)
         else:
-            be_price = entry_price * (1 - self.commission_rate)
+            be_price = entry_price * (1 - self.commission_rate - be_buffer)
         commission_usd = round(notional * self.commission_rate, 4)
         side = "SELL" if direction == "LONG" else "BUY"
         order_params = {
@@ -422,8 +440,8 @@ class PositionMonitor:
             resp.raise_for_status()
             data = resp.json()
             if data.get("code", 0) == 0:
-                order_id = str(
-                    data.get("data", {}).get("orderId", "?"))
+                _d = data.get("data", {})
+                order_id = str(_d.get("orderId") or _d.get("order", {}).get("orderId", "?"))
                 logger.info(
                     "BE+fees SL placed: %s side=%s entry=%.8f be_price=%.8f"
                     " rate=%.4f%% covers=$%.4f commission orderId=%s",
@@ -438,29 +456,42 @@ class PositionMonitor:
             return None
 
     def check_breakeven(self):
-        """Auto-raise SL to breakeven when TTP activates, if be_auto is enabled in config.
+        """Auto-raise SL to breakeven when live mark price crosses be_act threshold.
 
-        Trigger: ttp_state == "ACTIVATED" written to position state by signal_engine each bar.
+        Trigger: live mark price >= entry * (1 + be_act) for LONG,
+                          or <= entry * (1 - be_act) for SHORT.
+        Fetches mark price once per open position per call (runs every 30s in monitor loop).
         Runs once per position (be_raised persists in state.json).
-        No-op if be_auto is False or TTP is disabled (state never reaches ACTIVATED).
+        No-op if be_auto is False.
         """
         be_auto = self.config.get("position", {}).get("be_auto", True)
         if not be_auto:
             return
+        ttp_act = self.config.get("position", {}).get("be_act", 0.004)
         positions = self.state.get_open_positions()
         for key, pos_data in positions.items():
             if pos_data.get("be_raised"):
-                continue
-            if pos_data.get("ttp_state") != "ACTIVATED":
                 continue
             entry_price = float(pos_data.get("entry_price", 0) or 0)
             direction = pos_data.get("direction", "")
             symbol = pos_data.get("symbol", key.rsplit("_", 1)[0])
             if not entry_price or direction not in ("LONG", "SHORT") or not symbol:
                 continue
+            mark = self._fetch_mark_price_pm(symbol)
+            if mark is None or mark <= 0:
+                logger.debug("BE check: no mark price for %s", symbol)
+                continue
+            if direction == "LONG":
+                activation_price = entry_price * (1.0 + ttp_act)
+                triggered = mark >= activation_price
+            else:
+                activation_price = entry_price * (1.0 - ttp_act)
+                triggered = mark <= activation_price
+            if not triggered:
+                continue
             logger.info(
-                "BE trigger (TTP activated): %s entry=%.6f direction=%s",
-                key, entry_price, direction)
+                "BE trigger (live mark): %s entry=%.6f mark=%.6f act=%.6f direction=%s",
+                key, entry_price, mark, activation_price, direction)
             self._cancel_open_sl_orders(symbol, direction)
             be_price = self._place_be_sl(symbol, pos_data)
             if be_price is not None:
@@ -470,17 +501,17 @@ class PositionMonitor:
                 })
                 notional = pos_data.get("notional_usd", 0)
                 commission_usd = round(notional * self.commission_rate, 4)
-                msg = ("<b>BE+FEES RAISED (TTP)</b>  " + key
+                msg = ("<b>BE+FEES RAISED</b>  " + key
                        + "\nEntry:  " + str(round(entry_price, 8))
+                       + "\nMark:   " + str(round(mark, 8))
                        + "\nSL -> " + str(round(be_price, 8))
                        + "  (+" + str(round(self.commission_rate * 100, 3))
-                       + "% covers $" + str(commission_usd) + " RT commission)"
-                       + "\nTTP activated at ~0.5% from entry")
+                       + "% covers $" + str(commission_usd) + " RT commission)")
                 self.notifier.send(msg)
                 logger.info(
-                    "BE+fees raised (TTP): %s entry=%.8f be_price=%.8f"
+                    "BE+fees raised: %s entry=%.8f mark=%.8f be_price=%.8f"
                     " (+%.4f%%) covers=$%.4f RT commission",
-                    key, entry_price, be_price,
+                    key, entry_price, mark, be_price,
                     self.commission_rate * 100, commission_usd)
             else:
                 logger.error(
@@ -488,6 +519,92 @@ class PositionMonitor:
                 self.notifier.send(
                     "<b>BE RAISE FAILED</b>  " + key
                     + "\nOld SL cancelled but new SL FAILED -- check manually")
+
+
+
+    def _tighten_sl_after_ttp(self, key, pos_data, mark_price):
+        """Progressive SL tightening once TTP is ACTIVATED.
+
+        Trails SL toward current_extreme * (1 - sl_trail_pct) for LONG
+        or current_extreme * (1 + sl_trail_pct) for SHORT.
+        Only moves SL in the favourable direction. Rate-limited: only
+        fires when new level is >=0.1% better than current SL.
+        sl_trail_pct_post_ttp in config (default 0.003 = 0.3%). Set to
+        null to disable.
+        """
+        sl_trail_pct = (
+            self.config.get("four_pillars", {}).get("sl_trail_pct_post_ttp")
+            or self.config.get("position", {}).get("sl_trail_pct_post_ttp")
+        )
+        if not sl_trail_pct:
+            return  # disabled
+
+        direction   = pos_data.get("direction", "")
+        entry_price = float(pos_data.get("entry_price") or 0)
+        cur_sl      = float(pos_data.get("sl_price") or 0)
+        ttp_extreme = pos_data.get("ttp_extreme")
+        symbol      = pos_data.get("symbol", key.rsplit("_", 1)[0])
+        quantity    = pos_data.get("quantity", 0)
+
+        if not direction or not entry_price or not ttp_extreme or not quantity:
+            return
+        if direction not in ("LONG", "SHORT"):
+            return
+
+        extreme = float(ttp_extreme)
+        sl_trail_pct = float(sl_trail_pct)
+
+        if direction == "LONG":
+            new_sl = extreme * (1.0 - sl_trail_pct)
+            # Only move SL up
+            if cur_sl and new_sl <= cur_sl:
+                return
+            # Must be above entry (never worse than entry)
+            if new_sl <= entry_price:
+                return
+            # Rate limit: at least 0.1% improvement
+            if cur_sl and (new_sl - cur_sl) / cur_sl < 0.001:
+                return
+        else:
+            new_sl = extreme * (1.0 + sl_trail_pct)
+            # Only move SL down
+            if cur_sl and new_sl >= cur_sl:
+                return
+            if new_sl >= entry_price:
+                return
+            if cur_sl and (cur_sl - new_sl) / cur_sl < 0.001:
+                return
+
+        new_sl = round(new_sl, 8)
+        logger.info("SL tighten post-TTP: %s cur_sl=%.8f new_sl=%.8f extreme=%.8f",
+                    key, cur_sl, new_sl, extreme)
+
+        # Cancel existing SL orders then place tightened SL
+        self._cancel_open_sl_orders(symbol, direction)
+        side = "SELL" if direction == "LONG" else "BUY"
+        order_params = {
+            "symbol": symbol,
+            "side": side,
+            "positionSide": direction,
+            "type": "STOP_MARKET",
+            "quantity": str(quantity),
+            "stopPrice": str(new_sl),
+            "workingType": "MARK_PRICE",
+        }
+        req = self.auth.build_signed_request("POST", ORDER_PATH, order_params)
+        try:
+            resp = requests.post(req["url"], headers=req["headers"], timeout=10)
+            data = resp.json()
+            if data.get("code", 0) == 0:
+                _d = data.get("data", {})
+                order_id = str(_d.get("orderId") or _d.get("order", {}).get("orderId", "?"))
+                self.state.update_position(key, {"sl_price": new_sl})
+                logger.info("SL tightened: %s new_sl=%.8f orderId=%s", key, new_sl, order_id)
+            else:
+                logger.warning("SL tighten failed %s: code=%s msg=%s",
+                               key, data.get("code"), data.get("msg"))
+        except Exception as e:
+            logger.warning("SL tighten error %s: %s", key, e)
 
 
     def check_ttp_closes(self):
@@ -519,6 +636,20 @@ class PositionMonitor:
                 # Failed to place market close -- leave flag for retry
                 logger.error("TTP close FAILED: %s -- will retry next loop", key)
 
+    def check_ttp_sl_tighten(self):
+        """Tighten SL progressively for all ACTIVATED TTP positions."""
+        positions = self.state.get_open_positions()
+        for key, pos in positions.items():
+            if pos.get("ttp_state") != "ACTIVATED":
+                continue
+            if pos.get("ttp_close_pending"):
+                continue  # TTP close already queued — don't move SL
+            symbol    = pos.get("symbol", key.rsplit("_", 1)[0])
+            direction = pos.get("direction", "LONG")
+            mark = self._fetch_mark_price_pm(symbol)
+            if mark and mark > 0:
+                self._tighten_sl_after_ttp(key, pos, mark)
+
     def _cancel_all_orders_for_symbol(self, symbol, direction):
         """Cancel ALL pending orders for symbol+direction (SL, TP, any type)."""
         try:
@@ -548,7 +679,7 @@ class PositionMonitor:
             logger.warning("TTP cancel_all_orders failed %s: %s", symbol, e)
 
     def _place_market_close(self, symbol, direction, quantity):
-        """Place MARKET reduceOnly close order. Returns True on success."""
+        """Place MARKET close order using positionSide (Hedge mode — no reduceOnly). Returns True on success."""
         side = "SELL" if direction == "LONG" else "BUY"
         order_params = {
             "symbol": symbol,
@@ -564,7 +695,8 @@ class PositionMonitor:
             resp.raise_for_status()
             data = resp.json()
             if data.get("code", 0) == 0:
-                order_id = str(data.get("data", {}).get("orderId", "?"))
+                _d = data.get("data", {})
+                order_id = str(_d.get("orderId") or _d.get("order", {}).get("orderId", "?"))
                 logger.info("TTP market close placed: %s %s orderId=%s",
                             symbol, side, order_id)
                 return True
@@ -604,6 +736,25 @@ class PositionMonitor:
             logger.warning("TTP fetch_single_position %s: %s", symbol, e)
             return None
 
+    def _calc_unrealized_pnl(self, positions):
+        """Fetch mark prices and sum unrealized PnL across all open positions."""
+        total_unrealized = 0.0
+        for key, pos in positions.items():
+            symbol = pos.get("symbol", key.rsplit("_", 1)[0])
+            entry = float(pos.get("entry_price") or 0)
+            qty = float(pos.get("quantity") or 0)
+            direction = pos.get("direction", "LONG")
+            if not entry or not qty:
+                continue
+            mark = self._fetch_mark_price_pm(symbol)
+            if not mark:
+                continue
+            if direction == "LONG":
+                total_unrealized += (mark - entry) * qty
+            else:
+                total_unrealized += (entry - mark) * qty
+        return round(total_unrealized, 2)
+
     def check_daily_reset(self):
         """Check if 17:00 UTC has passed and trigger reset."""
         now = datetime.now(timezone.utc)
@@ -614,10 +765,15 @@ class PositionMonitor:
             current = self.state.get_state()
             daily_pnl = current.get("daily_pnl", 0)
             daily_trades = current.get("daily_trades", 0)
-            open_count = len(current.get("open_positions", {}))
+            open_positions = current.get("open_positions", {})
+            open_count = len(open_positions)
+            unrealized = self._calc_unrealized_pnl(open_positions)
+            equity = round(daily_pnl + unrealized, 2)
             self.state.reset_daily()
             summary = ("<b>DAILY SUMMARY</b>"
-                       + "\nPnL: $" + str(round(daily_pnl, 2))
+                       + "\nRealized PnL: $" + str(round(daily_pnl, 2))
+                       + "\nUnrealized:   $" + str(unrealized)
+                       + "\nEquity:       $" + str(equity)
                        + "\nTrades: " + str(daily_trades)
                        + "\nOpen: " + str(open_count))
             self.notifier.send(summary)
@@ -633,16 +789,21 @@ class PositionMonitor:
         current = self.state.get_state()
         daily_pnl = current.get("daily_pnl", 0)
         daily_trades = current.get("daily_trades", 0)
-        open_count = len(current.get("open_positions", {}))
+        open_positions = current.get("open_positions", {})
+        open_count = len(open_positions)
+        unrealized = self._calc_unrealized_pnl(open_positions)
+        equity = round(daily_pnl + unrealized, 2)
         pct_of_limit = (abs(daily_pnl) / self.daily_loss_limit
                         * 100) if self.daily_loss_limit > 0 else 0
         logger.info(
-            "HOURLY: pnl=%.2f trades=%d open=%d loss_pct=%.1f%%",
-            daily_pnl, daily_trades, open_count, pct_of_limit)
+            "HOURLY: realized=%.2f unrealized=%.2f equity=%.2f trades=%d open=%d loss_pct=%.1f%%",
+            daily_pnl, unrealized, equity, daily_trades, open_count, pct_of_limit)
         if daily_pnl < 0 and pct_of_limit >= 50:
             self.notifier.send(
                 "<b>WARNING</b>\nDaily loss at "
                 + str(round(pct_of_limit, 1))
-                + "% of limit\n$"
+                + "% of limit\nRealized: $"
                 + str(round(abs(daily_pnl), 2))
-                + " / $" + str(round(self.daily_loss_limit, 2)))
+                + " / $" + str(round(self.daily_loss_limit, 2))
+                + "\nUnrealized: $" + str(unrealized)
+                + "\nEquity: $" + str(equity))

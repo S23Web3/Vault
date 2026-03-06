@@ -209,6 +209,56 @@ Read every 5s by CB-S1, rendered by CB-S2.
 
 ---
 
+---
+
+## Session Continuation — 2026-03-03 (afternoon)
+
+### Changes Made
+
+#### 1. Removed conflicting BingX native trailing order
+- `config.yaml`: `trailing_activation_atr_mult: null`, `trailing_rate: null`
+- Was placing `TRAILING_STOP_MARKET` at 2% callback rate on exchange, conflicting with TTP engine
+- executor.py guard `if self.trailing_rate and self.trailing_activation_atr_mult` already handles null — no code change needed
+- TTP engine (0.5% act / 0.2% trail) is now sole trailing exit mechanism
+
+#### 2. BE raise switched to live mark price trigger
+- `position_monitor.py`: `check_breakeven()` rewritten
+- Old: waited for `ttp_state == "ACTIVATED"` (5m candle close → up to 105s lag)
+- New: fetches live mark price per open position, triggers when `mark >= entry * (1 + ttp_act)` (LONG) or `mark <= entry * (1 - ttp_act)` (SHORT)
+- No API calls made when no positions are open
+- `be_raised` guard unchanged — fires exactly once per position
+- py_compile: PASS
+
+#### 3. Monitor loop poll reduced
+- `config.yaml`: `position_check_sec: 60 → 30`
+- BE raise now responds within ~30s of price crossing activation level
+- max_positions raised to 15, max_daily_trades to 200 (user set via dashboard)
+
+### Active Config Summary (post-session)
+
+| Parameter | Value |
+|-----------|-------|
+| poll_interval_sec | 45 |
+| position_check_sec | 30 |
+| max_positions | 15 |
+| max_daily_trades | 200 |
+| trailing_activation_atr_mult | null |
+| trailing_rate | null |
+| ttp_enabled | true |
+| ttp_act | 0.005 (0.5%) |
+| ttp_dist | 0.002 (0.2%) |
+| be_auto | true |
+
+### SL Ladder (confirmed from code)
+
+| Step | Trigger | SL location | Mechanism |
+|------|---------|-------------|-----------|
+| 1 | Entry | entry ± 2×ATR | STOP_MARKET on exchange |
+| 2 | Live mark crosses ±0.5% | entry + commission (BE) | check_breakeven() every 30s |
+| 3 | TTP trail reversal | 0.2% behind extreme | Python engine → market close |
+
+---
+
 ## Lessons This Session
 
 1. **Browser cache causes KeyError after callback map changes.** When IDs are removed/renamed
@@ -222,3 +272,164 @@ Read every 5s by CB-S1, rendered by CB-S2.
 3. **Patch scripts applied twice = duplicate code.** Always check if a patch was already
    applied before running it (safe_replace guard: check if anchor exists, or check if result
    already exists).
+
+---
+
+## Session Continuation — 2026-03-03 (evening)
+
+### Patch4 Applied — Close Market Button
+
+**Script**: `C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector\scripts\build_dashboard_v1_4_patch4.py`
+**Result**: 2/2 PASS, py_compile PASS, BUILD OK
+**Dashboard restarted**: yes, running on http://127.0.0.1:8051
+
+**What patch4 adds:**
+
+| Patch | Change |
+|-------|--------|
+| P1 | Red "Close Market" button added after "Move SL" in Live Trades position action panel |
+| P2 | CB-16 callback: cancels ALL open orders for selected symbol, places MARKET reduceOnly close, writes `close_pending=True` + `close_source="dashboard"` to state.json |
+
+CB-16 uses `prevent_initial_call=True` and `allow_duplicate=True` on `pos-action-status` output.
+
+**Awaiting test**: Need an open position to verify the full close flow (cancel orders + market close + state write).
+
+### Cumulative Dashboard v1-4 Patch Status
+
+| Patch Script | Status | Changes |
+|-------------|--------|---------|
+| build_dashboard_v1_4.py | APPLIED | 15 patches: v1-3 -> v1-4 (Bot Terminal tab, tab rename, status feed) |
+| build_dashboard_v1_4_patch1.py | APPLIED | CB-T3 prevent_initial_call fix |
+| build_dashboard_v1_4_patch2.py | APPLIED | 13 patches: dedup main.py, toggle button, OFFLINE header, 360px log |
+| build_dashboard_v1_4_patch3.py | APPLIED | TTP columns + Controls toggle in dashboard |
+| build_dashboard_v1_4_patch4.py | APPLIED | Close Market button + CB-16 callback |
+
+### Current Config (live, from config.yaml)
+
+| Parameter | Value |
+|-----------|-------|
+| demo_mode | false |
+| margin_usd | 5.0 |
+| leverage | 10 |
+| coins | 47 |
+| max_positions | 15 |
+| max_daily_trades | 200 |
+| daily_loss_limit_usd | 15.0 |
+| ttp_enabled | true |
+| ttp_act | 0.005 (0.5%) |
+| ttp_dist | 0.002 (0.2%) |
+| be_auto | true |
+| tp_atr_mult | null (TTP handles exits) |
+| trailing_activation_atr_mult | null (disabled — TTP is sole trailing mechanism) |
+| require_stage2 | true |
+
+### Dashboard v1-4 Feature Summary (all patches applied)
+
+**6 tabs**: Live Trades > Bot Terminal > Strategy Parameters > History > Analytics > Coin Summary
+
+**Live Trades tab actions** (per selected position row):
+- Raise BE — cancel SL, place STOP_MARKET at entry+fees
+- Move SL — place new STOP_MARKET at user-entered price
+- Close Market — cancel ALL open orders, place MARKET reduceOnly close
+
+**Bot Terminal tab**:
+- Toggle button (Start/Stop) with PID tracking
+- Activity Log feed (bot-status.json, 5s poll, 360px height)
+
+**Header**: Shows LIVE/DEMO/OFFLINE status, refreshes every 5s
+
+---
+
+## Patch5 Written — TTP Controls + BE Buffer (not yet run)
+
+**Script**: `C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector\scripts\build_dashboard_v1_4_patch5.py`
+**py_compile**: PASS (build script itself)
+**Status**: NOT YET RUN — awaiting user execution
+
+### What patch5 does (5 patches across 3 files)
+
+| Patch | File | Change |
+| ----- | ---- | ------ |
+| P1 | dashboard v1-4 | TTP controls row in CB-5 action panel: Act% input, Trail% input, "Set TTP" button, "Activate Now" button |
+| P1b | dashboard v1-4 | TTP display variables — reads per-position overrides from state.json |
+| P2 | dashboard v1-4 | CB-17 (Set TTP) writes ttp_act_override + ttp_dist_override + ttp_engine_dirty to state.json; CB-18 (Activate Now) writes ttp_force_activate=True |
+| P4 | signal_engine.py | Per-position TTP overrides when creating TTPExit + force activate handling + engine dirty flag recreates engine |
+| P5 | position_monitor.py | BE slippage buffer: adds 0.1% (be\_buffer=0.001) on top of commission rate in \_place\_be\_sl() |
+
+### BE price formula after patch5
+
+```python
+LONG:  be_price = entry * (1 + commission_rate + 0.001)
+SHORT: be_price = entry * (1 - commission_rate - 0.001)
+```
+
+Commission rate = 0.0016 (0.16% RT from API). Total BE offset = 0.26% above entry (LONG).
+
+### Run command
+
+```bash
+cd "C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector"
+python scripts/build_dashboard_v1_4_patch5.py
+```
+
+Then restart bot (`python main.py`) and dashboard (`python bingx-live-dashboard-v1-4.py`), hard refresh browser (`Ctrl+Shift+R`).
+
+### Cumulative Patch Status
+
+| Patch Script | Status | Changes |
+| ------------ | ------ | ------- |
+| build_dashboard_v1_4.py | APPLIED | 15 patches: v1-3 -> v1-4 |
+| build_dashboard_v1_4_patch1.py | APPLIED | CB-T3 prevent_initial_call fix |
+| build_dashboard_v1_4_patch2.py | APPLIED | 13 patches: dedup main.py, toggle, OFFLINE, 360px |
+| build_dashboard_v1_4_patch3.py | APPLIED | TTP columns + Controls toggle |
+| build_dashboard_v1_4_patch4.py | APPLIED | Close Market button + CB-16 |
+| build_dashboard_v1_4_patch5.py | WRITTEN, NOT RUN | TTP per-position controls + BE buffer |
+
+---
+
+## Session Continuation — 2026-03-04 (late night)
+
+### Context
+
+Continuation from 2026-03-03 evening session. Patch5 written but not yet run. All docs updated. This short session covered verification and one optimization.
+
+### 1. Exit Mechanics Verification (all confirmed from source code)
+
+Full audit of all exit mechanics via Explore agent reading live source files:
+
+| Mechanic | Status | Code Location |
+| -------- | ------ | ------------- |
+| Initial SL | 2.0x ATR, STOP_MARKET attached to entry | executor.py L195-200 |
+| BE Raise | entry * (1 + commission_rate + 0.001) — commission + 0.1% buffer | position_monitor.py L403-408 |
+| BE Trigger | Live mark price crosses entry * (1 +/- ttp_act), checks every 30s | position_monitor.py L442-486 |
+| TTP Engine | Enabled, act=0.5%, dist=0.2%, per-position overrides from state.json | signal_engine.py L111-119 |
+| Commission | Fetched from BingX API x2 (round-trip), fallback 0.001 | main.py L114-127 |
+| BingX native trailing | Disabled (both null in config) | config.yaml L78-79 |
+
+**Patch5 confirmed already applied** — `be_buffer = 0.001` present in position_monitor.py.
+
+### 2. Monitor Loop Optimization
+
+User requested: only poll exchange API when positions are actually open (bot-only account, no manual trades).
+
+**Change**: Added early return in `position_monitor.py` `check()` method (line 252-254):
+
+```python
+state_positions = self.state.get_open_positions()
+if not state_positions:
+    return
+```
+
+This skips `_fetch_positions()` API call when no positions exist in state. WS fill queue is still drained before the guard (in case a fill event arrives for a just-opened position).
+
+**py_compile**: PASS
+
+**Effect**: Zero API calls from monitor loop when no trades are open. Previously called `_fetch_positions()` every 30s regardless.
+
+### SL Ladder (verified from code, all 3 steps confirmed)
+
+| Step | Trigger | SL Location | Mechanism |
+| ---- | ------- | ----------- | --------- |
+| 1 | Entry | entry +/- 2x ATR | STOP_MARKET on exchange |
+| 2 | Mark crosses +/- 0.5% | entry + commission + 0.1% buffer | BE raise every 30s |
+| 3 | TTP trail reversal | 0.2% behind extreme | Python engine -> market close |

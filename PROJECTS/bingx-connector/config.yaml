@@ -1,6 +1,6 @@
 connector:
   poll_interval_sec: 45
-  position_check_sec: 60
+  position_check_sec: 30
   timeframe: 5m
   ohlcv_buffer_bars: 201
   demo_mode: false
@@ -63,8 +63,8 @@ four_pillars:
   require_stage2: true
   rot_level: 80
 risk:
-  max_positions: 8
-  max_daily_trades: 50
+  max_positions: 25
+  max_daily_trades: 200
   daily_loss_limit_usd: 15.0
   min_atr_ratio: 0.003
   cooldown_bars: 3
@@ -78,8 +78,10 @@ position:
   trailing_activation_atr_mult: null
   trailing_rate: null
   ttp_enabled: true
-  ttp_act: 0.005
-  ttp_dist: 0.002
+  sl_trail_pct_post_ttp: 0.003
+  be_act: 0.004
+  ttp_act: 0.008
+  ttp_dist: 0.003
   be_auto: true
 notification:
   daily_summary_utc_hour: 17

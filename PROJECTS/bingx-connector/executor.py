@@ -247,6 +247,24 @@ class Executor:
                         "<b>SESSION BLOCKED</b>\n" + symbol
                         + "\nError 101209 (halved qty=0)")
                     return None
+            elif error_code == 109400:
+                # Timestamp invalid -- force re-sync and retry once
+                from time_sync import get_time_sync
+                _ts = get_time_sync()
+                _ts.force_resync()
+                req_retry = self.auth.build_signed_request(
+                    "POST", ORDER_PATH, dict(order_params))
+                result = self._safe_post(
+                    req_retry["url"], headers=req_retry["headers"])
+                if result and result.get("code", 0) == 0:
+                    logger.info("109400 retry OK: %s", symbol)
+                    error_code = 0
+                else:
+                    logger.error("109400 retry FAILED: %s", symbol)
+                    self.notifier.send(
+                        "<b>ORDER FAILED</b>\n" + side + " " + symbol
+                        + "\n109400 timestamp error after retry")
+                    return None
             else:
                 logger.error("API error %s: %s",
                              error_code, result.get("msg"))

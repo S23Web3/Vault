@@ -10,6 +10,7 @@ import logging
 import asyncio
 import threading
 import requests
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
@@ -17,8 +18,8 @@ LISTEN_KEY_PATH = "/openApi/user/auth/userDataStream"
 WS_LIVE_URL = "wss://open-api-swap.bingx.com/swap-market"
 WS_DEMO_URL = "wss://vst-open-api-ws.bingx.com/swap-market"
 REFRESH_INTERVAL = 55 * 60  # 55 minutes
-MAX_RECONNECT = 3
-RECONNECT_DELAY = 5
+MAX_RECONNECT = 10
+RECONNECT_DELAY = 5  # base; actual = RECONNECT_DELAY * 2**min(reconnect_count, 5)
 
 
 class WSListener(threading.Thread):
@@ -129,9 +130,11 @@ class WSListener(threading.Thread):
         while not self._stop_event.is_set() and reconnect_count < MAX_RECONNECT:
             self._listen_key = self._obtain_listen_key()
             if not self._listen_key:
-                self.log.error("Cannot obtain listenKey, retry in %ds", RECONNECT_DELAY)
+                backoff = RECONNECT_DELAY * (2 ** min(reconnect_count, 5))
+                self.log.error("Cannot obtain listenKey, retry in %ds (attempt %d/%d)",
+                               backoff, reconnect_count + 1, MAX_RECONNECT)
                 reconnect_count += 1
-                await asyncio.sleep(RECONNECT_DELAY)
+                await asyncio.sleep(backoff)
                 continue
             ws_url = self._ws_base + "?listenKey=" + self._listen_key
             self.log.info("Connecting to WS: %s...%s",
@@ -175,11 +178,22 @@ class WSListener(threading.Thread):
                 self.log.error("WebSocket error: %s", e)
                 reconnect_count += 1
                 if reconnect_count < MAX_RECONNECT:
+                    backoff = RECONNECT_DELAY * (2 ** min(reconnect_count, 5))
                     self.log.info("Reconnecting in %ds (attempt %d/%d)",
-                                  RECONNECT_DELAY, reconnect_count, MAX_RECONNECT)
-                    await asyncio.sleep(RECONNECT_DELAY)
+                                  backoff, reconnect_count, MAX_RECONNECT)
+                    await asyncio.sleep(backoff)
         if reconnect_count >= MAX_RECONNECT:
-            self.log.error("Max reconnect attempts reached, WS listener stopping")
+            self.log.critical("WS LISTENER DEAD after %d reconnect attempts", MAX_RECONNECT)
+            import datetime as _dt
+            _ts = _dt.datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+            _flag_dir = Path("logs")
+            _flag_dir.mkdir(exist_ok=True)
+            _flag = _flag_dir / ("ws_dead_" + _ts + ".flag")
+            _flag.write_text(
+                "WS listener died at " + _ts + " after " + str(MAX_RECONNECT) + " reconnect attempts",
+                encoding="utf-8",
+            )
+            self.log.critical("Dead flag written: %s", _flag)
 
     def run(self):
         """Run asyncio event loop in this thread."""

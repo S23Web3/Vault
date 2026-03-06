@@ -93,7 +93,7 @@ if CUDA_AVAILABLE:
         reentry_long, reentry_short,
         cloud3_ok_long, cloud3_ok_short,
         param_grid, N, N_combos,
-        notional, commission_rate,
+        notional, commission_rate, maker_rate,
         results,
     ):
         """One thread per param combo. Bar-by-bar backtest matching v3.9.0 logic.
@@ -143,7 +143,8 @@ if CUDA_AVAILABLE:
         wf_mean = float32(0.0)
         wf_M2 = float32(0.0)
 
-        comm_per_side = notional * commission_rate
+        entry_comm = notional * commission_rate
+        exit_comm = notional * maker_rate
 
         for i in range(N):
             if atr[i] != atr[i]:  # isnan check
@@ -160,7 +161,7 @@ if CUDA_AVAILABLE:
 
                 if pos_dir[s] == 1:  # LONG
                     # Check if trade went green at any point (using high)
-                    if high[i] > pos_entry[s]:
+                    if high[i] >= pos_entry[s]:
                         saw_green = 1
                     if low[i] <= pos_sl[s]:
                         exit_price = pos_sl[s]
@@ -169,7 +170,7 @@ if CUDA_AVAILABLE:
                         exit_price = pos_tp[s]
                         exited = 1
                 else:  # SHORT
-                    if low[i] < pos_entry[s]:
+                    if low[i] <= pos_entry[s]:
                         saw_green = 1
                     if high[i] >= pos_sl[s]:
                         exit_price = pos_sl[s]
@@ -183,24 +184,25 @@ if CUDA_AVAILABLE:
                         raw_pnl = (exit_price - pos_entry[s]) / pos_entry[s] * notional
                     else:
                         raw_pnl = (pos_entry[s] - exit_price) / pos_entry[s] * notional
-                    net_pnl = raw_pnl - comm_per_side  # exit commission
+                    net_pnl = raw_pnl - exit_comm  # exit commission (maker)
+                    pnl_sum_pnl = net_pnl - entry_comm  # full round-trip for pnl_sum
 
                     trade_count += 1
-                    pnl_sum += net_pnl
-                    if net_pnl > 0:
+                    pnl_sum += pnl_sum_pnl
+                    if pnl_sum_pnl > 0:
                         win_count += 1
-                        gross_profit += net_pnl
+                        gross_profit += pnl_sum_pnl
                     else:
-                        gross_loss += (-net_pnl)
+                        gross_loss += (-pnl_sum_pnl)
                         total_losers += 1
                         if saw_green == 1:
                             lsg_count += 1
 
                     # Welford update
                     wf_n += 1
-                    delta = net_pnl - wf_mean
+                    delta = pnl_sum_pnl - wf_mean
                     wf_mean += delta / float32(wf_n)
-                    wf_M2 += delta * (net_pnl - wf_mean)
+                    wf_M2 += delta * (pnl_sum_pnl - wf_mean)
 
                     equity += net_pnl
                     pos_active[s] = 0
@@ -268,7 +270,7 @@ if CUDA_AVAILABLE:
                         pos_be_trigger[slot] = close[i] + atr[i] * be_trigger_atr
                     else:
                         pos_be_trigger[slot] = float32(999999.0)
-                    equity -= comm_per_side  # entry commission
+                    equity -= entry_comm  # entry commission (taker)
                     last_entry_bar = i
                     did_enter = 1
 
@@ -294,7 +296,7 @@ if CUDA_AVAILABLE:
                         pos_be_trigger[slot] = close[i] - atr[i] * be_trigger_atr
                     else:
                         pos_be_trigger[slot] = float32(0.000001)
-                    equity -= comm_per_side
+                    equity -= entry_comm  # entry commission (taker)
                     last_entry_bar = i
                     did_enter = 1
 
@@ -320,7 +322,7 @@ if CUDA_AVAILABLE:
                         pos_be_trigger[slot] = close[i] + atr[i] * be_trigger_atr
                     else:
                         pos_be_trigger[slot] = float32(999999.0)
-                    equity -= comm_per_side
+                    equity -= entry_comm  # entry commission (taker)
                     last_entry_bar = i
                     did_enter = 1
 
@@ -346,7 +348,7 @@ if CUDA_AVAILABLE:
                         pos_be_trigger[slot] = close[i] - atr[i] * be_trigger_atr
                     else:
                         pos_be_trigger[slot] = float32(0.000001)
-                    equity -= comm_per_side
+                    equity -= entry_comm  # entry commission (taker)
                     last_entry_bar = i
                     did_enter = 1
 
@@ -372,7 +374,7 @@ if CUDA_AVAILABLE:
                         pos_be_trigger[slot] = close[i] + atr[i] * be_trigger_atr
                     else:
                         pos_be_trigger[slot] = float32(999999.0)
-                    equity -= comm_per_side
+                    equity -= entry_comm  # entry commission (taker)
                     last_entry_bar = i
                     did_enter = 1
 
@@ -398,7 +400,7 @@ if CUDA_AVAILABLE:
                         pos_be_trigger[slot] = close[i] - atr[i] * be_trigger_atr
                     else:
                         pos_be_trigger[slot] = float32(0.000001)
-                    equity -= comm_per_side
+                    equity -= entry_comm  # entry commission (taker)
                     last_entry_bar = i
                     did_enter = 1
 
@@ -417,18 +419,19 @@ if CUDA_AVAILABLE:
                     raw_pnl = (last_close - pos_entry[s]) / pos_entry[s] * notional
                 else:
                     raw_pnl = (pos_entry[s] - last_close) / pos_entry[s] * notional
-                net_pnl = raw_pnl - comm_per_side
+                net_pnl = raw_pnl - exit_comm  # exit commission (maker)
+                pnl_sum_pnl = net_pnl - entry_comm  # full round-trip for pnl_sum
                 trade_count += 1
-                pnl_sum += net_pnl
-                if net_pnl > 0:
+                pnl_sum += pnl_sum_pnl
+                if pnl_sum_pnl > 0:
                     win_count += 1
-                    gross_profit += net_pnl
+                    gross_profit += pnl_sum_pnl
                 else:
-                    gross_loss += (-net_pnl)
+                    gross_loss += (-pnl_sum_pnl)
                 wf_n += 1
-                delta = net_pnl - wf_mean
+                delta = pnl_sum_pnl - wf_mean
                 wf_mean += delta / float32(wf_n)
-                wf_M2 += delta * (net_pnl - wf_mean)
+                wf_M2 += delta * (pnl_sum_pnl - wf_mean)
                 equity += net_pnl
 
         # ── Write results ─────────────────────────────────────────────────
@@ -469,7 +472,7 @@ if CUDA_AVAILABLE:
         results[c, 7] = sharpe
 
 
-def run_gpu_sweep(df_signals, param_grid_np, notional_val=5000.0, comm_rate=0.0008):
+def run_gpu_sweep(df_signals, param_grid_np, notional_val=5000.0, comm_rate=0.0008, maker_rate=0.0002):
     """Run GPU sweep. Returns DataFrame with results sorted by net_pnl descending.
 
     Args:
@@ -479,7 +482,8 @@ def run_gpu_sweep(df_signals, param_grid_np, notional_val=5000.0, comm_rate=0.00
             cloud3_allows_long, cloud3_allows_short
         param_grid_np: [N_combos, 4] float32 array from build_param_grid()
         notional_val: position notional (same for all combos)
-        comm_rate: taker commission rate per side (default 0.0008 = 0.08%)
+        comm_rate: taker commission rate per side entry (default 0.0008 = 0.08%)
+        maker_rate: maker commission rate per side exit (default 0.0002 = 0.02%)
 
     Returns:
         DataFrame with columns: sl_mult, tp_mult, be_trigger_atr, cooldown,
@@ -521,7 +525,7 @@ def run_gpu_sweep(df_signals, param_grid_np, notional_val=5000.0, comm_rate=0.00
         d_re_long, d_re_short,
         d_c3_long, d_c3_short,
         d_param_grid, N, N_combos,
-        np.float32(notional_val), np.float32(comm_rate),
+        np.float32(notional_val), np.float32(comm_rate), np.float32(maker_rate),
         d_results,
     )
     cuda.synchronize()
@@ -545,3 +549,43 @@ def run_gpu_sweep(df_signals, param_grid_np, notional_val=5000.0, comm_rate=0.00
     df_results = df_results[param_cols + result_cols]
 
     return df_results.sort_values("net_pnl", ascending=False).reset_index(drop=True)
+
+
+def run_gpu_sweep_multi(
+    coin_data_list,
+    param_grid_np,
+    notional_val=5000.0,
+    comm_rate=0.0008,
+    maker_rate=0.0002,
+    progress_callback=None,
+):
+    """Run GPU sweep across multiple coins. Returns dict keyed by symbol.
+
+    Args:
+        coin_data_list: list of (symbol, df_signals) tuples.
+            Each df_signals must have the 12 required columns.
+        param_grid_np: [N_combos, 4] float32 array from build_param_grid()
+        notional_val: position notional per trade
+        comm_rate: taker commission rate per side entry
+        maker_rate: maker commission rate per side exit
+        progress_callback: optional callable(current_idx, total, symbol)
+
+    Returns:
+        dict: {symbol: DataFrame} where each DataFrame has the same columns
+              as run_gpu_sweep() output (params + 8 metrics).
+    """
+    results = {}
+    total = len(coin_data_list)
+    for idx, (symbol, df_signals) in enumerate(coin_data_list):
+        if progress_callback is not None:
+            should_stop = progress_callback(idx, total, symbol)
+            if should_stop:
+                break
+        try:
+            df_result = run_gpu_sweep(df_signals, param_grid_np, notional_val, comm_rate, maker_rate)
+            results[symbol] = df_result
+        except Exception:
+            pass
+    if progress_callback is not None:
+        progress_callback(total, total, "done")
+    return results

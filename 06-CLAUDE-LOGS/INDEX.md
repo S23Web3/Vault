@@ -1,17 +1,39 @@
 # Session Log Index
-**Last Updated:** 2026-03-03
-**Total:** 144 markdown files, 2 JSON manifests, 1 Python script
+**Last Updated:** 2026-03-05
+**Total:** 148 markdown files, 2 JSON manifests, 1 Python script
 
 ---
 
 ## By Date (newest first)
 
+### 2026-03-05
+| File | Summary |
+| ---- | ------- |
+| `2026-03-05-native-trailing-build.md` | Native trailing stop build. Scoped ttp_mode toggle (native vs engine), found _cancel_open_sl_orders bug, built `build_native_trailing.py` that creates bingx-connector-v2 with 6 patched files. Eliminates ~6min TTP delay with exchange-managed trailing. |
+| `plans/2026-03-05-native-trailing-switch.md` | Plan: native TRAILING_STOP_MARKET switch. Config toggle, 6 files patched, TRAILING_EXIT detection, trailing order protection from BE cancel. |
+| `2026-03-05-research-orchestrator-build.md` | Built automated research orchestrator (`run_log_research.py`). Reads all ~350 vault logs + plans via sequential `claude -p` CLI batches (20 files/batch, sonnet model). Rate-limit-aware (25min pause, 30min backoff on 429). Per-batch findings files, auto-merge, progress tracker, full code verification. Designed for overnight unattended execution on $100 Max plan. 6 bugs fixed during build (PATH, .cmd execution, stdin pipe, duplicate log). Batch 1 confirmed working 19:49. |
+| `plans/2026-03-05-research-execution-plan.md` | Plan: chronological log research via build script. Architecture: Python orchestrator calls `claude -p` sequentially, each batch writes findings to own file, script merges. 16 batches + synthesis. Rate limit protection, auto-retry, resumable. |
+| `2026-03-05-bingx-data-fetcher-and-updater.md` | BingX OHLCV data pipeline: bulk fetcher (626 coins, 12mo, progress bars), daily incremental updater (gap-only fetch, imports from fetcher), autorun scheduler (timed Bybit+BingX updates). 3 build scripts, 3 output scripts. All py_compile PASS. |
+| `2026-03-05-next-chat-prompt-audit.md` | Audited next-chat continuation prompt. Found 2 errors (Task 1 function mismatch, Task 2 already 80% done) + 3 gaps (no bot restart constraint, stale runtime data, import switch unspecified). Created corrected v2 prompt. Also reviewed trade-analyzer-v2 plan. |
+| `plans/2026-03-05-v2-prompt-audit.md` | Audit of v2 next-chat prompt. Verdict: clean scope, ready to use. Two dashboard-only builds (v395 + v1.5 patch), zero bot changes. |
+| `2026-03-05-bingx-bot-session.md` | Bot restart session. Three-stage position management (be_act/ttp_act split), orderId extraction fix (3 places), unrealized PnL in Telegram summaries, max_positions raised to 25. 25/25 tests pass. Evening: 109400 timestamp fix -- time_sync.py module built, 5 files patched, w32tm clock sync applied. Afternoon: Trade Analyzer v2 built + run (57 trades, 57.9% WR, -$0.69 pre-rebate, +$2.50 post-rebate, BE=backbone, TTP=profit engine). ATR Investigation built + run (4 HIGH_VOL+ trades caused 66% of non-BE losses, Q-USDT 5.15% SL would liquidate at 20x). Scaling analysis: $500/20x/$10k projections (+$500/day post-rebate, $804 max DD, Q-USDT liquidation risk). Evening continuation: Dashboard v1.5 runtime fixes. P1: 100001 signing fix (build URL manually, match bingx_auth.py -- Balance $73.61 confirmed). P2: trades.csv column mismatch fix (csv.reader, 18-col rows truncated to 12-col header -- 47 trades loaded). P3: refresh interval 60s->15s. P4: Max DD % industry-standard fix written (equity-based: starting_bal + cumPnL), pending user run of build_dashboard_v1_5_drawdown_fix.py. |
+| `plans/2026-03-05-trade-analyzer-v2.md` | Plan: Trade Analyzer v2. 11 analysis sections (summary, equity curve, symbol leaderboard, direction/grade/exit breakdowns, hold times, TTP/BE effectiveness, PnL distribution, per-trade detail). Build audit: 7 hazards (CSV schema mismatch, f-string trap, division by zero). Testing plan: 6 tests + 5 debugging aids. |
+| `plans/2026-03-05-bingx-timestamp-sync-fix.md` | Plan: fix BingX error 109400 "timestamp is invalid". Root cause: no server time sync. Fix: time_sync.py module + patches to bingx_auth, main, executor, position_monitor, dashboard. |
+| `2026-03-05-project-review-volume-uml.md` | Project review + volume/rebate analysis ($10k/$500/20x scenario) + UML update. Read INDEX, key logs, trades.csv (300+ rows). Full project brief produced. |
+
+### 2026-03-04
+| File | Summary |
+| ---- | ------- |
+| `2026-03-04-position-management-study.md` | Position management study session (continuation). Resolved 6 open questions: HTF-1 (cloud stack transitions on 4h/1h), HTF-2 (MTF clouds = hold duration modulator), ENTRY-1 (sequential stoch confirmation), BBW-1 (flagged for Vince), TDI-1 (RSI=9, Smooth=5, Signal=10, BB=34). Reviewed PUMP 4h + 1h charts for perspective reversal at March 1st. 7 of 13 questions now resolved, 6 remaining. Study doc: `plans/2026-03-04-position-management-study.md`. |
+| `2026-03-04-bingx-v1-5-full-audit-upgrade.md` | Full audit + v1.5 upgrade (2 sessions). Phase 1: 6 diagnostic scripts built + run (all OK). Phase 2: bot core fixes confirmed applied. Phase 3: dashboard v1.5 built (8 patches). Phase 4: beta bot built. Phase 1 results: WR=8.3%, LSG=75.8%, EXIT_UNKNOWN=43% — all caused by 109400 reduceOnly bug now fixed. Trade analysis klines bug fixed (dict not list). Phase 1 runner (`run_phase1_all.py`) built, subprocess-based. Bot ready to restart. |
+
 ### 2026-03-03
 | File | Summary |
 | ---- | ------- |
-| `2026-03-03-cuda-dashboard-v394-build.md` | CUDA dashboard v394 build session. Audited spec (4 issues found: engine version mismatch, column names, reentry cloud3 gate, v393 claim). Wrote build_cuda_engine.py (py_compile PASS). Discovered Python 3.13 CUDA blocker (Numba access violation). Wrote PowerShell Python 3.12 install script. Build script creates cuda_sweep.py + jit_backtest.py + dashboard_v394.py. |
+| `2026-03-03-daily-bybit-updater.md` | Daily Bybit data updater build. Standalone script: discovers all USDT perps from Bybit API, incremental fetch (only gap since last cache), 5m resample. Build script: `build_daily_updater.py`. Output: `daily_update.py`. Flags: --dry-run, --skip-new, --max-new, --skip-resample. py_compile + ast.parse PASS. Not yet executed. |
+| `2026-03-03-cuda-dashboard-v394-build.md` | CUDA dashboard v394 build (5 sessions). S1: Spec audit, build_cuda_engine.py, Python 3.13 blocker, install script. S2: CUDA toolkit setup. S3: GPU Portfolio Sweep, ROI math fix, full logic audit (2 CRITICAL, 3 HIGH, 8 MEDIUM). S4: Audit fixes applied (commission split, pnl_sum, win_rate%, saw_green, WSListener resilience, reduceOnly). S5: UX improvements (coin selection reset, stop/reset buttons, random week/month sidebar+GPU, volume & rebates, est. trade duration, matplotlib fallback). |
 | `2026-03-03-cuda-dashboard-v394-planning.md` | CUDA dashboard v394 spec planning. No code written. Identified 4 pre-audit errors in existing vault plan (column names, param_grid shape, tp sentinel, missing cloud3 arrays). Wrote corrected dashboard-focused handover spec: plans/2026-03-03-cuda-dashboard-v394-spec.md. Supersedes 2026-03-03-cuda-sweep-engine.md (which had errors). |
-| `2026-03-03-bingx-dashboard-v1-4-patches.md` | BingX dashboard v1-4: diagnosed doubled Activity Log (patch7 ran twice on main.py), IndexError (CB-T3 initial_duplicate + CB-S1 conflict), Activity Log height cap. Wrote build_dashboard_v1_4_patch2.py (13 patches: dedup main.py, toggle button, OFFLINE header, 360px log height). Browser cache KeyError at session end — requires Ctrl+Shift+R after dashboard restart. |
+| `2026-03-03-bingx-dashboard-v1-4-patches.md` | BingX dashboard v1-4: 5 patch rounds. Patch2 (13 patches: dedup main.py, toggle, OFFLINE, 360px). Patch3 (TTP columns + controls toggle). Patch4 (Close Market button + CB-16). Afternoon: removed BingX trailing order conflict, BE raise to live mark price, poll 30s. Evening: patch5 written (TTP per-position controls + force activate + BE 0.1% slippage buffer). |
 | `2026-03-03-session-handoff.md` | Context switch session. No new builds. Verified B2 artefacts intact. Identified B1 spec conflict (build spec says v383_v2, plan mode plan says v386 — v386 is correct). Wrote next-steps roadmap: plans/2026-03-03-next-steps-roadmap.md. |
 | `2026-03-03-ttp-integration-plan.md` | TTP engine integration planning session. Audited initial mark-price approach, found 5 critical gaps, revised to hybrid architecture (TTP evaluates in market_loop on real OHLC, closes execute in monitor_loop). Plan finalized with full pseudocode and file-by-file change lists. |
 | `2026-03-03-ttp-integration-build.md` | TTP engine build session. Wrote build_ttp_integration.py (6 patches: ttp_engine.py, signal_engine.py, position_monitor.py, main.py, config.yaml, test_ttp_engine.py) and build_dashboard_v1_4_patch3.py (5 patches: TTP columns, build_positions_df, Controls layout, CB-11, CB-12). Both py_compile PASS. |
@@ -410,7 +432,8 @@
 - 2026-01-28-Jacky-VPS-Setup.md
 - 2026-01-28-n8n-webhook-testing.md
 
-### Data Pipeline (3 files)
+### Data Pipeline (4 files)
+- 2026-03-05-bingx-data-fetcher-and-updater.md — BingX OHLCV bulk fetcher + daily updater + autorun scheduler
 - 2026-02-28-parquet-data-catchup.md — Bybit cache 15 days stale, added --all flag to fetch_data.py
 - 2026-02-13-data-pipeline-build.md
 - 2026-02-20-youtube-transcript-analyzer-build.md

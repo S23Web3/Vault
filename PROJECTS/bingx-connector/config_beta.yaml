@@ -1,0 +1,83 @@
+connector:
+  poll_interval_sec: 45
+  position_check_sec: 30
+  timeframe: 5m
+  ohlcv_buffer_bars: 201
+  demo_mode: false
+coins:
+- ENSO-USDT
+- GRASS-USDT
+- POWER-USDT
+- VENICE-USDT
+- SIREN-USDT
+- FHE-USDT
+- BTR-USDT
+- OWC-USDT
+- WARD-USDT
+- WHITEWHALE-USDT
+- ESP-USDT
+- INJ-USDT
+- JTO-USDT
+- JUP-USDT
+- LINK-USDT
+- LTC-USDT
+- METAX-USDT
+- MUS-USDT
+- MYX-USDT
+- NEAR-USDT
+- ONDO-USDT
+- PENGU-USDT
+- POPCAT-USDT
+- PUMP-USDT
+- QNT-USDT
+- 1000SHIB-USDT
+- SOL-USDT
+- SUI-USDT
+- UNI-USDT
+- XRP-USDT
+- ZEC-USDT
+- ZEN-USDT
+- APE-USDT
+- ASTER-USDT
+- AXS-USDT
+- BANK-USDT
+- BERAU-USDT
+- BNB-USDT
+- BONK-USDT
+- DASH-USDT
+- DOT-USDT
+- FARTCOIN-USDT
+- HMSTR-USDT
+- IMX-USDT
+strategy:
+  plugin: four_pillars_v384
+four_pillars:
+  allow_a: true
+  allow_b: true
+  allow_c: false
+  sl_atr_mult: 2.0
+  tp_atr_mult: null
+  require_stage2: true
+  rot_level: 80
+risk:
+  max_positions: 15
+  max_daily_trades: 200
+  daily_loss_limit_usd: 15.0
+  min_atr_ratio: 0.003
+  cooldown_bars: 3
+  bar_duration_sec: 300
+position:
+  margin_usd: 5.0
+  leverage: 20
+  margin_mode: ISOLATED
+  sl_working_type: MARK_PRICE
+  tp_working_type: MARK_PRICE
+  trailing_activation_atr_mult: null
+  trailing_rate: null
+  ttp_enabled: true
+  sl_trail_pct_post_ttp: 0.003
+  ttp_act: 0.005
+  ttp_dist: 0.002
+  be_auto: true
+notification:
+  daily_summary_utc_hour: 17

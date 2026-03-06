@@ -113,7 +113,7 @@ class StateManager:
             return pos
 
     def _append_trade(self, pos, exit_price, exit_reason, pnl_net):
-        """Append one trade row to trades.csv."""
+        """Append one trade row to trades.csv (includes TTP + BE columns)."""
         file_exists = self.trades_path.exists()
         try:
             with open(self.trades_path, "a", newline="",
@@ -125,7 +125,31 @@ class StateManager:
                         "entry_price", "exit_price", "exit_reason",
                         "pnl_net", "quantity", "notional_usd",
                         "entry_time", "order_id",
+                        "ttp_activated", "ttp_extreme_pct", "ttp_trail_pct",
+                        "ttp_exit_reason", "be_raised", "saw_green",
                     ])
+                # Compute TTP stats from position data at close time
+                ttp_state    = pos.get("ttp_state", "")
+                ttp_activated = ttp_state in ("ACTIVATED", "CLOSED")
+                entry_p      = float(pos.get("entry_price") or 0)
+                direction_p  = pos.get("direction", "LONG")
+                ttp_extreme  = pos.get("ttp_extreme")
+                ttp_trail    = pos.get("ttp_trail_level")
+                ttp_extreme_pct = ""
+                ttp_trail_pct   = ""
+                if ttp_extreme and entry_p > 0:
+                    raw_ext = float(ttp_extreme)
+                    if direction_p == "LONG":
+                        ttp_extreme_pct = round((raw_ext - entry_p) / entry_p * 100, 4)
+                    else:
+                        ttp_extreme_pct = round((entry_p - raw_ext) / entry_p * 100, 4)
+                if ttp_trail and entry_p > 0:
+                    raw_trail = float(ttp_trail)
+                    if direction_p == "LONG":
+                        ttp_trail_pct = round((raw_trail - entry_p) / entry_p * 100, 4)
+                    else:
+                        ttp_trail_pct = round((entry_p - raw_trail) / entry_p * 100, 4)
+                ttp_exit_reason_col = "TTP_CLOSE" if exit_reason == "TTP_EXIT" else ""
                 writer.writerow([
                     datetime.now(timezone.utc).isoformat(),
                     pos.get("symbol", ""),
@@ -139,18 +163,25 @@ class StateManager:
                     pos.get("notional_usd", ""),
                     pos.get("entry_time", ""),
                     pos.get("order_id", ""),
+                    ttp_activated,
+                    ttp_extreme_pct,
+                    ttp_trail_pct,
+                    ttp_exit_reason_col,
+                    pos.get("be_raised", False),
+                    "",  # saw_green: backfilled by run_trade_analysis.py
                 ])
         except OSError as e:
             logger.error("trades.csv append failed: %s", e)
 
     def reset_daily(self):
-        """Reset daily_pnl, daily_trades, halt_flag (BUG-C04 fix)."""
+        """Reset daily_pnl, daily_trades, halt_flag, and session_start (BUG-C04 fix)."""
         with self.lock:
             self.state["daily_pnl"] = 0.0
             self.state["daily_trades"] = 0
             self.state["halt_flag"] = False
+            self.state["session_start"] = datetime.now(timezone.utc).isoformat()
             self._save_state()
-            logger.info("Daily reset: pnl=0, trades=0, halt=False")
+            logger.info("Daily reset: pnl=0, trades=0, halt=False, session_start refreshed")
 
     def set_halt_flag(self, value):
         """Set the halt flag explicitly."""
@@ -178,12 +209,20 @@ class StateManager:
             state_keys = set(self.state["open_positions"].keys())
             phantoms = state_keys - live_keys
             for key in phantoms:
-                logger.warning("Reconcile: removing phantom %s", key)
-                self.state["open_positions"].pop(key, None)
+                pos = self.state["open_positions"].pop(key, None)
+                logger.error(
+                    "Reconcile: phantom position %s removed "
+                    "-- recording EXIT_UNKNOWN with $0 PnL", key)
+                if pos is not None:
+                    self.state["daily_pnl"] += 0.0
+                    self._last_exit_time[key] = datetime.now(timezone.utc)
+                    self._append_trade(pos, pos.get("entry_price", 0),
+                                       "EXIT_UNKNOWN_RECONCILE", 0.0)
             if phantoms:
                 self._save_state()
-                logger.info("Reconcile: removed %d phantoms",
-                            len(phantoms))
+                logger.error("Reconcile: removed %d phantom(s) -- "
+                             "check exchange for liquidations",
+                             len(phantoms))
             else:
                 logger.info(
                     "Reconcile: state matches exchange (%d positions)",

@@ -1,9 +1,9 @@
 # Dashboard File Index
 ## Four Pillars Trading System
 
-**Last Updated:** 2026-02-28
-**Current Production:** `scripts/dashboard_v393.py` (v3.9.3, 2385 lines) -- STABLE
-**Prior Version:** `scripts/dashboard_v392.py` (v3.9.2, 2371 lines) -- fallback
+**Last Updated:** 2026-03-03
+**Current Production:** `scripts/dashboard_v394.py` (v3.9.4, ~52290 lines) -- CUDA GPU Sweep + Portfolio (requires .venv312)
+**Prior Version:** `scripts/dashboard_v393.py` (v3.9.3, 2385 lines) -- fallback (standard Python)
 
 ---
 
@@ -11,7 +11,8 @@
 
 | File | Lines | Version | Status | Description |
 |------|-------|---------|--------|-------------|
-| `scripts/dashboard_v393.py` | 2385 | v3.9.3 | PRODUCTION | Stale cache fix (clear portfolio on settings change) + silent date filter fallback fixed. |
+| `scripts/dashboard_v394.py` | ~52290 | v3.9.4 | PRODUCTION | CUDA GPU Sweep + Portfolio mode. Audit fixes (commission split, pnl_sum, win_rate%). UX (coin reset, stop/reset, random week/month, volume & rebates). Requires .venv312 (Python 3.12 + Numba CUDA). |
+| `scripts/dashboard_v393.py` | 2385 | v3.9.3 | PRIOR STABLE | Stale cache fix (clear portfolio on settings change) + silent date filter fallback fixed. |
 | `scripts/dashboard_v392.py` | 2371 | v3.9.2 | PRIOR STABLE | All v3.9 features + equity curve date filter fix + capital model v2 integration. Fallback if v3.9.3 regresses. |
 | `scripts/dashboard_v391.py` | 2338 | v3.9.1 | PRIOR STABLE | 14 patches, PDF export, combined CSV. Superseded by v3.9.2. |
 
@@ -64,7 +65,9 @@ v3.9.1  scripts/dashboard_v391.py (2338L)     -- 14 patches, PDF export, combine
   |
 v3.9.2  scripts/dashboard_v392.py (2371L)     -- PRIOR STABLE: equity curve fix, capital model v2
   |
-v3.9.3  scripts/dashboard_v393.py (2385L)     -- PRODUCTION: stale cache fix + date filter fallback fix
+v3.9.3  scripts/dashboard_v393.py (2385L)     -- PRIOR STABLE: stale cache fix + date filter fallback fix
+  |
+v3.9.4  scripts/dashboard_v394.py (~52290L)  -- PRODUCTION: CUDA GPU Sweep + Portfolio, audit fixes, UX improvements
 ```
 
 ## Utils Modules

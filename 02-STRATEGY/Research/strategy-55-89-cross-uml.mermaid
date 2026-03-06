@@ -1,0 +1,69 @@
+flowchart TD
+    START([🕐 New Candle Closes]) --> BIAS
+
+    subgraph TF15["📊 15-MIN — Directional Bias"]
+        BIAS{Price vs VWAP\n200-candle lookback}
+        BIAS -->|Above VWAP| LONG_BIAS[✅ LONG Bias]
+        BIAS -->|Below VWAP| SHORT_BIAS[✅ SHORT Bias]
+        BIAS -->|At VWAP| NO_TRADE1([❌ No Trade\nAmbiguous Bias])
+    end
+
+    LONG_BIAS --> VOL_CHECK
+    SHORT_BIAS --> VOL_CHECK
+
+    subgraph TF5["📊 5-MIN — Volatility Filter"]
+        VOL_CHECK{BBWP State\nExpansion?}
+        VOL_CHECK -->|Yes — Suitable Expansion| EMA_CHECK
+        VOL_CHECK -->|No — Squeeze / Extreme| NO_TRADE2([❌ No Trade\nVolatility Not Ready])
+    end
+
+    subgraph TF1["📊 1-MIN — Entry Conditions"]
+        EMA_CHECK{EMA Stack\n21 / 55 / 89}
+        EMA_CHECK -->|LONG: 21 > 55 > 89\nPrice > 21| RSI_CHECK
+        EMA_CHECK -->|SHORT: 21 < 55 < 89\nPrice < 21| RSI_CHECK
+        EMA_CHECK -->|Mixed / Flat| NO_TRADE3([❌ No Trade\nNo Stack])
+
+        RSI_CHECK{Multi-RSI\n9 / 21 / 55\nAligned?}
+        RSI_CHECK -->|LONG: RSI9 > RSI21 > RSI55| SIGNAL
+        RSI_CHECK -->|SHORT: RSI9 < RSI21 < RSI55| SIGNAL
+        RSI_CHECK -->|Not Aligned| NO_TRADE4([❌ No Trade\nMomentum Missing])
+    end
+
+    SIGNAL([✅ SIGNAL GENERATED\nSend Alert to n8n]) --> N8N
+
+    subgraph N8N_BLOCK["⚙️ n8n — Momentum Validation"]
+        N8N[Fetch Last 3 × 5-min Candles\nFrom Exchange API]
+        N8N --> ATR_CHECK{Avg ATR\nLast 3 Candles\n≥ Min Threshold?}
+        ATR_CHECK -->|Yes — Momentum Confirmed| PLACE_ORDER
+        ATR_CHECK -->|No — ATR Too Tight| NO_TRADE5([❌ Rejected\nNo Momentum])
+
+        PLACE_ORDER[Place Order\n──────────────\nEntry: Market Price\nSL: Entry ± 1m ATR × 2\nTrailing Activation: Entry + 5m ATR × 2\nTrailing Callback: 5m ATR × 2]
+    end
+
+    PLACE_ORDER --> TRADE_OPEN
+
+    subgraph MGMT["📈 Position Management — Exchange Handles"]
+        TRADE_OPEN([🔄 Trade Open\nMonitoring 5-min Chart])
+        TRADE_OPEN --> CROSS_CHECK{5-min EMA\n21 crosses 55\nin Trade Direction?}
+        CROSS_CHECK -->|Not Yet| TRADE_OPEN
+        CROSS_CHECK -->|Yes — Cross Confirmed| TRAIL_ACT
+
+        TRAIL_ACT[✅ Trailing Stop Activated\nExchange Manages\nCallback = 5m ATR × 2]
+        TRAIL_ACT --> PRICE_MOVE{Price Movement?}
+        PRICE_MOVE -->|Continues in Direction| TRAIL_ACT
+        PRICE_MOVE -->|Reverses → Stop Hit| EXIT_TRAIL([🔴 Exit: Trailing Stop Hit])
+        PRICE_MOVE -->|Reaches Bollinger Band 1-min| EXIT_TP([🟢 Exit: Take Profit\nBollinger Band Target])
+    end
+
+    style TF15 fill:#1a237e,color:#fff,stroke:#3949ab
+    style TF5 fill:#1b5e20,color:#fff,stroke:#388e3c
+    style TF1 fill:#4a148c,color:#fff,stroke:#7b1fa2
+    style N8N_BLOCK fill:#e65100,color:#fff,stroke:#f57c00
+    style MGMT fill:#263238,color:#fff,stroke:#546e7a
+    style EXIT_TP fill:#2e7d32,color:#fff
+    style EXIT_TRAIL fill:#c62828,color:#fff
+    style NO_TRADE1 fill:#424242,color:#fff
+    style NO_TRADE2 fill:#424242,color:#fff
+    style NO_TRADE3 fill:#424242,color:#fff
+    style NO_TRADE4 fill:#424242,color:#fff
+    style NO_TRADE5 fill:#424242,color:#fff

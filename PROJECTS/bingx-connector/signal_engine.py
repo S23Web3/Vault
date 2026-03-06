@@ -25,8 +25,8 @@ class StrategyAdapter:
         # TTP configuration
         _ttp = ttp_config or {}
         self.ttp_enabled = _ttp.get("ttp_enabled", False)
-        self.ttp_act = _ttp.get("ttp_act", 0.005)
-        self.ttp_dist = _ttp.get("ttp_dist", 0.002)
+        self.ttp_act = _ttp.get("ttp_act", 0.008)
+        self.ttp_dist = _ttp.get("ttp_dist", 0.003)
         self.ttp_engines = {}  # keyed by position key e.g. "BTCUSDT_LONG"
         logger.info(
             "StrategyAdapter: plugin=%s v%s warmup=%d grades=%s",
@@ -102,15 +102,72 @@ class StrategyAdapter:
         for key, pos in positions.items():
             if pos.get("symbol") != symbol:
                 continue
+            entry = pos.get("entry_price", 0) or 0
             engine = self.ttp_engines.get(key)
             if engine is None:
+                if not entry:
+                    logger.warning("TTP: skipping %s — no entry_price in state", key)
+                    continue
+                # Per-position TTP overrides from dashboard "Set TTP"
+                pos_act = pos.get("ttp_act_override", self.ttp_act)
+                pos_dist = pos.get("ttp_dist_override", self.ttp_dist)
                 engine = TTPExit(
                     pos.get("direction", "LONG"),
-                    pos.get("entry_price", 0),
-                    self.ttp_act,
-                    self.ttp_dist,
+                    entry,
+                    pos_act,
+                    pos_dist,
                 )
+                # Restore persisted TTP state on bot restart
+                saved_state = pos.get("ttp_state", "MONITORING")
+                saved_extreme = pos.get("ttp_extreme")
+                saved_trail = pos.get("ttp_trail_level")
+                if saved_state == "ACTIVATED" and saved_extreme and saved_trail:
+                    engine.state = "ACTIVATED"
+                    engine.extreme = float(saved_extreme)
+                    engine.trail_level = float(saved_trail)
+                    logger.info(
+                        "TTP restored: %s state=ACTIVATED extreme=%.8f trail=%.8f",
+                        key, engine.extreme, engine.trail_level)
+                elif saved_state == "CLOSED":
+                    engine.state = "CLOSED"
+                    logger.info("TTP restored: %s state=CLOSED (skipping)", key)
                 self.ttp_engines[key] = engine
+            # Dashboard "Activate Now" — force to ACTIVATED from last candle extreme
+            if pos.get("ttp_force_activate") and engine.state == "MONITORING":
+                engine.state = "ACTIVATED"
+                engine.extreme = h if pos.get("direction", "LONG") == "LONG" else l
+                if pos.get("direction", "LONG") == "LONG":
+                    engine.trail_level = engine.extreme * (1.0 - engine.dist)
+                else:
+                    engine.trail_level = engine.extreme * (1.0 + engine.dist)
+                logger.info("TTP force-activated: %s extreme=%.8f trail=%.8f",
+                            key, engine.extreme, engine.trail_level)
+                self.state_manager.update_position(key, {
+                    "ttp_force_activate": False,
+                    "ttp_state": "ACTIVATED",
+                    "ttp_trail_level": engine.trail_level,
+                    "ttp_extreme": engine.extreme,
+                })
+            # Dashboard "Set TTP" with dirty flag — recreate engine with new params
+            if pos.get("ttp_engine_dirty"):
+                pos_act = pos.get("ttp_act_override", self.ttp_act)
+                pos_dist = pos.get("ttp_dist_override", self.ttp_dist)
+                new_engine = TTPExit(
+                    pos.get("direction", "LONG"),
+                    entry,
+                    pos_act,
+                    pos_dist,
+                )
+                self.ttp_engines[key] = new_engine
+                engine = new_engine
+                self.state_manager.update_position(key, {
+                    "ttp_engine_dirty": False,
+                    "ttp_state": "MONITORING",
+                    "ttp_trail_level": None,
+                    "ttp_extreme": None,
+                })
+                logger.info("TTP engine recreated: %s act=%.4f dist=%.4f",
+                            key, pos_act, pos_dist)
             if engine.state == "CLOSED":
                 continue
             result = engine.evaluate(candle_high=h, candle_low=l)

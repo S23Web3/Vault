@@ -130,6 +130,10 @@ if "gpu_sweep_results" not in st.session_state:
     st.session_state["gpu_sweep_results"] = None
 if "gpu_sweep_symbol" not in st.session_state:
     st.session_state["gpu_sweep_symbol"] = None
+if "gpu_port_results" not in st.session_state:
+    st.session_state["gpu_port_results"] = None
+if "gpu_port_symbols" not in st.session_state:
+    st.session_state["gpu_port_symbols"] = None
 
 
 # ============================================================================
@@ -455,7 +459,7 @@ timeframe = st.sidebar.radio("Timeframe", ["1m", "5m"], index=1, horizontal=True
 # -- Date range filter (v3.1) --
 st.sidebar.markdown("---")
 st.sidebar.subheader("Date Range")
-date_preset = st.sidebar.radio("Period", ["All", "7d", "30d", "90d", "1y", "Custom"],
+date_preset = st.sidebar.radio("Period", ["All", "7d", "30d", "90d", "1y", "Custom", "Rand Week", "Rand Month"],
     horizontal=True, index=0)
 date_range = None
 if date_preset == "Custom":
@@ -463,6 +467,33 @@ if date_preset == "Custom":
     date_start = dr_c1.date_input("Start", datetime.now() - timedelta(days=90))
     date_end = dr_c2.date_input("End", datetime.now())
     date_range = (date_start, date_end)
+elif date_preset in ("Rand Week", "Rand Month"):
+    _rand_days = 7 if date_preset == "Rand Week" else 30
+    _rand_mode_key = "_sidebar_rand_mode"
+    _rand_window_key = "_sidebar_rand_window"
+    _rand_need_gen = (st.session_state.get(_rand_window_key) is None
+                      or st.session_state.get(_rand_mode_key) != date_preset)
+    if _rand_need_gen and cached:
+        _rand_sample_df = load_data(cached[0], timeframe)
+        if _rand_sample_df is not None and len(_rand_sample_df) > 200:
+            _rand_dt_col = pd.to_datetime(_rand_sample_df["datetime"])
+            _rand_min = _rand_dt_col.min()
+            _rand_max = _rand_dt_col.max() - pd.Timedelta(days=_rand_days)
+            if _rand_max > _rand_min:
+                _rand_start = _rand_min + pd.Timedelta(
+                    seconds=random.randint(0, int((_rand_max - _rand_min).total_seconds())))
+                _rand_end = _rand_start + pd.Timedelta(days=_rand_days)
+                st.session_state[_rand_window_key] = (_rand_start.date(), _rand_end.date())
+                st.session_state[_rand_mode_key] = date_preset
+    _rand_w = st.session_state.get(_rand_window_key)
+    if _rand_w is not None:
+        date_range = _rand_w
+        st.sidebar.caption(str(date_range[0]) + " to " + str(date_range[1]))
+    else:
+        st.sidebar.caption("Not enough data for random window")
+    if st.sidebar.button("Re-roll", key="sidebar_reroll"):
+        st.session_state[_rand_window_key] = None
+        st.rerun()
 elif date_preset != "All":
     _days_map = {"7d": 7, "30d": 30, "90d": 90, "1y": 365}
     _n_days = _days_map[date_preset]
@@ -479,6 +510,7 @@ run_single = st.sidebar.button("Run Backtest")
 run_sweep = st.sidebar.button("Sweep ALL coins")
 run_portfolio = st.sidebar.button("Portfolio Analysis")
 run_gpu_sweep = st.sidebar.button("GPU Sweep (CUDA)")
+run_gpu_port = st.sidebar.button("GPU Portfolio Sweep")
 batch_top = st.sidebar.slider("Top N", 5, 50, 20)
 st.sidebar.markdown("---")
 perf_debug = st.sidebar.checkbox("Performance Debug", value=False)
@@ -513,6 +545,10 @@ if run_portfolio:
 if run_gpu_sweep:
     st.session_state["mode"] = "gpu_sweep"
     st.session_state["gpu_sweep_results"] = None
+if run_gpu_port:
+    st.session_state["mode"] = "gpu_port_sweep"
+    st.session_state["gpu_port_results"] = None
+    st.session_state["gpu_port_symbols"] = None
 
 # -- Stochastic K lengths (-> compute_signals_v383 -> compute_all_stochastics) --
 # These control the 4-stochastic entry system (John Kurisko method).
@@ -2224,8 +2260,11 @@ elif mode == "portfolio":
             for sym, eq_arr in pf["per_coin_eq"].items():
                 changes[sym] = np.diff(eq_arr)
             corr_df = pd.DataFrame(changes).corr()
-            st.dataframe(corr_df.round(3).style.background_gradient(cmap="RdYlGn_r", vmin=-1, vmax=1),
-                use_container_width=True)
+            try:
+                st.dataframe(corr_df.round(3).style.background_gradient(cmap="RdYlGn_r", vmin=-1, vmax=1),
+                    use_container_width=True)
+            except ImportError:
+                st.dataframe(corr_df.round(3), use_container_width=True)
         # -- Volume & Rebate Summary (v3.9) --
         st.markdown("---")
         st.subheader("Trading Volume & Rebates")
@@ -2549,9 +2588,11 @@ elif mode == "gpu_sweep":
         st.subheader("Top 20 Combos (by expectancy)")
         _top20 = _gpu_res.sort_values("expectancy", ascending=False).head(20).copy()
         _top20["tp_mult"] = _top20["tp_mult"].apply(lambda x: "No TP" if x >= 998.0 else str(round(x, 2)))
+        _top20["win_rate"] = (_top20["win_rate"] * 100).round(1)
+        _top20 = _top20.rename(columns={"win_rate": "win_rate%"})
         _display_cols = [
             "sl_mult", "tp_mult", "be_trigger_atr", "cooldown",
-            "total_trades", "win_rate", "net_pnl", "expectancy",
+            "total_trades", "win_rate%", "net_pnl", "expectancy",
             "max_dd_pct", "profit_factor", "lsg_pct", "sharpe",
         ]
         st.dataframe(_top20[_display_cols], use_container_width=True)
@@ -2565,3 +2606,598 @@ elif mode == "gpu_sweep":
             mime="text/csv",
         )
 
+
+# ============================================================================
+# GPU PORTFOLIO SWEEP MODE — Multi-coin CUDA parameter optimization
+# ============================================================================
+elif mode == "gpu_port_sweep":
+    if st.button("Back to Settings"):
+        st.session_state["mode"] = "settings"
+        st.session_state["gpu_port_results"] = None
+        st.session_state["gpu_port_symbols"] = None
+        st.rerun()
+
+    # CUDA availability check
+    try:
+        from engine.cuda_sweep import run_gpu_sweep_multi, build_param_grid, get_cuda_info
+        from signals.four_pillars_v390 import compute_signals as compute_signals_v390
+        _cuda_ok = True
+    except ImportError as _imp_err:
+        _cuda_ok = False
+        _cuda_msg = str(_imp_err)
+
+    if not _cuda_ok:
+        st.error("CUDA engine not available: " + _cuda_msg)
+        st.info("Run: python scripts/build_gpu_portfolio_sweep.py")
+        st.stop()
+
+    _gpu = get_cuda_info()
+    if _gpu:
+        st.caption("GPU: " + str(_gpu["device"]) + " | VRAM free: " + str(_gpu["vram_free_gb"]) + " GB")
+    st.title("GPU Portfolio Sweep -- " + timeframe)
+    if date_range:
+        st.caption("Date range: " + str(date_range[0]) + " to " + str(date_range[1]))
+    else:
+        st.caption("Date range: All available data")
+
+    # ── Coin Selection (same pattern as Portfolio Analysis) ──
+    _gp_source = st.radio("Coin Selection", ["Top N", "Lowest N", "Random N", "Custom"],
+        horizontal=True, key="gp_source")
+
+    # Clear locked coin list when selection mode or N changes
+    _gp_prev_source = st.session_state.get("_gp_prev_source")
+    _gp_prev_n = st.session_state.get("_gp_prev_n")
+    _gp_n = st.slider("N coins", 2, 50, 10, key="gp_n")
+    if _gp_prev_source != _gp_source or _gp_prev_n != _gp_n:
+        st.session_state["gpu_port_symbols"] = None
+        st.session_state["gpu_port_results"] = None
+        st.session_state["_gp_prev_source"] = _gp_source
+        st.session_state["_gp_prev_n"] = _gp_n
+
+    _gp_sweep_csv = []
+    if SWEEP_PROGRESS.exists():
+        try:
+            _gp_sdf = pd.read_csv(SWEEP_PROGRESS)
+            if not _gp_sdf.empty and "Exp" in _gp_sdf.columns:
+                _gp_sweep_csv = _gp_sdf.sort_values("Exp", ascending=False)["Symbol"].tolist()
+        except Exception:
+            pass
+
+    _gp_locked = st.session_state.get("gpu_port_symbols")
+
+    if _gp_source == "Custom":
+        _gp_default = _gp_locked if _gp_locked is not None else cached[:min(5, len(cached))]
+        _gp_default = [s for s in _gp_default if s in cached]
+        _gp_symbols = st.multiselect("Select coins", cached, default=_gp_default, key="gp_custom_coins")
+    elif _gp_locked is not None:
+        _gp_symbols = _gp_locked
+    elif _gp_source == "Top N":
+        if _gp_sweep_csv:
+            _gp_symbols = _gp_sweep_csv[:_gp_n]
+        else:
+            st.warning("No sweep results found. Run a sweep first or choose Custom.")
+            _gp_symbols = []
+    elif _gp_source == "Lowest N":
+        if _gp_sweep_csv:
+            _gp_symbols = _gp_sweep_csv[-_gp_n:]
+        else:
+            st.warning("No sweep results found.")
+            _gp_symbols = []
+    elif _gp_source == "Random N":
+        _gp_symbols = random.sample(list(cached), min(_gp_n, len(cached)))
+    else:
+        _gp_symbols = []
+
+    if _gp_symbols:
+        _gp_sym_str = ", ".join(_gp_symbols[:5]) + (", ..." if len(_gp_symbols) > 5 else "")
+        st.caption("Portfolio: " + str(len(_gp_symbols)) + " coins -- " + _gp_sym_str)
+
+    # ── Date Window Override (optional) ──
+    _gp_date_mode = st.radio("Date Window", ["Sidebar Date Range", "Random Week", "Random Month"],
+        horizontal=True, key="gp_date_mode")
+    if _gp_date_mode in ("Random Week", "Random Month"):
+        _gp_rand_days = 7 if _gp_date_mode == "Random Week" else 30
+        _gp_sample_sym = cached[0] if cached else None
+        if _gp_sample_sym:
+            _gp_sample_df = load_data(_gp_sample_sym, timeframe)
+            if _gp_sample_df is not None and len(_gp_sample_df) > 200:
+                _gp_dt_col = pd.to_datetime(_gp_sample_df["datetime"])
+                _gp_min_dt = _gp_dt_col.min()
+                _gp_max_dt = _gp_dt_col.max() - pd.Timedelta(days=_gp_rand_days)
+                _gp_window_label = "week" if _gp_date_mode == "Random Week" else "month"
+                if _gp_max_dt > _gp_min_dt:
+                    if st.session_state.get("_gp_rand_window") is None or st.session_state.get("_gp_rand_mode") != _gp_date_mode:
+                        _gp_rand_start = _gp_min_dt + pd.Timedelta(
+                            seconds=random.randint(0, int((_gp_max_dt - _gp_min_dt).total_seconds())))
+                        _gp_rand_end = _gp_rand_start + pd.Timedelta(days=_gp_rand_days)
+                        st.session_state["_gp_rand_window"] = (_gp_rand_start.date(), _gp_rand_end.date())
+                        st.session_state["_gp_rand_mode"] = _gp_date_mode
+                    _gp_rand_w = st.session_state["_gp_rand_window"]
+                    st.info("Random " + _gp_window_label + ": " + str(_gp_rand_w[0]) + " to " + str(_gp_rand_w[1]))
+                    if st.button("Re-roll window", key="gp_reroll"):
+                        st.session_state["_gp_rand_window"] = None
+                        st.rerun()
+                else:
+                    _gp_span = (_gp_dt_col.max() - _gp_dt_col.min()).days
+                    st.warning("Data spans " + str(_gp_span) + " days, need at least " + str(_gp_rand_days) + " for a random " + _gp_window_label)
+            else:
+                st.warning("Not enough data loaded for " + _gp_sample_sym)
+    else:
+        # Sidebar date range selected — clear any random window
+        if st.session_state.get("_gp_rand_window") is not None:
+            st.session_state["_gp_rand_window"] = None
+            st.session_state["_gp_rand_mode"] = None
+
+    # ── Load/Save Portfolio ──
+    st.markdown("---")
+    _gp_pf_c1, _gp_pf_c2 = st.columns(2)
+    with _gp_pf_c1:
+        _gp_saved = list_portfolios()
+        if _gp_saved:
+            _gp_pf_names = ["(none)"] + [p["name"] + " (" + str(p["coin_count"]) + " coins)" for p in _gp_saved]
+            _gp_pf_choice = st.selectbox("Load Saved Portfolio", _gp_pf_names, key="gp_pf_load")
+            if _gp_pf_choice != "(none)":
+                _gp_pf_idx = _gp_pf_names.index(_gp_pf_choice) - 1
+                _gp_pf_file = _gp_saved[_gp_pf_idx]["file"]
+                _gp_pf_data = load_portfolio(_gp_pf_file)
+                if _gp_pf_data is not None:
+                    _gp_symbols = [s for s in _gp_pf_data["coins"] if s in cached]
+                    _gp_missing = [s for s in _gp_pf_data["coins"] if s not in cached]
+                    if _gp_missing:
+                        st.warning("Missing from cache: " + ", ".join(_gp_missing[:5]))
+                    st.caption("Loaded: " + _gp_pf_data.get("notes", ""))
+        else:
+            st.caption("No saved portfolios yet")
+    with _gp_pf_c2:
+        _gp_save_name = st.text_input("Save current selection as", key="gp_pf_save_name")
+        _gp_save_notes = st.text_input("Notes (optional)", key="gp_pf_save_notes")
+        if st.button("Save Portfolio", key="gp_pf_save_btn"):
+            if _gp_save_name and _gp_symbols:
+                _gp_method = _gp_source.lower().replace(" ", "_")
+                save_portfolio(_gp_save_name, _gp_symbols, selection_method=_gp_method, notes=_gp_save_notes)
+                st.success("Saved: " + _gp_save_name + " (" + str(len(_gp_symbols)) + " coins)")
+            elif not _gp_save_name:
+                st.warning("Enter a portfolio name first")
+            else:
+                st.warning("Select coins first")
+
+    st.markdown("---")
+
+    # ── Capital Configuration ──
+    st.subheader("Capital")
+    _gp_cap_mode = st.radio("Mode", ["Per-Coin Independent", "Shared Pool"],
+        horizontal=True, key="gp_cap_mode",
+        help="Per-Coin: each coin runs with full notional independently. Shared Pool: fixed total capital, specify per-trade notional.")
+    if _gp_cap_mode == "Shared Pool":
+        _gp_cap_c1, _gp_cap_c2 = st.columns(2)
+        _gp_total_cap = _gp_cap_c1.number_input(
+            "Total Capital ($)", min_value=1000, max_value=500000,
+            value=10000, step=1000, key="gp_total_cap"
+        )
+        _gp_per_trade = _gp_cap_c2.number_input(
+            "Per-Trade Notional ($)", min_value=100, max_value=50000,
+            value=int(notional), step=100, key="gp_per_trade"
+        )
+        _gp_max_pos = int(_gp_total_cap / (margin if margin > 0 else 500))
+        st.caption("Max concurrent positions: " + str(_gp_max_pos) + " ($" + str(int(_gp_total_cap)) + " / $" + str(int(margin)) + " margin)")
+    else:
+        _gp_total_cap = None
+        _gp_per_trade = float(notional)
+
+    st.markdown("---")
+
+    # ── Parameter Ranges ──
+    st.subheader("Parameter Ranges")
+    _gp_c1, _gp_c2 = st.columns(2)
+    with _gp_c1:
+        _gp_sl_min = st.number_input("SL min", value=0.5, step=0.25, key="gp_sl_min")
+        _gp_sl_max = st.number_input("SL max", value=3.0, step=0.25, key="gp_sl_max")
+        _gp_sl_step = st.number_input("SL step", value=0.25, step=0.05, key="gp_sl_step")
+    with _gp_c2:
+        _gp_tp_min = st.number_input("TP min", value=0.5, step=0.25, key="gp_tp_min")
+        _gp_tp_max = st.number_input("TP max", value=4.0, step=0.25, key="gp_tp_max")
+        _gp_tp_step = st.number_input("TP step", value=0.25, step=0.05, key="gp_tp_step")
+
+    _gp_no_tp = st.checkbox('Include "No TP" (999.0)', value=True, key="gp_no_tp")
+    _gp_cooldowns = st.multiselect("Cooldown values", [0, 3, 5, 10], default=[0, 3, 5, 10], key="gp_cd")
+    _gp_be_vals = st.multiselect("BE trigger ATR values", [0.0, 0.5, 1.0], default=[0.0, 0.5, 1.0], key="gp_be")
+
+    import numpy as _np
+    _gp_sl_range = _np.arange(_gp_sl_min, _gp_sl_max + _gp_sl_step * 0.5, _gp_sl_step)
+    _gp_tp_range = _np.arange(_gp_tp_min, _gp_tp_max + _gp_tp_step * 0.5, _gp_tp_step)
+    _gp_pg = build_param_grid(
+        sl_range=_gp_sl_range, tp_range=_gp_tp_range,
+        cooldown_vals=_gp_cooldowns, be_vals=_gp_be_vals,
+        include_no_tp=_gp_no_tp,
+    )
+    _gp_n_combos = len(_gp_pg)
+    _gp_n_coins = len(_gp_symbols) if _gp_symbols else 0
+    st.info(
+        "Combos: " + str(_gp_n_combos) + " x " + str(_gp_n_coins) + " coins = "
+        + str(_gp_n_combos * _gp_n_coins) + " total backtests"
+    )
+
+    # ── Run / Stop / Reset Buttons ──
+    _gp_btn_c1, _gp_btn_c2, _gp_btn_c3 = st.columns([2, 1, 1])
+    _gp_run_clicked = _gp_btn_c1.button("Run GPU Portfolio Sweep", key="gp_run") and _gp_symbols
+    _gp_stop_clicked = _gp_btn_c2.button("Stop Sweep", key="gp_stop")
+    _gp_reset_clicked = _gp_btn_c3.button("Reset Parameters", key="gp_reset")
+
+    if _gp_stop_clicked:
+        st.session_state["gp_stop_flag"] = True
+
+    if _gp_reset_clicked:
+        for _rk in ["gp_sl_min", "gp_sl_max", "gp_sl_step", "gp_tp_min", "gp_tp_max",
+                     "gp_tp_step", "gp_no_tp", "gp_cd", "gp_be", "gp_n", "gp_source",
+                     "gp_cap_mode", "gp_total_cap", "gp_per_trade",
+                     "gpu_port_results", "gpu_port_symbols", "gpu_port_hash",
+                     "_gp_prev_source", "_gp_prev_n",
+                     "_gp_rand_window", "_gp_rand_mode", "gp_date_mode", "gp_custom_coins"]:
+            if _rk in st.session_state:
+                del st.session_state[_rk]
+        st.rerun()
+
+    if _gp_run_clicked:
+        st.session_state["gp_stop_flag"] = False
+        st.session_state["gpu_port_symbols"] = _gp_symbols
+        _gp_progress = st.progress(0)
+        _gp_status = st.empty()
+
+        # Prepare coin data — use random window override if set
+        _gp_effective_date_range = st.session_state.get("_gp_rand_window") or date_range
+        _gp_coin_data = []
+        _gp_skipped = []
+        _gp_status.text("Loading data and computing v3.9.0 signals...")
+        for _ci, _sym in enumerate(_gp_symbols):
+            _gp_status.text("Signals: " + _sym + " (" + str(_ci + 1) + "/" + str(len(_gp_symbols)) + ")")
+            try:
+                _df_gp = load_data(_sym, timeframe)
+                if _df_gp is None or len(_df_gp) < 200:
+                    _gp_skipped.append(_sym)
+                    continue
+                _df_gp = apply_date_filter(_df_gp, _gp_effective_date_range)
+                if len(_df_gp) < 200:
+                    _gp_skipped.append(_sym)
+                    continue
+                _df_sig_gp = compute_signals_v390(_df_gp.copy(), signal_params)
+                _gp_coin_data.append((_sym, _df_sig_gp))
+            except Exception:
+                _gp_skipped.append(_sym)
+
+        if not _gp_coin_data:
+            st.error("No valid coins after loading/filtering.")
+            st.stop()
+
+        if _gp_skipped:
+            st.warning("Skipped " + str(len(_gp_skipped)) + " coins (< 200 bars): " + ", ".join(_gp_skipped[:10]))
+
+        # Run GPU sweep per coin
+        _gp_t_start = time.time()
+
+        def _gp_progress_cb(current, total, symbol):
+            """Update progress bar and check stop flag. Return True to abort."""
+            if total > 0 and current < total:
+                _gp_progress.progress((current + 1) / total)
+                _gp_status.text("GPU sweep: " + str(symbol) + " (" + str(current + 1) + "/" + str(total) + ")")
+            elif current >= total:
+                _gp_progress.progress(1.0)
+            return st.session_state.get("gp_stop_flag", False)
+
+        _gp_all_results = run_gpu_sweep_multi(
+            _gp_coin_data, _gp_pg, _gp_per_trade, 0.0008,
+            progress_callback=_gp_progress_cb,
+        )
+
+        _gp_stopped = st.session_state.get("gp_stop_flag", False)
+        _gp_elapsed = time.time() - _gp_t_start
+        _gp_total_bt = _gp_n_combos * len(_gp_all_results)
+        st.session_state["gpu_port_results"] = _gp_all_results if _gp_all_results else None
+        st.session_state["gpu_port_hash"] = compute_params_hash(signal_params, bt_params, timeframe, date_range)
+        st.session_state["gpu_port_cap"] = _gp_total_cap
+        st.session_state["gpu_port_per_trade"] = _gp_per_trade
+        st.session_state["gpu_port_total_bars"] = sum(len(d) for _, d in _gp_coin_data)
+        st.session_state["gpu_port_n_coins"] = len(_gp_coin_data)
+        st.session_state["gp_stop_flag"] = False
+        if _gp_stopped:
+            st.warning(
+                "Sweep stopped after " + str(len(_gp_all_results)) + "/" + str(len(_gp_coin_data))
+                + " coins (" + str(round(_gp_elapsed, 2)) + "s). Partial results shown below."
+            )
+        else:
+            st.success(
+                "GPU portfolio sweep complete: " + str(len(_gp_all_results)) + " coins x "
+                + str(_gp_n_combos) + " combos = " + str(_gp_total_bt) + " backtests in "
+                + str(round(_gp_elapsed, 2)) + "s"
+            )
+
+    # ── Display Results ──
+    _gp_res = st.session_state.get("gpu_port_results")
+    if _gp_res is not None and len(_gp_res) > 0:
+        # Stale params detection
+        _gp_current_hash = compute_params_hash(signal_params, bt_params, timeframe, date_range)
+        _gp_stored_hash = st.session_state.get("gpu_port_hash")
+        _gp_cap_changed = (_gp_total_cap != st.session_state.get("gpu_port_cap"))
+        _gp_trade_changed = (_gp_per_trade != st.session_state.get("gpu_port_per_trade"))
+        if _gp_stored_hash and (_gp_current_hash != _gp_stored_hash or _gp_cap_changed or _gp_trade_changed):
+            st.warning("Settings changed since last run (date range, signals, or capital). Click **Run GPU Portfolio Sweep** to update results.")
+        # Use stored capital values from the run for display
+        _gp_total_cap_display = st.session_state.get("gpu_port_cap", _gp_total_cap)
+        _gp_per_trade_display = st.session_state.get("gpu_port_per_trade", _gp_per_trade)
+        st.markdown("---")
+
+        # ── Per-Coin Best Combo Table ──
+        st.subheader("Best Combo Per Coin")
+        _gp_best_rows = []
+        for _sym, _df_r in _gp_res.items():
+            if _df_r.empty:
+                continue
+            _best = _df_r.iloc[0]  # already sorted by net_pnl desc
+            _gp_best_rows.append({
+                "symbol": _sym,
+                "sl_mult": round(float(_best["sl_mult"]), 2),
+                "tp_mult": "No TP" if float(_best["tp_mult"]) >= 998.0 else round(float(_best["tp_mult"]), 2),
+                "be_trigger": round(float(_best["be_trigger_atr"]), 2),
+                "cooldown": int(_best["cooldown"]),
+                "trades": int(_best["total_trades"]),
+                "win_rate": round(float(_best["win_rate"]) * 100, 1),
+                "net_pnl": round(float(_best["net_pnl"]), 2),
+                "expectancy": round(float(_best["expectancy"]), 2),
+                "max_dd_pct": round(float(_best["max_dd_pct"]), 1),
+                "profit_factor": round(float(_best["profit_factor"]), 2),
+                "lsg_pct": round(float(_best["lsg_pct"]), 1),
+                "sharpe": round(float(_best["sharpe"]), 4),
+            })
+
+        if _gp_best_rows:
+            _gp_best_df = pd.DataFrame(_gp_best_rows)
+            _gp_best_df = _gp_best_df.sort_values("net_pnl", ascending=False).reset_index(drop=True)
+
+            # ── Uniform Params View (honest portfolio result) ──
+            # For each param combo, sum net_pnl across ALL coins using the SAME params.
+            # This is the realistic answer: "if I run all coins with identical settings."
+            st.subheader("Best Uniform Params (same settings, all coins)")
+            st.caption("Each param combo applied identically to every coin. No per-coin cherry-picking.")
+
+            _gp_uniform_rows = []
+            for _sym, _df_r in _gp_res.items():
+                _df_r_copy = _df_r.copy()
+                _df_r_copy["_symbol"] = _sym
+                _gp_uniform_rows.append(_df_r_copy)
+            _gp_uniform_all = pd.concat(_gp_uniform_rows, ignore_index=True)
+
+            # Group by param combo, sum metrics across coins
+            _gp_uniform_agg = _gp_uniform_all.groupby(
+                ["sl_mult", "tp_mult", "be_trigger_atr", "cooldown"]
+            ).agg(
+                total_trades=("total_trades", "sum"),
+                net_pnl=("net_pnl", "sum"),
+                coins_profitable=("net_pnl", lambda x: int((x > 0).sum())),
+                avg_win_rate=("win_rate", "mean"),
+                avg_expectancy=("expectancy", "mean"),
+                avg_max_dd_pct=("max_dd_pct", "mean"),
+                avg_profit_factor=("profit_factor", "mean"),
+                avg_sharpe=("sharpe", "mean"),
+            ).reset_index()
+            _gp_uniform_agg = _gp_uniform_agg.sort_values("net_pnl", ascending=False).reset_index(drop=True)
+
+            # Best uniform combo
+            _gp_ub = _gp_uniform_agg.iloc[0]
+            _gp_n_coins_actual = len(_gp_res)
+
+            # Capital calculation: kernel starts each coin at $10,000 equity
+            # Per-Coin Independent: total capital deployed = N_coins * kernel_start_equity
+            _gp_kernel_equity = 10000.0
+            if _gp_total_cap_display is not None:
+                _gp_deployed = float(_gp_total_cap_display)
+            else:
+                _gp_deployed = _gp_n_coins_actual * _gp_kernel_equity
+
+            _gp_uni_pnl = float(_gp_ub["net_pnl"])
+            _gp_uni_roi = (_gp_uni_pnl / _gp_deployed) * 100 if _gp_deployed > 0 else 0.0
+
+            _gp_ub_tp = "No TP" if float(_gp_ub["tp_mult"]) >= 998.0 else str(round(float(_gp_ub["tp_mult"]), 2))
+            st.markdown(
+                "**Best uniform combo**: SL=" + str(round(float(_gp_ub["sl_mult"]), 2))
+                + " | TP=" + _gp_ub_tp
+                + " | BE=" + str(round(float(_gp_ub["be_trigger_atr"]), 2))
+                + " | CD=" + str(int(_gp_ub["cooldown"]))
+            )
+
+            _gp_u1, _gp_u2, _gp_u3, _gp_u4, _gp_u5 = st.columns(5)
+            _gp_u1.metric("Net P&L (uniform)", "$" + str(round(_gp_uni_pnl, 0)))
+            _gp_u2.metric("Capital Deployed", "$" + str(round(_gp_deployed, 0)))
+            _gp_u3.metric("ROI", str(round(_gp_uni_roi, 1)) + "%")
+            _gp_u4.metric("Total Trades", str(int(_gp_ub["total_trades"])))
+            _gp_u5.metric("Coins Profitable", str(int(_gp_ub["coins_profitable"])) + "/" + str(_gp_n_coins_actual))
+
+            # Top 10 uniform combos
+            _gp_uni_top10 = _gp_uniform_agg.head(10).copy()
+            _gp_uni_top10["tp_mult"] = _gp_uni_top10["tp_mult"].apply(lambda x: "No TP" if x >= 998.0 else str(round(x, 2)))
+            _gp_uni_top10["roi_pct"] = _gp_uni_top10["net_pnl"].apply(lambda x: round((x / _gp_deployed) * 100, 1) if _gp_deployed > 0 else 0.0)
+            _gp_uni_top10["avg_win_rate"] = (_gp_uni_top10["avg_win_rate"] * 100).round(1)
+            _gp_uni_top10 = _gp_uni_top10.rename(columns={"avg_win_rate": "avg_wr%"})
+            st.dataframe(_gp_uni_top10, use_container_width=True)
+
+            st.markdown("---")
+
+            # ── Per-Coin Best Combo Table (cherry-picked, clearly labeled) ──
+            st.subheader("Per-Coin Optimized (cherry-picked best per coin)")
+            st.caption("Each coin uses its OWN optimal params. Overfitted upper bound — not realistic for live trading.")
+
+            _gp_total_pnl = _gp_best_df["net_pnl"].sum()
+            _gp_profitable = int((_gp_best_df["net_pnl"] > 0).sum())
+            _gp_total_trades = int(_gp_best_df["trades"].sum())
+            _gp_cherry_roi = (_gp_total_pnl / _gp_deployed) * 100 if _gp_deployed > 0 else 0.0
+
+            _gp_m1, _gp_m2, _gp_m3, _gp_m4 = st.columns(4)
+            _gp_m1.metric("Coins", str(len(_gp_best_df)))
+            _gp_m2.metric("Total Net P&L (cherry-picked)", "$" + str(round(_gp_total_pnl, 0)))
+            _gp_m3.metric("ROI (cherry-picked)", str(round(_gp_cherry_roi, 1)) + "%")
+            _gp_m4.metric("Total Trades", str(_gp_total_trades))
+
+            st.dataframe(_gp_best_df, use_container_width=True)
+
+        # ── Aggregated Heatmap (uniform params: sum net_pnl for each SL/TP across all coins) ──
+        st.subheader("Uniform Params Heatmap: SL vs TP")
+        st.caption("Each cell = sum of net P&L across all coins using the SAME SL/TP (best BE/CD per cell).")
+
+        # For each (sl, tp, be, cd) combo, sum net_pnl across coins, then for each (sl, tp) take best (be, cd)
+        _gp_hm_rows = []
+        for _sym, _df_r in _gp_res.items():
+            _gp_hm_rows.append(_df_r[["sl_mult", "tp_mult", "be_trigger_atr", "cooldown", "net_pnl"]].copy())
+
+        if _gp_hm_rows:
+            _gp_hm_all = pd.concat(_gp_hm_rows, ignore_index=True)
+            # Sum across coins for each exact param combo, then take best (be, cd) per (sl, tp)
+            _gp_hm_combo = _gp_hm_all.groupby(["sl_mult", "tp_mult", "be_trigger_atr", "cooldown"])["net_pnl"].sum().reset_index()
+            _gp_hm_agg = _gp_hm_combo.groupby(["sl_mult", "tp_mult"])["net_pnl"].max().reset_index()
+            _gp_hm_pivot = _gp_hm_agg.pivot(index="sl_mult", columns="tp_mult", values="net_pnl")
+
+            _gp_new_cols = []
+            for _col in _gp_hm_pivot.columns:
+                if _col >= 998.0:
+                    _gp_new_cols.append("No TP")
+                else:
+                    _gp_new_cols.append(str(round(_col, 2)))
+            _gp_hm_pivot.columns = _gp_new_cols
+            _gp_hm_pivot.index = [str(round(x, 2)) for x in _gp_hm_pivot.index]
+
+            _gp_hm_fig = go.Figure(data=go.Heatmap(
+                z=_gp_hm_pivot.values,
+                x=_gp_hm_pivot.columns.tolist(),
+                y=_gp_hm_pivot.index.tolist(),
+                colorscale="RdYlGn",
+                zmid=0,
+                colorbar=dict(title="Uniform Net P&L ($)"),
+            ))
+            _gp_hm_fig.update_layout(
+                xaxis_title="TP Mult",
+                yaxis_title="SL Mult",
+                height=500,
+            )
+
+            # Annotate best cell
+            _gp_best_sl_tp = _gp_hm_agg.loc[_gp_hm_agg["net_pnl"].idxmax()]
+            _gp_best_tp_lbl = "No TP" if float(_gp_best_sl_tp["tp_mult"]) >= 998.0 else str(round(float(_gp_best_sl_tp["tp_mult"]), 2))
+            _gp_hm_fig.add_annotation(
+                x=_gp_best_tp_lbl,
+                y=str(round(float(_gp_best_sl_tp["sl_mult"]), 2)),
+                text="BEST",
+                showarrow=True,
+                arrowhead=2,
+                font=dict(color="white", size=12),
+            )
+            st.plotly_chart(_gp_hm_fig, use_container_width=True)
+
+        # ── Per-Coin Heatmaps (expandable) ──
+        st.subheader("Per-Coin Heatmaps")
+        for _sym, _df_r in _gp_res.items():
+            with st.expander(_sym + " (best: $" + str(round(float(_df_r.iloc[0]["net_pnl"]), 0)) + ")"):
+                _pc_hm = _df_r.groupby(["sl_mult", "tp_mult"])["net_pnl"].max().reset_index()
+                _pc_pivot = _pc_hm.pivot(index="sl_mult", columns="tp_mult", values="net_pnl")
+                _pc_cols = []
+                for _c in _pc_pivot.columns:
+                    if _c >= 998.0:
+                        _pc_cols.append("No TP")
+                    else:
+                        _pc_cols.append(str(round(_c, 2)))
+                _pc_pivot.columns = _pc_cols
+                _pc_pivot.index = [str(round(x, 2)) for x in _pc_pivot.index]
+
+                _pc_fig = go.Figure(data=go.Heatmap(
+                    z=_pc_pivot.values,
+                    x=_pc_pivot.columns.tolist(),
+                    y=_pc_pivot.index.tolist(),
+                    colorscale="RdYlGn",
+                    zmid=0,
+                    colorbar=dict(title="Net P&L ($)"),
+                ))
+                _pc_fig.update_layout(
+                    xaxis_title="TP Mult", yaxis_title="SL Mult",
+                    height=400, title=_sym,
+                )
+                st.plotly_chart(_pc_fig, use_container_width=True)
+
+                # Top 5 for this coin
+                _pc_top5 = _df_r.head(5).copy()
+                _pc_top5["tp_mult"] = _pc_top5["tp_mult"].apply(lambda x: "No TP" if x >= 998.0 else str(round(x, 2)))
+                _pc_top5["win_rate"] = (_pc_top5["win_rate"] * 100).round(1)
+                _pc_top5 = _pc_top5.rename(columns={"win_rate": "win_rate%"})
+                st.dataframe(_pc_top5[[
+                    "sl_mult", "tp_mult", "be_trigger_atr", "cooldown",
+                    "total_trades", "win_rate%", "net_pnl", "expectancy",
+                    "max_dd_pct", "profit_factor", "lsg_pct", "sharpe",
+                ]], use_container_width=True)
+
+        # ── Export All Results CSV ──
+        st.markdown("---")
+        _gp_all_export = []
+        for _sym, _df_r in _gp_res.items():
+            _exp = _df_r.copy()
+            _exp.insert(0, "symbol", _sym)
+            _gp_all_export.append(_exp)
+        if _gp_all_export:
+            _gp_export_df = pd.concat(_gp_all_export, ignore_index=True)
+            _gp_csv_data = _gp_export_df.to_csv(index=False)
+            st.download_button(
+                "Export All Results CSV",
+                data=_gp_csv_data,
+                file_name="gpu_portfolio_sweep.csv",
+                mime="text/csv",
+            )
+
+        # ── Export Best-Per-Coin CSV ──
+        if _gp_best_rows:
+            _gp_best_csv = pd.DataFrame(_gp_best_rows).to_csv(index=False)
+            st.download_button(
+                "Export Best-Per-Coin CSV",
+                data=_gp_best_csv,
+                file_name="gpu_portfolio_best.csv",
+                mime="text/csv",
+                key="gp_best_csv",
+            )
+
+        # ── Trading Volume & Rebates (derived from best uniform combo) ──
+        if _gp_best_rows:
+            st.markdown("---")
+            st.subheader("Trading Volume & Rebates (uniform params)")
+            _gp_uni_trades = int(_gp_ub["total_trades"])
+            _gp_notional = float(_gp_per_trade_display)
+            _gp_taker_rate = 0.0008
+            _gp_maker_rate = 0.0002
+            _gp_rebate_pct = 0.70
+            _gp_total_sides = _gp_uni_trades * 2
+            _gp_total_vol = _gp_total_sides * _gp_notional
+            _gp_entry_comm = _gp_uni_trades * _gp_notional * _gp_taker_rate
+            _gp_exit_comm = _gp_uni_trades * _gp_notional * _gp_maker_rate
+            _gp_gross_comm = _gp_entry_comm + _gp_exit_comm
+            _gp_total_rebate = _gp_gross_comm * _gp_rebate_pct
+            _gp_net_comm = _gp_gross_comm - _gp_total_rebate
+            _gp_v1, _gp_v2, _gp_v3 = st.columns(3)
+            _gp_v1.metric("Total Volume", "$" + "{:,.0f}".format(_gp_total_vol))
+            _gp_v2.metric("Total Rebate (70%)", "$" + "{:,.2f}".format(_gp_total_rebate))
+            _gp_v3.metric("Net Commission", "$" + "{:,.2f}".format(_gp_net_comm))
+            _gp_v4, _gp_v5, _gp_v6 = st.columns(3)
+            _gp_v4.metric("Total Sides", "{:,}".format(_gp_total_sides))
+            _gp_v5.metric("Gross Commission", "$" + "{:,.2f}".format(_gp_gross_comm))
+            _gp_v6.metric("True Net P&L", "$" + "{:,.2f}".format(_gp_uni_pnl + _gp_total_rebate))
+            # Estimated trade duration
+            _gp_stored_bars = st.session_state.get("gpu_port_total_bars", 0)
+            _gp_stored_n = st.session_state.get("gpu_port_n_coins", 1)
+            if _gp_uni_trades > 0 and _gp_stored_bars > 0:
+                _gp_tf_mins = {"1m": 1, "5m": 5, "15m": 15, "1h": 60, "4h": 240, "1d": 1440}
+                _gp_bar_mins = _gp_tf_mins.get(timeframe, 5)
+                _gp_avg_bars_per_coin = _gp_stored_bars / max(_gp_stored_n, 1)
+                _gp_trades_per_coin = _gp_uni_trades / max(_gp_stored_n, 1)
+                _gp_avg_dur_bars = _gp_avg_bars_per_coin / _gp_trades_per_coin if _gp_trades_per_coin > 0 else 0
+                _gp_avg_dur_mins = _gp_avg_dur_bars * _gp_bar_mins
+                if _gp_avg_dur_mins >= 1440:
+                    _gp_dur_str = "{:.1f}d".format(_gp_avg_dur_mins / 1440)
+                elif _gp_avg_dur_mins >= 60:
+                    _gp_dur_str = "{:.1f}h".format(_gp_avg_dur_mins / 60)
+                else:
+                    _gp_dur_str = "{:.0f}m".format(_gp_avg_dur_mins)
+                _gp_v7, _gp_v8, _gp_v9 = st.columns(3)
+                _gp_v7.metric("Est. Avg Trade Duration", _gp_dur_str)
+                _gp_v8.metric("Avg Bars/Trade", "{:.1f}".format(_gp_avg_dur_bars))
+                _gp_v9.metric("Trades/Coin (avg)", "{:.0f}".format(_gp_trades_per_coin))
