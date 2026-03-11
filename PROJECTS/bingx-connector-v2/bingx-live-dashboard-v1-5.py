@@ -561,13 +561,13 @@ def compute_metrics(df: pd.DataFrame) -> dict:
     be_hit_pct = "N/A"
     lsg_pct = "N/A"
     if "be_raised" in df.columns:
-        be_count = int(df["be_raised"].sum())
+        be_count = int((df["be_raised"].astype(str).str.lower() == "true").sum())
         be_hit_count = be_count
         be_hit_pct = round(be_count / total * 100, 1) if total > 0 else 0.0
     if "saw_green" in df.columns:
         losing = df[df.pnl_net <= 0]
         if len(losing) > 0:
-            lsg_pct = round(losing["saw_green"].sum() / len(losing) * 100, 1)
+            lsg_pct = round((losing["saw_green"].astype(str).str.lower() == "true").sum() / len(losing) * 100, 1)
 
     return {
         "total": total,

@@ -38,9 +38,9 @@ REPORT_PATH = VAULT_ROOT / "06-CLAUDE-LOGS" / (TODAY + "-bingx-trade-analysis.md
 PHASE_MAP = {500: 1, 1500: 2, 50: 3}
 
 # Commission constants (BingX)
-COMMISSION_TAKER = 0.0005       # 0.05% per side
-COMMISSION_RT_GROSS = 0.001     # 0.10% round trip (entry + exit)
-COMMISSION_REBATE = 0.50        # 50% rebated next day
+COMMISSION_TAKER = 0.0008       # 0.08% per side
+COMMISSION_RT_GROSS = 0.0016    # 0.16% round trip (entry + exit)
+COMMISSION_REBATE = 0.70        # 70% rebated next day
 COMMISSION_RT_NET = COMMISSION_RT_GROSS * (1 - COMMISSION_REBATE)  # 0.0005
 
 # Breakeven tolerance: exit within this % of entry = BE trade
@@ -458,6 +458,122 @@ def compute_rr_ratio(trades):
     avg_sl_abs = abs(sum(sl_pnls) / len(sl_pnls)) if sl_pnls else None
     rr = avg_tp / avg_sl_abs if (avg_tp and avg_sl_abs) else None
     return rr, avg_tp, avg_sl_abs, len(tp_pnls), len(sl_pnls)
+
+
+def compute_concurrent_positions(trades):
+    """Trace position opens/closes over time. Returns dict with peak stats.
+
+    Uses entry_dt (open) and ts_dt (close) to build a timeline.
+    """
+    events = []
+    for t in trades:
+        entry = t.get("entry_dt")
+        close = t.get("ts_dt")
+        notional = t.get("notional_usd", 0)
+        margin = notional / 10.0  # derive margin from notional/leverage
+        if entry and close:
+            events.append((entry, +1, +margin, +notional, t["symbol"]))
+            events.append((close, -1, -margin, -notional, t["symbol"]))
+    events.sort(key=lambda x: x[0])
+    current_count = 0
+    current_margin = 0.0
+    current_notional = 0.0
+    peak_count = 0
+    peak_margin = 0.0
+    peak_notional = 0.0
+    peak_time = None
+    timeline = []
+    for ts, delta, margin_delta, notional_delta, sym in events:
+        current_count += delta
+        current_margin += margin_delta
+        current_notional += notional_delta
+        if current_count > peak_count:
+            peak_count = current_count
+            peak_margin = current_margin
+            peak_notional = current_notional
+            peak_time = ts
+        timeline.append((ts, current_count, round(current_margin, 2),
+                         round(current_notional, 2)))
+    return {
+        "peak_count": peak_count,
+        "peak_margin": round(peak_margin, 2),
+        "peak_notional": round(peak_notional, 2),
+        "peak_time": peak_time,
+        "total_events": len(events),
+        "timeline": timeline,
+    }
+
+
+def compute_scaling_projection(trades, capital_stats, new_margin, new_leverage,
+                               rebate_pct=0.70, bingx_taker_rt=0.0016):
+    """Project PnL and volume at different margin/leverage.
+
+    Returns dict with scaled metrics.
+    """
+    if not trades:
+        return {}
+    current_notional = trades[0].get("notional_usd", 50.0)
+    new_notional = new_margin * new_leverage
+    scale = new_notional / current_notional if current_notional else 1.0
+    n = len(trades)
+    winners = [t["pnl_net"] for t in trades if t["pnl_net"] > 0]
+    losers = [t["pnl_net"] for t in trades if t["pnl_net"] < 0]
+    gross_wins = sum(winners) * scale
+    gross_losses = sum(losers) * scale
+    bot_pnl = (sum(winners) + sum(losers)) * scale
+    # Bot uses commission_rate from config (typically 0.001 RT).
+    # Actual BingX = bingx_taker_rt. With rebate, net = bingx_taker_rt * (1 - rebate).
+    bot_commission_rt = 0.001  # what the bot deducts
+    actual_net_commission_rt = bingx_taker_rt * (1.0 - rebate_pct)
+    over_deduction_per_trade = (bot_commission_rt - actual_net_commission_rt) * new_notional
+    true_pnl = bot_pnl + over_deduction_per_trade * n
+    rt_volume = new_notional * 2.0 * n
+    commission_gross = rt_volume * bingx_taker_rt / 2.0  # per-side rate on both sides
+    rebate = commission_gross * rebate_pct
+    peak_margin = capital_stats.get("peak_count", 1) * new_margin
+    peak_notional = capital_stats.get("peak_count", 1) * new_notional
+    # Monthly projection (extrapolate from runtime)
+    if len(trades) >= 2:
+        first_entry = min(t["entry_dt"] for t in trades if t.get("entry_dt"))
+        last_close = max(t["ts_dt"] for t in trades if t.get("ts_dt"))
+        hours = (last_close - first_entry).total_seconds() / 3600.0
+        trades_per_day = n / (hours / 24.0) if hours > 0 else 0
+    else:
+        trades_per_day = 0
+        hours = 0
+    monthly_trades = trades_per_day * 30
+    monthly_volume = monthly_trades * new_notional * 2.0
+    monthly_commission = monthly_volume * bingx_taker_rt / 2.0
+    monthly_rebate = monthly_commission * rebate_pct
+    monthly_bot_pnl = bot_pnl / n * monthly_trades if n else 0
+    monthly_true_pnl = true_pnl / n * monthly_trades if n else 0
+    return {
+        "new_margin": new_margin,
+        "new_leverage": new_leverage,
+        "new_notional": new_notional,
+        "scale_factor": scale,
+        "n_trades": n,
+        "runtime_hours": round(hours, 1),
+        "trades_per_day": round(trades_per_day, 1),
+        "gross_wins": round(gross_wins, 2),
+        "gross_losses": round(gross_losses, 2),
+        "bot_pnl_scaled": round(bot_pnl, 2),
+        "true_pnl_scaled": round(true_pnl, 2),
+        "over_deduction_total": round(over_deduction_per_trade * n, 2),
+        "rt_volume": round(rt_volume, 2),
+        "commission_gross": round(commission_gross, 2),
+        "rebate": round(rebate, 2),
+        "commission_net": round(commission_gross - rebate, 2),
+        "peak_concurrent": capital_stats.get("peak_count", 0),
+        "peak_margin": round(peak_margin, 2),
+        "peak_notional": round(peak_notional, 2),
+        "monthly_trades": round(monthly_trades, 0),
+        "monthly_volume": round(monthly_volume, 0),
+        "monthly_commission": round(monthly_commission, 2),
+        "monthly_rebate": round(monthly_rebate, 2),
+        "monthly_bot_pnl": round(monthly_bot_pnl, 2),
+        "monthly_true_pnl": round(monthly_true_pnl, 2),
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -914,6 +1030,66 @@ def build_report(trades, open_positions=None, mark_prices=None, open_orders_map=
     lines.append("")
 
     # ------------------------------------------------------------------
+    # Section 4b: Capital Usage & Scaling Projections
+    # ------------------------------------------------------------------
+    lines.append("## 4b. Capital Usage & Scaling Projections")
+    lines.append("")
+    cap = compute_concurrent_positions(p3)
+    lines.append("### Current Run ($" + str(int(MARGIN_USD)) + " margin, "
+                 + str(LEVERAGE) + "x leverage, $"
+                 + str(int(MARGIN_USD * LEVERAGE)) + " notional)")
+    lines.append("")
+    lines.append("| Metric | Value |")
+    lines.append("|--------|-------|")
+    lines.append("| Peak concurrent positions | " + str(cap["peak_count"]) + " |")
+    lines.append("| Peak margin deployed | $" + str(cap["peak_margin"]) + " |")
+    lines.append("| Peak notional at risk | $" + str(cap["peak_notional"]) + " |")
+    if cap["peak_time"]:
+        lines.append("| Peak time | " + cap["peak_time"].strftime("%Y-%m-%d %H:%M UTC") + " |")
+    lines.append("")
+    # Scaling projections
+    scenarios = [
+        (500, 20, "Scaled: $500 margin, 20x"),
+        (100, 20, "Scaled: $100 margin, 20x"),
+        (20, 20, "Scaled: $20 margin, 20x"),
+    ]
+    for sc_margin, sc_lev, sc_label in scenarios:
+        sc = compute_scaling_projection(p3, cap, sc_margin, sc_lev)
+        if not sc:
+            continue
+        lines.append("### " + sc_label + " ($"
+                     + str(int(sc["new_notional"])) + " notional)")
+        lines.append("")
+        lines.append("| Metric | Value |")
+        lines.append("|--------|-------|")
+        lines.append("| Scale factor | " + str(round(sc["scale_factor"], 1)) + "x |")
+        lines.append("| Bot PnL (scaled) | " + fmt_pnl(sc["bot_pnl_scaled"]) + " |")
+        lines.append("| Commission over-deduction | " + fmt_pnl(sc["over_deduction_total"]) + " |")
+        lines.append("| True PnL (after 70% rebate) | " + fmt_pnl(sc["true_pnl_scaled"]) + " |")
+        lines.append("| RT volume (" + str(sc["n_trades"]) + " trades) | $"
+                     + "{:,.0f}".format(sc["rt_volume"]) + " |")
+        lines.append("| Commission gross | $"
+                     + "{:,.2f}".format(sc["commission_gross"]) + " |")
+        lines.append("| Rebate (70%) | $"
+                     + "{:,.2f}".format(sc["rebate"]) + " |")
+        lines.append("| Peak margin needed | $"
+                     + "{:,.0f}".format(sc["peak_margin"])
+                     + " (" + str(sc["peak_concurrent"]) + " concurrent) |")
+        lines.append("| --- | --- |")
+        lines.append("| **Monthly projection** | |")
+        lines.append("| Trades/day (est) | " + str(sc["trades_per_day"]) + " |")
+        lines.append("| Monthly trades | " + str(int(sc["monthly_trades"])) + " |")
+        lines.append("| Monthly volume | $"
+                     + "{:,.0f}".format(sc["monthly_volume"]) + " |")
+        lines.append("| Monthly rebate | $"
+                     + "{:,.0f}".format(sc["monthly_rebate"]) + " |")
+        lines.append("| Monthly bot PnL | " + fmt_pnl(sc["monthly_bot_pnl"]) + " |")
+        lines.append("| Monthly true PnL | " + fmt_pnl(sc["monthly_true_pnl"]) + " |")
+        lines.append("")
+    lines.append("---")
+    lines.append("")
+
+        # ------------------------------------------------------------------
     # Section 5: Key Findings
     # ------------------------------------------------------------------
     lines.append("## 5. Key Findings")

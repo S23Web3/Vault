@@ -67,6 +67,7 @@ risk:
   max_daily_trades: 200
   daily_loss_limit_usd: 15.0
   min_atr_ratio: 0.003
+  max_atr_ratio: 0.015
   cooldown_bars: 3
   bar_duration_sec: 300
 position:
@@ -83,6 +84,7 @@ position:
   be_act: 0.004
   ttp_act: 0.008
   ttp_dist: 0.003
+  be_buffer: 0.002
   be_auto: true
 notification:
   daily_summary_utc_hour: 17

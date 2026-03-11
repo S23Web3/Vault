@@ -320,11 +320,16 @@ Bot running live. Dashboard v1.5 launched — showed multiple errors. Full audit
 - Build script: `scripts/build_dashboard_v1_5_trades_refresh.py`
 - Result: 47 trades loaded in Analytics, History populated
 
-### Fix 5: Max DD % Industry Standard (in progress)
+### Fix 5: Max DD % Industry Standard (COMPLETE)
 - Bug: DD% was calculated as `pnl_drawdown / pnl_peak` — gives -100% when cumulative PnL crosses zero
 - Fix: equity-based drawdown — `equity = starting_balance + cumsum(PnL)`, DD% on equity curve
 - `starting_balance = api_balance - net_pnl` (derived from live API balance)
-- Build script: `scripts/build_dashboard_v1_5_drawdown_fix.py` — ready, not yet run
+- Build script: `scripts/build_dashboard_v1_5_drawdown_fix.py` — ran 2026-03-06, reported "not found" but patches were already applied (confirmed via grep). File is correct.
+
+### 2026-03-06 Continuation
+- Dashboard venv: `ModuleNotFoundError: No module named 'dash'` when run from `.venv312` (Python313)
+- Confirmed: dash 4.0.0 installed on Python314 only
+- Run command: `"C:\Users\User\AppData\Local\Programs\Python\Python314\python.exe" "C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector\bingx-live-dashboard-v1-5.py"`
 
 ### Build Scripts Created This Session
 | Script | Purpose |
@@ -339,8 +344,7 @@ Bot running live. Dashboard v1.5 launched — showed multiple errors. Full audit
 - Balance/Equity: live (signed API working)
 - Positions: real-time with mark prices (15s refresh)
 - History/Analytics: 47 trades loaded, charts populated
-- Max DD %: fix script written, pending run
+- Max DD %: FIXED (equity-based, confirmed in file)
 - IndexError: FIXED (BUG-C)
 - BE Activation %: wired into settings (BUG-D)
-  - Do NOT save settings from dashboard v1-4 until v1.5 is built
-- Dashboard v1.5 still pending (Phase 3 from prior plan)
+- Python: must use Python314 (`C:\Users\User\AppData\Local\Programs\Python\Python314\python.exe`)

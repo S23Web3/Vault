@@ -1,7 +1,7 @@
 # Batch 16 Findings: Dated Plans (2026-03-05 group)
 
-Processed: 9 files
-Date range: 2026-03-05
+Processed: 10 files
+Date range: 2026-03-05 to 2026-03-06
 
 ---
 
@@ -362,3 +362,41 @@ No changes requested.
 
 ### Notes
 - This is a companion to `2026-03-05-next-chat-prompt-audit.md` (which audited v1). This document audits v2 and gives the green light.
+
+---
+
+## 2026-03-06-git-push-bot-server-prep.md
+**Date:** 2026-03-06
+**Type:** Planning / Operations prep
+
+### What happened
+A plan for committing and pushing all work from 2026-03-03 through 2026-03-05 to the vault repo (GitHub: S23Web3/ni9htw4lker). The bot was to be pulled and run on the VPS the following day (VPS already configured with .env and environment).
+
+5-step plan:
+1. `git add -A` in vault root. .gitignore confirmed to exclude: `.env`, `data/`, `logs/`, `state.json`, `bot.pid`, `__pycache__/`, `.obsidian/`, ML binaries. All files verified secrets-free (config.yaml has no API keys; bingx_auth.py reads from env vars).
+2. Verify critical bot files are staged — list of 12 specific files: main.py, bingx_auth.py, executor.py, position_monitor.py, signal_engine.py, state_manager.py, ws_listener.py, config.yaml (all modified), plus NEW files: time_sync.py (explicitly flagged as CRITICAL for 109400 fix), main_beta.py, config_beta.yaml, bingx-live-dashboard-v1-5.py.
+3. Commit message specified: `"Vault update: BingX v1.5 (time sync, TTP, config tuning), backtester v391, session logs 2026-03-03 to 2026-03-05"`.
+4. `git push origin main`.
+5. Post-push: `git log --oneline -3`, `git status` clean. VPS instructions: `git pull origin main` then `python main.py`.
+
+Scope: ~20 modified tracked files, 70+ new untracked files (session logs, plans, build scripts, new modules), 0 files with secrets.
+
+### Decisions recorded
+- Commit message pre-specified.
+- .gitignore exclusion list verified correct.
+- VPS deployment sequence: `git pull origin main` then `python main.py`.
+- time_sync.py explicitly flagged as CRITICAL for the 109400 timestamp fix.
+- main_beta.py and config_beta.yaml included as new files (beta bot configuration created alongside main bot).
+
+### State changes
+- Plan document created 2026-03-06.
+- Based on git status (observed in conversation context), many files listed are staged (A/M status) — push was planned for execution.
+
+### Open items recorded
+- Actual git push execution (plan only at document creation time).
+- VPS: `git pull origin main` + verify `time_sync.py` exists in `PROJECTS/bingx-connector/`.
+
+### Notes
+- time_sync.py cited as critical for "109400 fix" — refers to BingX API error code for timestamp mismatch, resolved by adding time synchronization between bot clock and exchange clock.
+- Commit covers 3 days of sessions (2026-03-03 through 2026-03-05).
+- main_beta.py and config_beta.yaml indicate a parallel beta bot configuration was created during this period.

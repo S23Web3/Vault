@@ -127,6 +127,7 @@ class StateManager:
                         "entry_time", "order_id",
                         "ttp_activated", "ttp_extreme_pct", "ttp_trail_pct",
                         "ttp_exit_reason", "be_raised", "saw_green",
+                        "atr_at_entry", "sl_price",
                     ])
                 # Compute TTP stats from position data at close time
                 ttp_state    = pos.get("ttp_state", "")
@@ -174,6 +175,8 @@ class StateManager:
                     ttp_exit_reason_col,
                     pos.get("be_raised", False),
                     "",  # saw_green: backfilled by run_trade_analysis.py
+                    pos.get("atr_at_entry", ""),
+                    pos.get("sl_price", ""),
                 ])
         except OSError as e:
             logger.error("trades.csv append failed: %s", e)

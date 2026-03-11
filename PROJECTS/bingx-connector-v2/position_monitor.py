@@ -101,18 +101,32 @@ class PositionMonitor:
             return None
 
     def _detect_exit(self, symbol, pos_data):
-        """Detect SL or TP hit by checking which conditional orders remain.
+        """Detect exit by querying allOrders FIRST for real fill price.
 
-        Queries open orders for the symbol. If SL is still pending, TP
-        was hit (and vice versa). Cancels the orphaned remaining order.
+        Priority: (1) allOrders avgPrice, (2) pending-order inference for
+        reason only, (3) state estimates as last resort.
         Returns (exit_price, exit_reason) or (None, None) on failure.
         """
-        # TTP exit: if ttp_exit_pending flag is set, return trail level as exit price
+        # TTP exit: if ttp_exit_pending flag is set, try allOrders for fill price
         if pos_data.get("ttp_exit_pending"):
+            ttp_fill = pos_data.get("ttp_fill_price")
+            if ttp_fill:
+                return float(ttp_fill), "TTP_EXIT"
+            hist_price, _ = self._fetch_filled_exit(symbol, pos_data)
+            if hist_price:
+                return hist_price, "TTP_EXIT"
             trail = pos_data.get("ttp_trail_level")
             if trail is not None:
+                logger.warning("TTP exit %s: using trail_level as fallback (no fill price)", symbol)
                 return float(trail), "TTP_EXIT"
             return None, "TTP_EXIT"
+        # Step 1: Query allOrders for REAL fill price (most accurate)
+        hist_price, hist_reason = self._fetch_filled_exit(symbol, pos_data)
+        if hist_price is not None:
+            # Real fill found — cancel any orphaned orders
+            self._cleanup_orphaned_orders(symbol, pos_data)
+            return hist_price, hist_reason
+        # Step 2: Check pending orders to infer exit reason
         try:
             req = self.auth.build_signed_request(
                 "GET", OPEN_ORDERS_PATH, {"symbol": symbol})
@@ -148,42 +162,61 @@ class PositionMonitor:
                     self._cancel_order(symbol, o.get("orderId"))
                 logger.info("Detected TRAILING_EXIT for %s, cancelled %d orphaned orders",
                             symbol, len(sl_orders) + len(tp_orders))
-                hist_price, _ = self._fetch_filled_exit(symbol, pos_data)
-                if hist_price:
-                    return hist_price, "TRAILING_EXIT"
                 return None, "TRAILING_EXIT"
+        # Infer reason from which orders remain, but use state price as LAST RESORT
         if sl_orders and not tp_orders:
             exit_reason = "TP_HIT"
             exit_price = pos_data.get("tp_price")
             for o in sl_orders:
                 self._cancel_order(symbol, o.get("orderId"))
-            logger.info("Detected TP_HIT for %s, cancelled %d SL orders",
-                        symbol, len(sl_orders))
+            logger.warning("TP_HIT %s: allOrders miss, using state tp_price=%.8f as fallback",
+                           symbol, float(exit_price or 0))
         elif tp_orders and not sl_orders:
             exit_reason = "SL_HIT"
             exit_price = pos_data.get("sl_price")
             for o in tp_orders:
                 self._cancel_order(symbol, o.get("orderId"))
-            logger.info("Detected SL_HIT for %s, cancelled %d TP orders",
-                        symbol, len(tp_orders))
+            logger.warning("SL_HIT %s: allOrders miss, using state sl_price=%.8f as fallback",
+                           symbol, float(exit_price or 0))
         elif sl_orders and tp_orders:
             logger.warning(
                 "Both SL and TP still open for %s — position may not be closed",
                 symbol)
             return None, None
         else:
-            hist_price, hist_reason = self._fetch_filled_exit(
-                symbol, pos_data)
-            if hist_price is not None:
-                exit_price = hist_price
-                exit_reason = hist_reason
-            else:
-                exit_reason = "EXIT_UNKNOWN"
-                exit_price = pos_data.get("sl_price")
-                logger.warning(
-                    "No pending or filled SL/TP found for %s"
-                    " — using SL price estimate", symbol)
+            exit_reason = "EXIT_UNKNOWN"
+            exit_price = pos_data.get("sl_price")
+            logger.warning(
+                "No pending or filled SL/TP found for %s"
+                " — using SL price estimate", symbol)
         return exit_price, exit_reason
+
+    def _cleanup_orphaned_orders(self, symbol, pos_data):
+        """Cancel any orphaned SL/TP/trailing orders after a fill is confirmed."""
+        direction = pos_data.get("direction", "")
+        try:
+            req = self.auth.build_signed_request(
+                "GET", OPEN_ORDERS_PATH, {"symbol": symbol})
+            resp = requests.get(
+                req["url"], headers=req["headers"], timeout=10)
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("code", 0) != 0:
+                return
+            orders = data.get("data", {}).get("orders", [])
+            if isinstance(data.get("data"), list):
+                orders = data["data"]
+            cancelled = 0
+            for o in orders:
+                pos_side = o.get("positionSide", "")
+                if pos_side == direction:
+                    self._cancel_order(symbol, o.get("orderId"))
+                    cancelled += 1
+            if cancelled:
+                logger.info("Cleanup: cancelled %d orphaned orders for %s %s",
+                            cancelled, symbol, direction)
+        except Exception as e:
+            logger.warning("Orphaned order cleanup failed %s: %s", symbol, e)
 
     def _fetch_filled_exit(self, symbol, pos_data):
         """Query order history to find actual exit fill price.
@@ -194,7 +227,7 @@ class PositionMonitor:
         """
         try:
             entry_time = pos_data.get("entry_time", "")
-            params = {"symbol": symbol, "limit": "20"}
+            params = {"symbol": symbol, "limit": "50"}
             if entry_time:
                 from datetime import datetime as dt
                 try:
@@ -395,6 +428,41 @@ class PositionMonitor:
             logger.warning("Mark price fetch error %s: %s", symbol, e)
             return None
 
+    def _cancel_open_sl_orders_except_latest(self, symbol, direction):
+        """Cancel OLD SL orders for symbol+direction, keeping the most recent one."""
+        try:
+            req = self.auth.build_signed_request(
+                "GET", OPEN_ORDERS_PATH, {"symbol": symbol})
+            resp = requests.get(
+                req["url"], headers=req["headers"], timeout=10)
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("code", 0) != 0:
+                logger.warning("open orders error %s: %s",
+                               data.get("code"), data.get("msg"))
+                return
+            orders = data.get("data", {}).get("orders", [])
+            if isinstance(data.get("data"), list):
+                orders = data["data"]
+            sl_orders = []
+            for o in orders:
+                otype = o.get("type", "")
+                pos_side = o.get("positionSide", "")
+                if ("STOP" in otype and "TAKE_PROFIT" not in otype
+                        and otype != "TRAILING_STOP_MARKET"
+                        and pos_side == direction):
+                    sl_orders.append(o)
+            if len(sl_orders) <= 1:
+                return  # only the new SL exists, nothing to cancel
+            # Sort by orderId (ascending) — cancel all except the last (newest)
+            sl_orders.sort(key=lambda o: int(o.get("orderId", 0)))
+            for o in sl_orders[:-1]:
+                self._cancel_order(symbol, o.get("orderId"))
+                logger.info("Cancelled old SL order %s for %s %s",
+                            o.get("orderId"), symbol, direction)
+        except Exception as e:
+            logger.warning("cancel_old_sl_orders failed %s: %s", symbol, e)
+
     def _cancel_open_sl_orders(self, symbol, direction):
         """Cancel any open STOP/STOP_MARKET orders for symbol+direction (not TP)."""
         try:
@@ -437,8 +505,8 @@ class PositionMonitor:
         if not direction or not entry_price or not quantity:
             logger.error("BE SL: missing data for %s", symbol)
             return None
-        # 0.1% slippage buffer on top of commission to prevent negative fills
-        be_buffer = 0.001
+        # Slippage buffer on top of commission to prevent negative fills
+        be_buffer = self.config.get("position", {}).get("be_buffer", 0.002)
         if direction == "LONG":
             be_price = entry_price * (1 + self.commission_rate + be_buffer)
         else:
@@ -488,7 +556,7 @@ class PositionMonitor:
         be_auto = self.config.get("position", {}).get("be_auto", True)
         if not be_auto:
             return
-        ttp_act = self.config.get("position", {}).get("be_act", 0.004)
+        be_activation = self.config.get("position", {}).get("be_act", 0.004)
         positions = self.state.get_open_positions()
         for key, pos_data in positions.items():
             if pos_data.get("be_raised"):
@@ -503,19 +571,21 @@ class PositionMonitor:
                 logger.debug("BE check: no mark price for %s", symbol)
                 continue
             if direction == "LONG":
-                activation_price = entry_price * (1.0 + ttp_act)
+                activation_price = entry_price * (1.0 + be_activation)
                 triggered = mark >= activation_price
             else:
-                activation_price = entry_price * (1.0 - ttp_act)
+                activation_price = entry_price * (1.0 - be_activation)
                 triggered = mark <= activation_price
             if not triggered:
                 continue
             logger.info(
                 "BE trigger (live mark): %s entry=%.6f mark=%.6f act=%.6f direction=%s",
                 key, entry_price, mark, activation_price, direction)
-            self._cancel_open_sl_orders(symbol, direction)
+            # SAFE: place new SL first, cancel old ONLY after success
             be_price = self._place_be_sl(symbol, pos_data)
             if be_price is not None:
+                # New BE SL confirmed — now safe to cancel old SL
+                self._cancel_open_sl_orders_except_latest(symbol, direction)
                 self.state.update_position(key, {
                     "sl_price": be_price,
                     "be_raised": True,
@@ -535,11 +605,12 @@ class PositionMonitor:
                     key, entry_price, mark, be_price,
                     self.commission_rate * 100, commission_usd)
             else:
+                # Placement failed — old SL still intact (safe)
                 logger.error(
-                    "BE SL place FAILED for %s -- old SL cancelled, check manually", key)
+                    "BE SL place FAILED for %s -- old SL preserved (safe)", key)
                 self.notifier.send(
                     "<b>BE RAISE FAILED</b>  " + key
-                    + "\nOld SL cancelled but new SL FAILED -- check manually")
+                    + "\nNew SL rejected -- old SL still active")
 
 
 
@@ -600,8 +671,7 @@ class PositionMonitor:
         logger.info("SL tighten post-TTP: %s cur_sl=%.8f new_sl=%.8f extreme=%.8f",
                     key, cur_sl, new_sl, extreme)
 
-        # Cancel existing SL orders then place tightened SL
-        self._cancel_open_sl_orders(symbol, direction)
+        # SAFE: place new SL first, cancel old ONLY after success
         side = "SELL" if direction == "LONG" else "BUY"
         order_params = {
             "symbol": symbol,
@@ -619,13 +689,16 @@ class PositionMonitor:
             if data.get("code", 0) == 0:
                 _d = data.get("data", {})
                 order_id = str(_d.get("orderId") or _d.get("order", {}).get("orderId", "?"))
+                # New SL confirmed — now safe to cancel old SL orders
+                self._cancel_open_sl_orders_except_latest(symbol, direction)
                 self.state.update_position(key, {"sl_price": new_sl})
                 logger.info("SL tightened: %s new_sl=%.8f orderId=%s", key, new_sl, order_id)
             else:
-                logger.warning("SL tighten failed %s: code=%s msg=%s",
+                # Placement failed — old SL still intact (safe)
+                logger.warning("SL tighten REJECTED %s: code=%s msg=%s -- old SL preserved",
                                key, data.get("code"), data.get("msg"))
         except Exception as e:
-            logger.warning("SL tighten error %s: %s", key, e)
+            logger.warning("SL tighten error %s: %s -- old SL preserved", key, e)
 
 
     def check_ttp_closes(self):

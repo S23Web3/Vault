@@ -18,12 +18,14 @@ class RiskGate:
         self.max_daily_trades = config.get("max_daily_trades", 20)
         self.daily_loss_limit = config.get("daily_loss_limit_usd", 75.0)
         self.min_atr_ratio = config.get("min_atr_ratio", 0.003)
+        self.max_atr_ratio = config.get("max_atr_ratio", 0.015)
         self.cooldown_bars = config.get("cooldown_bars", 3)
         self.bar_duration_sec = config.get("bar_duration_sec", 300)
         logger.info(
-            "RiskGate: max_pos=%d max_trades=%d loss=%.1f atr=%.4f cooldown=%d",
+            "RiskGate: max_pos=%d max_trades=%d loss=%.1f atr=%.4f/%.4f cooldown=%d",
             self.max_positions, self.max_daily_trades,
-            self.daily_loss_limit, self.min_atr_ratio, self.cooldown_bars)
+            self.daily_loss_limit, self.min_atr_ratio, self.max_atr_ratio,
+            self.cooldown_bars)
 
     def evaluate(self, signal, symbol, state, allowed_grades,
                  state_manager=None):
@@ -70,6 +72,14 @@ class RiskGate:
             reason = ("BLOCKED: Too Quiet (atr_ratio="
                       + str(round(atr_ratio, 6)) + ")")
             logger.info("Check 5 FAIL: %s", reason)
+            return False, reason
+
+        # Check 5b: Max ATR ratio (blocks ultra-volatile coins)
+        if self.max_atr_ratio and atr_ratio > self.max_atr_ratio:
+            reason = ("BLOCKED: Too Volatile (atr_ratio="
+                      + str(round(atr_ratio, 6))
+                      + " > max=" + str(self.max_atr_ratio) + ")")
+            logger.info("Check 5b FAIL: %s", reason)
             return False, reason
 
         # Check 6: Daily trade limit

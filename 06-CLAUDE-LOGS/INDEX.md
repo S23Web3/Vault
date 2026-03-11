@@ -1,10 +1,44 @@
 # Session Log Index
-**Last Updated:** 2026-03-05
-**Total:** 148 markdown files, 2 JSON manifests, 1 Python script
+**Last Updated:** 2026-03-11
+**Total:** 150 markdown files, 2 JSON manifests, 1 Python script
 
 ---
 
 ## By Date (newest first)
+
+### 2026-03-11
+| File | Summary |
+|------|---------|
+| `2026-03-11-negative-coin-analysis-5589.md` | 55/89 negative coin deep analysis. Ran `analyze_negative_coins_5589.py` on 9 coins (full data, P0-fixed params). 8/9 coins negative. FARTCOINUSDT worst: 2193 trades, 28.1% WR, -$60k. #1 failure mode: COUNTER_TREND (77.4% of losers) -- strategy enters against EMA direction. Grade C = 55-64% of trades, WR 28-30%. Top fixes: EMA alignment gate, Grade C filter, Phase 2 AVWAP tightening check. 6 Plotly charts + CSVs generated. FARTCOIN verdict: EXCLUDE. |
+| `2026-03-11-s12-cloud-role-correction.md` | S12 cloud role corrected in strategy doc. Cloud is NOT entry (not leading, not filter). Cloud = macro context + TP setting (Cloud 3 midband) + SL movement. Removed all cloud conditions from REQUIRED entry criteria (SHORT and LONG). Three-version correction chain documented. |
+
+### 2026-03-10
+| File | Summary |
+|------|---------|
+| `2026-03-10-5589-trade-analysis-session.md` | 55/89 trade analysis + flaw identification. PDF extraction (10 coins, 532 trades). 6 flaws found (P2 graveyard 61.5%, ratchets never fire 70.3%, BE useless, P1 SL too tight). P0 fixes applied: sl_mult 2.5->4.0, avwap_warmup 5->20. AXSUSDT validation: 40.7% WR, $531 net, Sharpe 3.085. |
+| `2026-03-10-strategy-v4-research-session.md` | Research + critical review. S1-S11 scored vs core perspective. S4=10% (pile-in anti-pattern explains R:R=0.28). Cascade overlap math. Two-cycle divergence + regression channel designed. Rebate subsidy finding. 5 decisions required before build. |
+| `2026-03-10-55-89-dashboard-gpu-pdf-fix.md` | Dashboard v3 fixes: PDF params table (BE trigger -> 5589 params), GPU sweep ported from Backtester384 to Backtester5589 (cuda_sweep_5589.py). 4-phase AVWAP kernel, sl_mult x avwap_sigma grid. SHORT TP sentinel bug fixed. py_compile PASS. |
+
+### 2026-03-07
+| File | Summary |
+| ---- | ------- |
+| `2026-03-07-55-89-engine-build-session.md` | Backtester5589 engine built (4-phase AVWAP SL/TP). 3 files: engine/backtester_55_89.py, tests/test_backtester_55_89.py, build script. 7/7 tests pass. Dashboard v3 slider cap 30->50. Dashboard swap deferred. |
+| `2026-03-07-55-89-dashboard-v3-build.md` | Dashboard v3 built (6 changes from v2): re-roll seed fix, shared pool/per-coin capital toggle, Volume $/LSG% metrics, Rebate/Volume in portfolio table, CPU/GPU toggle (heatmaps + top-3), PDF export (reportlab+kaleido). Build script ran, py_compile+ast.parse PASS, 47,920 chars. Pending user run verification. |
+| `2026-03-07-strategy-catalogue-visual-plan.md` | Strategy catalogue + visualizer script. 5 strategies documented (Bible/v3.3, v3.8.1, v3.8.4, BingX v1.5, 55/89 scalp). Market-reading perspectives (not entry/exit). visualize_strategy_perspectives.py written (py_compile PASS). NORTH STAR rule + STARTUP protocol locked into MEMORY.md. Triple-quoted `\\n` build trap documented. |
+| `2026-03-07-bingx-v2-live-scaling-session.md` | v2 bot live stats (38 trades, 65.8% WR, R:R=0.28, -$2.70/day). be_raised analytics bug found. Capital analysis at $500/20x: monthly rebate ~$30k, net ~$24k/bot. Scaling projection April→August→December. build_analyzer_capital_patch_v2.py created (syntax OK, not yet run). |
+
+### 2026-03-06
+| File | Summary |
+| ---- | ------- |
+| `2026-03-06-55-89-scalp-backtest-build.md` | Master build script created: 4 files (signal module, runner, test, dashboard). User answers: SL=2.5 ATR, trail=2.5 ATR, BE=immediate on EMA cross, new dashboard file. All py_compile PASS. Signal: stoch 9 K/D gate -> alignment check -> delta cross. |
+| `2026-03-06-55-89-scalp-research-session.md` | 55/89 scalp research: full methodology doc (8 sections: Markov, OU, slope, TDI, stoch 9 gate, BBW, MC, Vince state). 12 discrepancies found/fixed in plan v1. Dashboard architecture explored (uses compute_signals_v383 + Backtester384, not BaseStrategy). Master build prompt written for new-chat handoff. |
+| `plans/2026-03-06-55-89-scalp-master-build-prompt.md` | Handoff prompt for new chat: master script approach to build 55/89 strategy backtest. All permissions, architecture findings, engine column mapping, 4 files to create, open questions. |
+| `plans/2026-03-06-55-89-scalp-research-plan.md` | Research plan v2 (corrected after 12-discrepancy audit). Markov chain, OU diffusion, slope/degree, Jupyter notebook cells. |
+| `2026-03-06-uml-55-89-scalp-session.md` | UML session (Claude Desktop). Corrected Claude-invented conditions. Built UML from 3 confirmed elements only. Wrote initial build prompt. |
+| `2026-03-06-v1-v2-mechanical-research.md` | Deep research: why v1 trades execute wrong (PNL_MISMATCH 85%, SL_AT_ENTRY, TTP price suspect, risk gate miss). v1 vs v2 architecture comparison. Visual ASCII diagrams of all 6 entry/exit scenarios (normal SL, BE raise, TTP engine, TTP native, pessimistic eval, ultra-volatile). v2 fixes TTP latency (tick-level vs 5m) but still has polling fallback gap. |
+| `2026-03-06-v2-mechanical-fixes-applied.md` | v2 build script: 16/16 patches applied (0 errors). Fixes: allOrders-first _detect_exit, place-then-cancel BE/SL tighten (fixes naked positions), configurable be_buffer 0.2%, commission fallback 0.0016, max_atr_ratio 0.015, atr_at_entry+sl_price in CSV, allOrders limit 50, be_activation rename. Overlap/contradiction analysis of all findings. |
+| `2026-03-06-git-push-bot-server-prep.md` | Full vault push for VPS bot deployment. 250 files committed (e85b370), pushed to origin/main. All 12 critical bot files verified (incl. time_sync.py). Data inventory: 4,401 files / 49GB excluded by .gitignore. Bot self-sufficient — fetches candles live, no data transfer needed. |
+| `2026-03-05-research-orchestrator-build.md` (continued) | 2026-03-06 continuation: all 21 file batches confirmed complete overnight (353/354 files). Synthesis fix: rewritten `build_synthesis_prompt()` reads merged RESEARCH-FINDINGS.md in 2000-line chunks instead of all 21 individual FINDINGS files (overflow fix). MAX_TURNS_SYNTHESIS 100→200. dated-plans-16 detected 9/10 incomplete, re-running. FINAL: 22/22 batches complete, 0 failures, 1.2h. Synthesis written. RESEARCH-FINDINGS.md merged. PROJECT-STATUS.md created + MEMORY.md updated with startup read rule. |
 
 ### 2026-03-05
 | File | Summary |

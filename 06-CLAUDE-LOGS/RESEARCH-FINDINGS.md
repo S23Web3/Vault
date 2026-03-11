@@ -1,5 +1,5 @@
 # Project Research - Chronological Log Findings
-**Task completed:** 2026-03-06 17:35:03
+**Task completed:** 2026-03-06 18:55:12
 **Method:** Automated sequential batches via Claude Code CLI
 **Total batches:** 21
 
@@ -8746,8 +8746,8 @@ Plan notes that the v2 continuation prompt (`2026-03-05-next-chat-prompt-v2.md`)
 
 # Batch 16 Findings: Dated Plans (2026-03-05 group)
 
-Processed: 9 files
-Date range: 2026-03-05
+Processed: 10 files
+Date range: 2026-03-05 to 2026-03-06
 
 ---
 
@@ -9108,6 +9108,44 @@ No changes requested.
 
 ### Notes
 - This is a companion to `2026-03-05-next-chat-prompt-audit.md` (which audited v1). This document audits v2 and gives the green light.
+
+---
+
+## 2026-03-06-git-push-bot-server-prep.md
+**Date:** 2026-03-06
+**Type:** Planning / Operations prep
+
+### What happened
+A plan for committing and pushing all work from 2026-03-03 through 2026-03-05 to the vault repo (GitHub: S23Web3/ni9htw4lker). The bot was to be pulled and run on the VPS the following day (VPS already configured with .env and environment).
+
+5-step plan:
+1. `git add -A` in vault root. .gitignore confirmed to exclude: `.env`, `data/`, `logs/`, `state.json`, `bot.pid`, `__pycache__/`, `.obsidian/`, ML binaries. All files verified secrets-free (config.yaml has no API keys; bingx_auth.py reads from env vars).
+2. Verify critical bot files are staged — list of 12 specific files: main.py, bingx_auth.py, executor.py, position_monitor.py, signal_engine.py, state_manager.py, ws_listener.py, config.yaml (all modified), plus NEW files: time_sync.py (explicitly flagged as CRITICAL for 109400 fix), main_beta.py, config_beta.yaml, bingx-live-dashboard-v1-5.py.
+3. Commit message specified: `"Vault update: BingX v1.5 (time sync, TTP, config tuning), backtester v391, session logs 2026-03-03 to 2026-03-05"`.
+4. `git push origin main`.
+5. Post-push: `git log --oneline -3`, `git status` clean. VPS instructions: `git pull origin main` then `python main.py`.
+
+Scope: ~20 modified tracked files, 70+ new untracked files (session logs, plans, build scripts, new modules), 0 files with secrets.
+
+### Decisions recorded
+- Commit message pre-specified.
+- .gitignore exclusion list verified correct.
+- VPS deployment sequence: `git pull origin main` then `python main.py`.
+- time_sync.py explicitly flagged as CRITICAL for the 109400 timestamp fix.
+- main_beta.py and config_beta.yaml included as new files (beta bot configuration created alongside main bot).
+
+### State changes
+- Plan document created 2026-03-06.
+- Based on git status (observed in conversation context), many files listed are staged (A/M status) — push was planned for execution.
+
+### Open items recorded
+- Actual git push execution (plan only at document creation time).
+- VPS: `git pull origin main` + verify `time_sync.py` exists in `PROJECTS/bingx-connector/`.
+
+### Notes
+- time_sync.py cited as critical for "109400 fix" — refers to BingX API error code for timestamp mismatch, resolved by adding time synchronization between bot clock and exchange clock.
+- Commit covers 3 days of sessions (2026-03-03 through 2026-03-05).
+- main_beta.py and config_beta.yaml indicate a parallel beta bot configuration was created during this period.
 
 
 # Batch 17 Findings — Auto-Generated Plans (Part 1)
@@ -9788,11 +9826,11 @@ CLI flags for run_bbw_simulator.py: --symbol, --tier, --timeframe, --top, --no-m
 CODE VERIFICATION: `C:\Users\User\Documents\Obsidian Vault\PROJECTS\four-pillars-backtester\scripts\build_bbw_remaining.py` EXISTS on disk — build was executed.
 
 
-# Research Batch 18 — Auto-Plan Files Findings
+# Research Batch 18 Findings — Auto-Plans (e through i)
 
-**Batch:** 18 of 22
+**Generated:** 2026-03-06
 **Files processed:** 20
-**Date processed:** 2026-03-06
+**Source directory:** C:\Users\User\Documents\Obsidian Vault\06-CLAUDE-LOGS\plans\
 
 ---
 
@@ -9801,53 +9839,94 @@ CODE VERIFICATION: `C:\Users\User\Documents\Obsidian Vault\PROJECTS\four-pillars
 **Type:** Planning
 
 ### What happened
-Detailed plan to switch the BingX bot's trailing take-profit (TTP) from a custom code-managed engine to BingX's native `TRAILING_STOP_MARKET` exchange order. The switch is config-toggled via a new `ttp_mode` key: `"native"` uses exchange trailing at tick-level, `"engine"` keeps the existing custom 5m-candle TTP. The native mode reuses existing `ttp_act` (0.008 = 0.8%) and `ttp_dist` (0.003 = 0.3%) params. Context: the custom TTP engine had a ~6min worst-case delay before trailing exit fires, whereas native runs tick-level.
+Plan for a config-toggled native trailing stop switch for the BingX connector. Context: the custom TTP engine evaluates on confirmed 5m candles creating up to ~6min worst-case delay before trailing exit fires. BingX native `TRAILING_STOP_MARKET` runs tick-level on exchange. A previous native trailing attempt had failed because activation was ATR-based (too far) and callback was 2% (too wide). This plan uses percentage-based params matching the working TTP config.
+
+New config key `ttp_mode` with values `"native"` (exchange-managed, tick-level) or `"engine"` (existing custom 5m-candle TTP, default). Reuses existing `ttp_act=0.008` and `ttp_dist=0.003` for both modes.
+
+6 files to modify: config.yaml, executor.py, signal_engine.py, position_monitor.py, ws_listener.py, state_manager.py (~65 lines changed total).
+
+Critical bug fix designed: `"STOP" in "TRAILING_STOP_MARKET"` evaluates True in Python, so BE raise would cancel native trailing orders in `_cancel_open_sl_orders`. Fix: exclude `TRAILING_STOP_MARKET` from cancellation check. Also: `_detect_exit` must detect when trailing_order_id disappears from open orders (= it fired), and `_fetch_filled_exit` and `ws_listener._parse_fill_event` must classify `TRAILING_STOP_MARKET` as `TRAILING_EXIT`.
+
+Delivery: build script `C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector\scripts\build_native_trailing.py`.
 
 ### Decisions recorded
-- New config key `ttp_mode: native` added under position section
-- `_place_trailing_order()` gains `price_rate` parameter to override trailing rate
-- `signal_engine.py` early-returns when `ttp_mode == "native"` to skip engine evaluation
+- `ttp_mode: native` added to config.yaml under position section
+- `_place_trailing_order()` gains `price_rate` override parameter
+- `signal_engine.py` early-returns when `ttp_mode == "native"` (skip engine evaluation)
 - `position_monitor.py` skips `check_ttp_closes` and `check_ttp_sl_tighten` in native mode
-- Critical bug fix: `_cancel_open_sl_orders` must exclude `TRAILING_STOP_MARKET` from cancellation (currently `"STOP" in "TRAILING_STOP_MARKET"` = True, so BE raise would cancel the native trail)
-- `_detect_exit` must detect when trailing_order_id missing from open orders = it fired
-- `ws_listener.py` adds `TRAILING_STOP_MARKET` detection before generic STOP handling
-- Build script: `scripts/build_native_trailing.py` writes all 6 modified files
+- BE raise still active in native mode (safety net between +0.4% and +0.8%)
+- If native trailing rejected by exchange: log error, SL remains, no fallback to engine
+- `ttp_engine.py`, `main.py`, and dashboard deferred/out of scope
 
 ### State changes
-- 6 files planned for modification: config.yaml, executor.py, signal_engine.py, position_monitor.py, ws_listener.py, state_manager.py
-- `ttp_engine.py` untouched; dashboard deferred
-- Breakeven raise remains active in native mode as safety net
+- Plan created for 6-file modification
+- Critical BE/native trail interaction bug identified and fix designed
+- `TRAILING_EXIT` reason added to trades.csv classification design
+- Build script `build_native_trailing.py` planned
 
 ### Open items recorded
-- Manual verification required: set `ttp_mode: native` + `demo_mode: true`, run bot, verify trailing order placed, BE raise does NOT cancel trailing, exit detected as `TRAILING_EXIT` in trades.csv
-- Switchback test: set `ttp_mode: engine`, verify three-stage pipeline restored
+- Build script to be written and executed
+- Manual verification: `ttp_mode: native` + `demo_mode: true`, verify trailing placed, BE doesn't cancel it, exit classified as `TRAILING_EXIT`
+- Switchback test: `ttp_mode: engine`, verify three-stage pipeline fully restored
 
 ### Notes
-- Previous native trailing attempt failed because activation was ATR-based (too far) and callback was 2% (too wide). This plan uses percentage-based params matching the working TTP config.
-- Three-stage interaction table provided: BE raise (+0.4%), TTP activation (+0.8%), trail (0.3% callback).
+Three-stage interaction table provided: BE raise (+0.4%), TTP activation (+0.8%), trail (0.3% callback). Previous failed attempt used ATR-based activation and 2% callback.
+
+---
+
+## enumerated-dazzling-squirrel.md
+**Date:** 2026-03-05 (inferred from content — references work through 2026-03-05)
+**Type:** Planning
+
+### What happened
+Plan for staging all vault repo changes and pushing to GitHub (S23Web3/ni9htw4lker). Covers all work from 2026-03-03 through 2026-03-05: BingX connector v1.5 patches (timestamp sync fix, TTP engine, config tuning), backtester v391 modules, session logs, build scripts, documentation updates. VPS was already configured with .env and environment; bot to be pulled and run on VPS after push.
+
+5-step plan:
+1. `git add -A` in vault root
+2. Verify 12 critical bot files staged (including new `time_sync.py`, `main_beta.py`, `config_beta.yaml`, `bingx-live-dashboard-v1-5.py`)
+3. Commit with specified message
+4. `git push origin main`
+5. Post-push verification + VPS instructions
+
+Scope: 20 modified tracked files, 70+ new untracked files, 0 files with secrets (config.yaml has no API keys, bingx_auth.py reads from env vars).
+
+### Decisions recorded
+- Commit message: `"Vault update: BingX v1.5 (time sync, TTP, config tuning), backtester v391, session logs 2026-03-03 to 2026-03-05"`
+- All files verified clean of secrets before push
+- VPS next step: `git pull origin main` then `python main.py`
+
+### State changes
+- This plan documents the git push that produced commit `e85b370` (confirmed in current git log)
+
+### Open items recorded
+- VPS: `git pull origin main` + verify `time_sync.py` exists
+
+### Notes
+Commit `e85b370` in current git log confirms this plan was executed successfully.
 
 ---
 
 ## eventual-plotting-pony.md
-**Date:** Not stated (no date in filename or content)
+**Date:** Not explicitly stated (BingX connector early setup phase)
 **Type:** Guided instructions / Setup document
 
 ### What happened
-Step-by-step instructions for connecting the BingX bot to Telegram by filling in `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in the `.env` file. Covers: creating a bot via BotFather, getting Chat ID, editing `.env`, testing with a one-liner, and running the bot. Noted that code (`notifier.py`, `main.py`) is already fully built and only the placeholder values in `.env` are blocking alerts.
+Step-by-step instructions for connecting the BingX bot to Telegram by populating `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` in the `.env` file. Code was already fully built (`notifier.py` complete, `main.py` loads from `.env`). Only the placeholder values were blocking alerts.
+
+5 steps: create bot via @BotFather, get Chat ID via `getUpdates` API URL, edit `.env`, test with a Python one-liner (sends "BingX bot Telegram test OK"), run bot and verify startup Telegram message. References `STEP1-CHECKLIST.md` item `**Telegram alert received**`.
 
 ### Decisions recorded
-- No quotes, no spaces around `=` in `.env`
-- Test command provided: Python one-liner to POST to Telegram API and confirm 200/ok response before running bot
+- No quotes or spaces around `=` in .env values
+- Test one-liner provided before running bot
 
 ### State changes
 - No code changes — purely a user instruction document
-- Files involved: `.env` (user edits), `notifier.py` and `main.py` (read-only reference)
 
 ### Open items recorded
-- User must complete all 5 steps and check off `Telegram alert received` in `STEP1-CHECKLIST.md`
+- User must complete all 5 steps and check off `Telegram alert received` in STEP1-CHECKLIST.md
 
 ### Notes
-- None.
+No date in file. Context places it in early BingX connector setup (before first signal fired). This is a user-facing guide, not a technical build plan.
 
 ---
 
@@ -9856,70 +9935,73 @@ Step-by-step instructions for connecting the BingX bot to Telegram by filling in
 **Type:** Fix plan / Audit execution
 
 ### What happened
-Plan to execute a full logic audit's findings on `cuda_sweep.py`, `dashboard_v394.py`, and BingX connector files via a single build script `build_audit_fixes.py`. The audit was completed in a previous session; this plan applies fixes in priority order.
+Plan to apply findings from a full logic audit of `cuda_sweep.py`, `dashboard_v394.py`, and BingX connector files via a single build script. Previous session documented findings without applying fixes.
 
-**Critical fixes:**
-1. Commission split in cuda_sweep.py: taker entry (0.0008) vs maker exit (0.0002) — previously both sides used 0.0008, overstating P&L by 0.06% per RT
-2. pnl_sum missing entry commission — `pnl_sum += net_pnl - entry_comm` at both exit points
-3. win_rate displayed as raw decimal in 3 table locations in dashboard_v394.py — format to `* 100` and rename to `win_rate%`
-4. HIGH #4 (TTP state lost on restart): REASSESSED — already fixed (code at signal_engine.py lines 113-127 restores from persisted fields). No action.
-5. WSListener dies permanently after 3 failures with no alert — increase MAX_RECONNECT to 10, add exponential backoff, write `logs/ws_dead_{timestamp}.flag`
-6. `_place_market_close()` missing `reduceOnly` — add as defensive measure (no downside in hedge mode)
-7. `saw_green` uses `>` instead of `>=` at cuda_sweep.py lines 163/171
+**CRITICAL #1** — Commission split in cuda_sweep.py: same rate (0.0008) used for both entry and exit. Fix: add `maker_rate=0.0002` param, split into `entry_comm` and `exit_comm`. Impact: all prior GPU sweep P&L numbers overstated by 0.06% × notional per RT.
+
+**CRITICAL #2** — `pnl_sum` missing entry commission: Fix: `pnl_sum += net_pnl - entry_comm` at both exit points.
+
+**HIGH #3** — win_rate displayed as raw decimal in 3 table locations in dashboard_v394.py. Fix: multiply × 100, rename to `win_rate%`.
+
+**HIGH #4** — TTP state lost on restart: REASSESSED as already fixed (signal_engine.py lines 113-127 already restores from persisted fields). No action.
+
+**HIGH #5** — WSListener dies permanently after 3 reconnect failures with no alert. Fix: MAX_RECONNECT=10, exponential backoff, write `logs/ws_dead_{timestamp}.flag`.
+
+**HIGH #6** — `_place_market_close()` missing reduceOnly: LOW risk in hedge mode. Decision: add `"reduceOnly": "true"` as defensive measure.
+
+**HIGH #7** — `saw_green` uses `>` instead of `>=` at cuda_sweep.py lines 163/171.
+
+Build script `build_audit_fixes.py` patches 4 files: cuda_sweep.py, dashboard_v394.py, ws_listener.py, position_monitor.py.
 
 ### Decisions recorded
-- CRITICAL #1 & #2 resolved with split commission accounting: `entry_comm = notional * taker_rate`, `exit_comm = notional * maker_rate`
 - HIGH #4 confirmed already fixed — skipped
-- HIGH #6 downgraded to LOW (hedge mode + positionSide sufficient), but add `reduceOnly: "true"` defensively anyway
-- All 6 entry blocks in cuda kernel: change `comm_per_side` → `entry_comm`
+- HIGH #6 downgraded to LOW but add reduceOnly defensively
 - `maker_rate=0.0002` added to `run_gpu_sweep()` and `run_gpu_sweep_multi()` signatures
+- Patch via exact string replacement (no full rewrite)
+- MEDIUM/LOW issues deferred
 
 ### State changes
-- 4 files planned for patching: `engine/cuda_sweep.py`, `scripts/dashboard_v394.py`, `bingx-connector/ws_listener.py`, `bingx-connector/position_monitor.py`
-- Build script: `scripts/build_audit_fixes.py` (string replacement, no full rewrite)
-- All prior GPU sweep P&L numbers are overstated by 0.06% × notional per RT
+- 4 files planned for patching
+- All prior GPU sweep P&L numbers confirmed overstated (0.06% × notional per RT)
+- Build script `build_audit_fixes.py` planned
 
 ### Open items recorded
-- User must run GPU Sweep on one coin and verify `win_rate%` column shows values like `42.3` not `0.423`
-- User must verify net_pnl figures are lower than previous runs (correct accounting)
+- User runs GPU Sweep post-fix, verifies `win_rate%` shows 42.3 not 0.423
+- Verify net_pnl figures lower than previous runs
 
 ### Notes
-- Medium/low issues explicitly deferred: stale detection for sweep params, shared pool capital enforcement, TTP mid-bar timing, race condition TTP close vs exchange SL/TP, commission rate fallback mismatch, no slippage protection, C trades checkbox UI.
+Previously noted TTP state restoration fix (signal_engine.py lines 113-127) confirmed correct by this audit.
 
 ---
 
 ## expressive-painting-taco.md
-**Date:** Not stated in content
-**Type:** Planning — BingX bot enhancements
+**Date:** Not explicitly stated (post-VPS-block discovery; consistent with early March 2026)
+**Type:** Planning
 
 ### What happened
-Plan for two deliverables: (1) Windows Task Scheduler auto-start for the BingX bot with crash recovery via PowerShell wrapper, and (2) improved Telegram message formatting (HTML bold `<b>` tags + newlines instead of single-line dumps). One build script `build_autostart_and_tg.py` creates 3 new files and modifies 3 existing files.
+Plan for two deliverables: (1) Windows Task Scheduler auto-start on reboot with crash recovery, and (2) improved Telegram message formatting. Context: VPS (Hostinger Jakarta) cannot reach BingX VST API (Indonesian IPs block datacenter connections) — bot runs locally on Windows in demo mode (47 coins, 5m).
 
-**New files created:**
-- `scripts/run_bot.ps1` — PowerShell crash-recovery loop (restarts on non-zero exit, waits 30s, clean exit code 0 = don't restart)
-- `scripts/bingx-bot-task.xml` — Task Scheduler XML (AtStartup trigger, 60s delay, run hidden)
-- `scripts/install_autostart.ps1` — admin script to register/verify/unregister task
+One build script `build_autostart_and_tg.py` backs up 3 existing files, creates 3 new files (PowerShell wrapper `run_bot.ps1`, Task Scheduler XML `bingx-bot-task.xml`, installer `install_autostart.ps1`), and modifies 3 existing files (executor.py, position_monitor.py, main.py — Telegram HTML formatting).
 
-**Files modified (with backups):**
-- `executor.py`: 3 Telegram calls formatted with `<b>ORDER FAILED</b>`, `<b>ORDER ID UNKNOWN</b>`, `<b>ENTRY</b>`
-- `position_monitor.py`: 4 Telegram calls formatted with `<b>EXIT</b>`, `<b>DAILY SUMMARY</b>`, `<b>HARD STOP</b>`, `<b>WARNING</b>`
-- `main.py`: 3 Telegram calls formatted with `<b>BOT STARTED</b>`, `<b>BOT STOPPING</b>`, `<b>BOT STOPPED</b>`
+PowerShell wrapper: crash recovery loop, restarts on non-zero exit code after 30s delay, does NOT restart on clean exit (code 0). Task Scheduler: AtStartup trigger, 60s network delay.
+
+Telegram messages reformatted from single-line dumps to multi-line HTML with `<b>` bold headers. 10 exact string replacements specified: ENTRY, ORDER FAILED, ORDER ID UNKNOWN, EXIT, DAILY SUMMARY, HARD STOP, WARNING, BOT STARTED, BOT STOPPING, BOT STOPPED.
 
 ### Decisions recorded
-- VPS (Hostinger Jakarta) cannot reach BingX VST API — bot runs locally on Windows
-- Demo mode first ("let it burn VST", 47 coins, 5m)
 - Clean exit (code 0) = intentional stop, no restart; non-zero = crash, restart after 30s
-- All 10 exact string replacements specified with old/new code blocks
+- Task Scheduler: AtStartup, 60s delay, run hidden
+- HTML parse mode (`<b>` tags) for all Telegram messages
+- Bot runs locally on Windows (not VPS) due to VST API block
 
 ### State changes
-- 6 files total touched (3 new, 3 modified with backups)
-- py_compile validates every .py file touched
+- Build script planned creating 3 new files + modifying 3 existing (with timestamped .bak backups)
 
 ### Open items recorded
-- Verification: run build script, test bot manually via PS1, verify TG messages, install as admin, reboot test, test crash recovery
+- User must run `install_autostart.ps1` as admin to register task
+- Reboot test + crash recovery test required
 
 ### Notes
-- Context: Indonesian VPS IPs blocked from BingX VST API.
+Indonesian VPS IPs block datacenter connections to BingX VST API — this was the constraint forcing local Windows execution.
 
 ---
 
@@ -9928,153 +10010,148 @@ Plan for two deliverables: (1) Windows Task Scheduler auto-start for the BingX b
 **Type:** Research / Strategy specification
 
 ### What happened
-Comprehensive position management study document built from two live TradingView Replay walkthroughs: PUMPUSDT LONG and PIPPINUSDT SHORT (both 5m chart, both trend-hold type). Documents the full trade lifecycle: HTF direction (three-layer system), entry detection (sequential stochastic confirmation + BBW + TDI), gate check (stoch 60 K vs D), trend hold management (TDI 2-candle rule, BBW health monitor, AVWAP trailing, Ripster cloud milestones), add-ons, and exit rules.
+Comprehensive position management study document based on two live TradingView Replay walkthroughs: PUMPUSDT LONG (Wed 04 Mar '26, 5m Bybit Spot) and PIPPINUSDT SHORT (Tue 03 Mar '26, 5m Bybit Perpetual). Both are trend-hold type (stoch 60 gate opens). Documents the full trade lifecycle across 6 phases.
 
-**Key confirmed rules:**
-- Three-layer HTF system: Layer 1 = 4h/1h session bias, Layer 2 = 15m MTF clouds on 5m chart, Layer 3 = 5m entry timing
-- All 4 stochastics (9, 14, 40, 60) must have K cross above/below D — sequential process, stoch 9 crosses first (alert), wait for others
-- BBW spectrum must cross from below to above MA for entry confirmation
-- TDI price line must be on correct side of MA at entry AND is a hard 2-candle exit rule
-- SL = 2 × ATR(14) validated against structural level
-- Stoch 60 K vs D crossing = gate opens = trend-hold mode
-- AVWAP is the trailing SL anchor (plain from trade start for longs, +2sigma for shorts, tightened on BBW red)
-- Ripster Cloud 4 value FROZEN at time of confirmation = TP target (doesn't move with cloud)
-- Add-ons require stoch 9/14 to reach opposite zone while 40/60 hold trend direction
+**Three-layer HTF direction system:** Layer 1 = 4h/1h session bias (Ripster EMA cloud transitions); Layer 2 = 15m MTF Clouds on 5m chart (hold duration modulator, not hard binary); Layer 3 = 5m execution timing. All three must agree.
+
+**Entry detection:** All 4 stochastics (9, 14, 40, 60 Raw K) must have K/D crossovers — sequential process, stoch 9 crosses first (alert), wait for others. Recent zone check: K must have been below 20 (long) or above 80 (short) within last N=10 bars. BBW spectrum must cross from below to above MA. TDI price line on correct side of MA.
+
+**SL:** 2 × ATR(14) from entry, validated against structural level.
+
+**Gate check:** Stoch 60 K vs D crossing = gate opens = trend-hold mode.
+
+**Trend hold management:** TDI 2-candle rule (hard exit), BBW health monitor (healthy/extreme/exit states), AVWAP trailing (plain or +2sigma), Ripster Cloud 4 value FROZEN at confirmation = TP target.
+
+**Add-ons:** Stoch 9/14 must reach opposite zone while 40/60 hold trend direction.
+
+Conclusion: "This is not a patch on v386. It is a different strategy architecture." Contradicts ATR-SL-MOVEMENT-BUILD-GUIDANCE.md which makes ATR central to phase transitions (ATR role here = thermometer only).
 
 ### Decisions recorded
-- N=10 bars for recent-zone check (K must have been below 20 / above 80 within last 10 bars) — flagged for Vince optimization
-- MTF clouds = hold duration modulator (not hard binary): price above MTF = stay in longer; below MTF = quick close
-- ATR role: thermometer only (SL sizing + confirmation), NOT central to phase transitions (contradicts ATR-SL-MOVEMENT-BUILD-GUIDANCE.md)
-- "This is not a patch on v386. It is a different strategy architecture."
+- N=10 bars for recent zone check (flagged for Vince optimization)
+- MTF clouds = hold duration modulator (not hard binary filter)
+- ATR: thermometer only (SL sizing + volatility confirmation, not phase driver)
+- No code until user explicitly approves the rules
 
 ### State changes
 - Study document only — no code written
-- State machine summary diagram provided (FLAT → MONITORING → IN TRADE → TREND HOLD with all transitions)
+- State machine diagram created
 - Full comparison table: User's Actual Trading vs ATR-SL-MOVEMENT Spec vs AVWAP 3-Stage vs v386
 
 ### Open items recorded
-- 6 open questions: SL-1 (what if 2 ATR doesn't align with structure?), SL-2 (what counts as structure?), GATE-1 (numeric threshold for K/D distance?), BE-1 (two BE methods interchangeable?), TRAIL-1 (AVWAP variant selection), CLOUD-1 (frozen Cloud 4 target longs-only?), TP-1 (cloud target vs % target?)
-- Document explicitly states: "No code should be written until the user explicitly approves the rules"
+- 7 open questions: SL-1 (2 ATR not aligned with structure?), SL-2 (what counts as structure?), GATE-1 (K/D distance threshold?), BE-1 (two BE methods interchangeable?), TRAIL-1 (AVWAP variant selection), CLOUD-1 (frozen Cloud 4 longs-only?), TP-1 (cloud vs % target?)
+- BBW BBWP percentile thresholds marked as "flagged for Vince research" — no numeric boundaries
 
 ### Notes
-- BBW-1 (BBWP thresholds for red/blue/dark blue) was marked RESOLVED as "flagged for Vince research" — no numeric boundaries established yet.
+Document explicitly states: "No code should be written until the user explicitly approves the rules." This is a research artifact, not a build plan.
 
 ---
 
 ## floating-jingling-valiant.md
-**Date:** 2026-03-05 (from content)
+**Date:** 2026-03-05
 **Type:** Audit / Quality review
 
 ### What happened
-Thoroughness audit of the `2026-03-05-next-chat-prompt.md` continuation prompt, performed while the bot was RUNNING (collecting 48h live data, must not be restarted). Found 2 errors and 3 gaps in the prompt, verified 8 claims as correct.
+Thoroughness audit of the `2026-03-05-next-chat-prompt.md` continuation prompt. Bot was RUNNING and must NOT be restarted (48h live data collection). Found 2 errors and 3 gaps; verified 8 claims as correct.
 
-**Errors found:**
-1. Task 1 function mismatch: prompt says `compute_signals()` accepts `require_stage2`/`rot_level`, but dashboard_v394.py line 57 actually calls `compute_signals_v383()` from `four_pillars_v383_v2.py`, which does NOT accept those params
-2. Task 2 already 80% done: dashboard v1.5 EXISTS (133K, built 2026-03-04), with BUG-4/BUG-1b/BUG-2/BUG-5 all fixed; only `be_act` save callback missing
+**ERROR 1 (Task 1 function mismatch):** Prompt says `compute_signals()` in `signals/four_pillars.py` accepts `require_stage2`/`rot_level`. Reality: dashboard_v394.py line 57 imports `compute_signals_v383()` from `signals/four_pillars_v383_v2.py` which does NOT accept those params. Fix options: (A) switch import line 57 to `compute_signals` from `signals.four_pillars`, or (B) add params to the v383 function.
 
-**Gaps found:**
-1. No bot restart constraint in prompt
-2. Stale runtime data (PnL snapshot, RENDER positions)
-3. Import switch not mentioned if Task 1 changes signal function
+**ERROR 2 (Task 2 already 80% done):** Prompt says 5 bugs still pending. Reality: `bingx-live-dashboard-v1-5.py` already EXISTS (133K, built 2026-03-04) with patches P3-A through P3-H applied. BUG-4/BUG-1b/BUG-2/BUG-5 all fixed. Only `be_act` save callback genuinely missing.
+
+**GAPs:** (1) No bot restart constraint, (2) Stale runtime data, (3) Import switch not mentioned.
+
+Verified correct: Three-stage TTP config values (be_act=0.004, ttp_act=0.008, ttp_dist=0.003), orderId extraction in 3 places, unrealized PnL in Telegram, max_positions=25, test pass count, key file paths.
+
+Plan: Create corrected v2 prompt at `2026-03-05-next-chat-prompt-v2.md` (do NOT overwrite original). 4 specific fixes documented.
 
 ### Decisions recorded
-- Create corrected v2 prompt, do NOT overwrite original
-- Fix 1: Add "CONSTRAINT: Bot is RUNNING -- DO NOT RESTART" section
-- Fix 2: Specify import switch (line 57 → `from signals.four_pillars import compute_signals`)
-- Fix 3: Rewrite Task 2 scope to only `be_act` save callback
-- Fix 4: Replace stale runtime data with instruction to check current logs
+- Option A for Task 1: change import (line 57) to `from signals.four_pillars import compute_signals`
+- Task 2 scoped down to `be_act` settings save only
+- Create v2 prompt file, preserve original
 
 ### State changes
 - New file planned: `06-CLAUDE-LOGS/plans/2026-03-05-next-chat-prompt-v2.md`
-- Original file preserved
+- Audit findings documented
 
 ### Open items recorded
-- Read new v2 file back to confirm all 5 fixes present
+- Write v2 prompt with all 4 fixes; read back to verify
 
 ### Notes
-- Content of this file is IDENTICAL to fluffy-singing-mango.md — both files contain the same audit document. This is a duplicate plan file.
+Confirms `bingx-live-dashboard-v1-5.py` existed as of 2026-03-04 with most bugs already fixed.
 
 ---
 
 ## fluffy-singing-mango.md
 **Date:** 2026-02-27
-**Type:** Planning — BingX bot improvement
+**Type:** Planning
 
 ### What happened
-Comprehensive BingX bot improvement plan created after scraping the full BingX API v3 reference (224 endpoints, 849KB). Cross-referenced against current bot code. Three major discoveries affecting live trading accuracy:
-1. Commission rate hardcoded wrong: bot uses 0.0012, real rate is 0.0016 RT — every recorded trade understated commission by 33%
-2. Position history endpoint gives BingX-calculated PnL (netProfit) with actual commission + funding fees — ground truth not used
-3. WebSocket ORDER_TRADE_UPDATE gives real-time fills — eliminates EXIT_UNKNOWN; entry price uses mark_price (wrong) not fill price (avgPrice)
+BingX bot improvement plan after scraping the full BingX API v3 reference (224 endpoints, 849KB). Decision context: stop polishing VST demo, prepare infrastructure for live money.
 
-**P0 fixes (live trading blockers):**
-- FIX-1: Query `GET /openApi/swap/v2/user/commissionRate` at startup, use dynamic rate
-- FIX-2: Use `data.avgPrice` from order POST response as entry_price
-- FIX-3: Validate SL direction before order (LONG sl_price < mark_price, SHORT sl_price > mark_price)
+**3 key API discoveries:**
+1. Commission rate queryable — `GET /openApi/swap/v2/user/commissionRate` returns actual taker/maker rates. Bot hardcoded 0.0012; real rate is 0.0016 RT — every trade understated commission by 33%.
+2. Position history gives BingX-calculated PnL (`netProfit` with actual commission + funding fees — ground truth).
+3. WebSocket ORDER_TRADE_UPDATE gives real-time fills — eliminates EXIT_UNKNOWN. Entry price wrong: bot uses `mark_price`, actual fill is `data.avgPrice`.
 
-**P1 improvements:**
-- IMP-1: New `ws_listener.py` module with WebSocket ORDER_TRADE_UPDATE daemon thread
-- IMP-2: `scripts/reconcile_pnl.py` standalone PnL audit vs BingX positionHistory
+**P0 bugs:** FIX-1 (commission hardcoded wrong), FIX-2 (entry price = fill price not mark), FIX-3 (SL direction validation).
 
-**P2 improvements:**
-- IMP-3: Handle error 101209 (max position value exceeded) with halved quantity retry
-- IMP-4: Cooldown filter (`cooldown_bars: 3`) to match backtester
-- IMP-5: Startup commission fetch consolidation
+**P1:** IMP-1 (new `ws_listener.py` WebSocket daemon thread), IMP-2 (`scripts/reconcile_pnl.py` standalone PnL audit).
 
-Full Ollama-based build runbook provided for each step (steps 1-11), including exact prompts to send to Ollama, bash commands for py_compile and diff, file copy sequences.
+**P2:** IMP-3 (error 101209 max position value), IMP-4 (cooldown filter), IMP-5 (startup commission fetch).
+
+**P3:** IMP-6 (batch cancel on shutdown), IMP-7 (Cancel All After safety timer), IMP-8 (trailing stop option).
+
+Full Ollama-based build runbook (Steps 1-11): paste file content, apply specific changes, py_compile each result.
 
 ### Decisions recorded
-- Execution via Ollama (local LLM) to generate code modifications
-- Two new files: `ws_listener.py`, `scripts/reconcile_pnl.py`
-- 5 files to modify: `position_monitor.py`, `executor.py`, `main.py`, `state_manager.py`, `risk_gate.py`, `config.yaml`
-- VPS cannot reach BingX VST API — local running only
+- Build via Ollama (local LLM) code generation
+- New files: `ws_listener.py`, `scripts/reconcile_pnl.py`
+- WSListener = threading.Thread, daemon=True; fill_queue drain before polling
+- Commission rate RT = taker rate × 2 = 0.0016
 
 ### State changes
-- Improvement catalog documented but not yet implemented (planning document)
-- All prior trade PnL records in bot logs have understated commission by 33%
+- Improvement catalog created (11 items, 4 priority levels)
+- All prior trade PnL records confirmed to have understated commission by 33%
 
 ### Open items recorded
-- 11-step build runbook for implementation
-- P2/P3 deferred: batch cancel on shutdown, Cancel All After safety timer, trailing stop option
+- 11-step build runbook
+- P2/P3 improvements deferred
 
 ### Notes
-- ws_listener.py was subsequently built in a later session (file exists in repo per git status). This plan appears to predate that implementation.
+`ws_listener.py` was subsequently built (confirmed in git status as `M PROJECTS/bingx-connector/ws_listener.py`). This plan predates that implementation.
 
 ---
 
 ## fluttering-kindling-creek.md
-**Date:** Not stated (no date in content)
-**Type:** Planning — Dashboard build
+**Date:** Not explicitly stated (references v1-1 spec; context ~2026-02-28)
+**Type:** Planning
 
 ### What happened
-Build plan for `bingx-live-dashboard-v1-1.py` — a Plotly Dash web app replacing the Streamlit read-only dashboard. References a 1795-line build spec at `C:\Users\User\.claude\plans\goofy-dancing-summit.md`. Notes that previous session finalized the spec but hit context limit before writing code. This plan executes the spec without further design decisions.
+Execution plan for building BingX Live Dashboard v1-1 from the complete spec in `C:\Users\User\.claude\plans\goofy-dancing-summit.md` (1795 lines). Previous session finalized spec but hit context limit before writing code.
 
-**Deliverables:** 3 files:
-1. `bingx-live-dashboard-v1-1.py` (~700 lines) — Dash 4.0 app, port 8051, 5 tabs (Operational, History, Analytics, Coin Summary, Bot Controls), 14 callbacks, ag-grid, dark theme, BingX API integration
-2. `assets/dashboard.css` (~20 lines) — dark theme overrides
-3. `scripts/test_dashboard.py` (~170 lines) — unit tests
+3 files to build:
+1. `bingx-live-dashboard-v1-1.py` (~700 lines) — Dash 4.0, port 8051, 5 tabs, 14 callbacks, ag-grid, dark theme, BingX API integration for position management (Raise BE, Move SL), config editor, halt/resume
+2. `assets/dashboard.css` (~20 lines)
+3. `scripts/test_dashboard.py` (~170 lines)
 
-**Key technical decisions confirmed:**
-- `suppress_callback_exceptions=True`
-- `prevent_initial_call=False` for CB-1 and CB-2 only
-- CB-6/CB-7 both output to `pos-action-status` (allowed, different inputs)
-- `fetch_all_mark_prices` uses `ThreadPoolExecutor(max_workers=8)`
-- API signing replicated in dashboard (not imported from bot internals)
-- Atomic writes via tmp + `os.replace()`
-- Dual logging with `TimedRotatingFileHandler`
+7-step build plan: load Dash skill, write 3 files, py_compile both .py files, give run command.
+
+Key technical decisions: `suppress_callback_exceptions=True`, `prevent_initial_call=False` for CB-1/CB-2, API signing replicated in dashboard (not imported from bot), `ThreadPoolExecutor(max_workers=8)` for price fetches, atomic writes via tmp + `os.replace()`, dual logging with `TimedRotatingFileHandler`.
 
 ### Decisions recorded
-- Load Dash skill (`/dash`) mandatory per MEMORY.md before any Dash code
-- Existing v1 (Streamlit) must NOT be touched
+- Dash 4.0 not Streamlit (Streamlit reruns full script on every click, wiping mid-action form state)
+- Pattern-matching callbacks (MATCH selector) required for per-row Raise BE / Move SL
+- Load Dash skill mandatory per MEMORY.md
+- Existing v1 (Streamlit, `bingx-live-dashboard-v1.py`) must NOT be touched
 
 ### State changes
-- No code written yet — plan to execute existing spec
-- References spec file: `C:\Users\User\.claude\plans\goofy-dancing-summit.md`
+- No code written yet — plan to execute goofy-dancing-summit.md spec
 
 ### Open items recorded
-- Build steps 1-7 listed; user verifies: py_compile, test_dashboard.py, actual launch at port 8051
+- Build steps 1-7 to be executed
+- User verification: py_compile, test_dashboard.py, launch at port 8051
 
 ### Notes
-- This is a pre-execution plan referencing goofy-dancing-summit.md (the full build spec, batch 18 file #13).
+References `goofy-dancing-summit.md` as source spec. That file is also in this batch (see below).
 
 ---
 
@@ -10083,33 +10160,31 @@ Build plan for `bingx-live-dashboard-v1-1.py` — a Plotly Dash web app replacin
 **Type:** Fix plan — Runtime error resolution
 
 ### What happened
-Dashboard v1.5 passed `py_compile` but first launch revealed 3 errors. The v2 continuation prompt had only listed `be_act` bug — these runtime errors are new findings.
+Dashboard v1.5 passed `py_compile` but had never been run until 2026-03-05. First launch revealed 2 code errors and 1 API error.
 
-**Errors:**
-1. `KeyError: "Callback function not found for output 'store-bot-status.data'."` at line 1141 — `dcc.Store(id='store-bot-status', data=[])` is the only store not using `storage_type='memory'`; the `data=[]` conflicts with callback registration
-2. `IndexError: list index out of range` in `_prepare_grouping` — likely cascading from Error 1 (Dash internal misalignment)
-3. `BingX error 100001: Signature verification failed` — API credential issue, not a code bug
+**Error 1:** `KeyError: "Callback function not found for output 'store-bot-status.data'."` — `dcc.Store(id='store-bot-status', data=[])` at line 1141 was the only store not using `storage_type='memory'`. All 4 other stores use `storage_type='memory'` and work fine. The `data=[]` conflicts with callback registration.
 
-**Fix:**
-- Patch 1: Change `dcc.Store(id='store-bot-status', data=[])` → `dcc.Store(id='store-bot-status', storage_type='memory')` (line 1141)
-- Patch 2: If IndexError persists, investigate CB-3, CB-9, CB-10 callbacks
+**Error 2:** `IndexError: list index out of range` in `_prepare_grouping` — likely cascading from Error 1. Re-test after fixing Error 1. If persists, investigate CB-3 (line 1252), CB-9 (line 1933), CB-10 (line 2089).
+
+**Error 3:** `BingX error 100001: Signature verification failed` — API auth issue, not code bug. User must verify `.env` keys.
+
+Fix: build script `build_dashboard_v1_5_patch_runtime.py` applies one-line patch: `dcc.Store(id='store-bot-status', storage_type='memory')`.
 
 ### Decisions recorded
-- Build script: `scripts/build_dashboard_v1_5_patch_runtime.py` patches base file in-place
-- Error 100001 is user action (verify `.env` keys), not a code fix
-- Patch 1 aligns store-bot-status with all other stores
+- Single patch: align store-bot-status with all other stores
+- Error 100001 is user action (verify .env keys), not code
+- `be_act` save bug and dashboard_v395 preset deferred to separate tasks
 
 ### State changes
 - Single-line change to `bingx-live-dashboard-v1-5.py` line 1141
-- `be_act` save bug deferred (separate task from v2 prompt)
-- dashboard_v395 backtester preset deferred
+- Build script `build_dashboard_v1_5_patch_runtime.py` planned
 
 ### Open items recorded
-- User must re-run dashboard after patch, verify no KeyError/IndexError in first 30 seconds
-- Signature errors will persist until `.env` keys updated
+- User re-runs dashboard after patch, verifies no KeyError/IndexError in first 30 seconds
+- Signature errors persist until .env keys updated
 
 ### Notes
-- The v2 continuation prompt (`2026-03-05-next-chat-prompt-v2.md`) only listed `be_act` — this plan discovered additional runtime errors not previously known.
+The v2 continuation prompt had only listed `be_act` — these runtime errors were new findings discovered at first launch.
 
 ---
 
@@ -10118,151 +10193,137 @@ Dashboard v1.5 passed `py_compile` but first launch revealed 3 errors. The v2 co
 **Type:** Handoff document / Comprehensive session summary
 
 ### What happened
-Full handoff document for Vince ML v2, created when context limit hit. Contains: critical error log, Vince ML v2 scope (in progress), full code audit of dashboard and engine, and pending items.
+Vince ML v2 full handoff document created when context limit hit. Contains: critical error log, Vince ML v2 scope (in progress), full code audit of dashboard and engine, pending items.
 
-**Critical error:** Claude inverted "under 60" to "past/over 60" when restating user direction — opposite signal meaning. Prevention rule documented: NEVER paraphrase directional statements.
+**Critical error logged:** Claude inverted "under 60" to "past/over 60" when restating user direction — opposite signal meaning. Prevention rule: NEVER paraphrase directional statements; "under 60" = "< 60".
 
-**Vince ML v2 scope (IN PROGRESS):**
-- Vince = trade research engine (NOT a trade filter/classifier)
-- Reads trade CSV from any strategy's backtester, enriches with full indicator constellation at every bar
-- Finds relationships between indicator states and trade outcomes using GPU (PyTorch)
-- Evidence from 2 unoptimized 10-coin runs: 86% LSG (Lost Saw Green) is systemic — entries work, exits lose money
+**Vince ML v2 scope (IN PROGRESS, not finalized):**
+- Vince = trade research engine that reads trade CSV, enriches with indicator constellations at every bar, finds relationships using GPU (PyTorch), extracts robust parameters
+- NOT a trade filter/classifier (previous v1 build = Vicky's architecture: XGBoost classifier, TAKE/SKIP decisions, reduces volume — wrong for rebate strategy)
+- Evidence: 86% LSG across 2 unoptimized 10-coin runs (77K-90K trades each) — entries work, exits lose money
 - Data flow: Stage 1 (Strategy → Trade CSV) → Stage 2 (Vince: Enricher → Relationship Engine → Cross-Validation → Dashboard)
-- Previous v1 build was wrong (Vicky architecture: XGBoost classifier for TAKE/SKIP — reduces volume, wrong for rebate strategy)
+- Key moments to snapshot: entry bar, MFE bar, MAE bar, breakeven bar, exit bar, phase transition bars, cloud cross bars
 
 **Full code audit (9 files):**
-- Signal pipeline (stochastics, clouds, state_machine_v383, four_pillars_v383): CORRECT
-- backtester_v384.py: CORRECT with ONE known bug — scale-out entry commission double-count in Trade CSV (equity curve unaffected)
+- stochastics.py, clouds.py, state_machine_v383.py, four_pillars_v383.py: CORRECT
+- backtester_v384.py: CORRECT with 1 known bug — scale-out entry commission double-count in Trade CSV (equity curve unaffected, LOW severity)
 - position_v384.py, avwap.py, commission.py: CORRECT
-- dashboard_v391.py: CORRECT — direct pass-through from engine, no inflation
-- Capital model v2: NOT audited in detail
-
-**Audit verdict:** The 77K-90K trades and 85-86% LSG numbers are REAL.
+- dashboard_v391.py (2338 lines): CORRECT — direct pass-through, no inflation
+- Audit verdict: "The 77K-90K trades and 85-86% LSG numbers are REAL."
 
 ### Decisions recorded
-- Vince = relationship research engine. Vicky = trade classifier (wrong architecture for rebate strategy)
-- NEVER reduce trade count — volume = $1.49B/year, critical for rebate
+- Vince = relationship research engine, NOT Vicky (trade classifier)
+- NEVER reduce trade count (volume = $1.49B/year, rebate critical)
 - Strategy-agnostic base (Andy = forex later)
-- No prioritization of relationship questions — data shows what's there
-- "Under 60" = "< 60", never to be paraphrased
+- No prioritization of relationship questions
+- "Under 60" = "< 60" — never to be paraphrased
 
 ### State changes
 - Vince ML v2 scope IN PROGRESS, not finalized
-- Code audit completed on all engine files
-- Known bug documented: scale-out entry commission double-count in Trade CSV
+- Full code audit completed; all engine math verified correct
+- Scale-out commission double-count bug documented (not fixed)
 
 ### Open items recorded
 1. Vince ML v2 scope not finalized — resume scoping
-2. Scale-out commission bug — not fixed, low priority (equity unaffected)
-3. RE-ENTRY logic — "currently totally wrongly programmed," deferred after scope
+2. Scale-out commission bug — not fixed (equity unaffected, low priority)
+3. RE-ENTRY logic — "currently totally wrongly programmed," deferred
 4. Dashboard v3.9.2 build script written but not run by user
 5. Architecture breakdown — next step after scope finalized
 
 ### Notes
-- This is a comprehensive handoff from early in the project (2026-02-18), covering the pivot from Vicky (classifier) to Vince (research engine) architecture.
-- dashboard_v391.py referenced here (2338 lines); later versions up to v394 were built in subsequent sessions.
+This is the 2026-02-18 handoff document. Covers the pivot from Vicky (classifier) to Vince (research engine) architecture. dashboard_v391.py referenced here (2338 lines); later versions up to v394 were built in subsequent sessions.
 
 ---
 
 ## generic-humming-kurzweil.md
-**Date:** Not stated
-**Type:** Planning — BingX bot utilities
+**Date:** Not explicitly stated (BingX connector setup context)
+**Type:** Planning
 
 ### What happened
 Plan for two tasks in the BingX connector:
-1. Create `historical_fetcher.py` — standalone script to pull full historical OHLCV data from BingX public klines endpoint and save as parquet (idempotent, deduplicates by timestamp). CLI usage and importable `fetch_and_save()` function. Paginates using startTime/endTime, max 1440 bars per call.
-2. Extract `set_leverage_and_margin()` from `main.py` (lines ~63-94) into new `exchange_setup.py` — separates exchange API logic from orchestration.
+
+**Task 1 — `historical_fetcher.py`:** Standalone script/importable module to pull full historical OHLCV from BingX public klines endpoint (`/openApi/swap/v3/quote/klines`, no auth) and save as parquet. Paginates backward using `startTime`/`endTime` (max 1440 per call). Saves to `data/historical/{symbol}_{timeframe}.parquet`. Deduplicates by timestamp on re-run (idempotent). Parquet schema: time (int64), open/high/low/close/volume (float64). CLI: `--symbol`, `--timeframe`, `--days`. Also importable as `fetch_and_save()`.
+
+**Task 2 — Extract `set_leverage_and_margin()` to `exchange_setup.py`:** Move function and constants from main.py (~32 lines). Reason: main.py should wire components, not make raw API calls. Call site stays identical.
 
 ### Decisions recorded
-- Uses `/openApi/swap/v3/quote/klines` (public, no auth needed)
-- Parquet schema: time (int64), open/high/low/close/volume (float64)
-- `data/historical/{symbol}_{timeframe}.parquet` save location
-- `main.py` after extraction imports from `exchange_setup.py`; call site stays identical
+- Public endpoint (no auth) for historical data
+- Idempotent design with timestamp deduplication
+- main.py: remove function + add `from exchange_setup import set_leverage_and_margin`
 
 ### State changes
 - 3 files planned: `historical_fetcher.py` (new), `exchange_setup.py` (new), `main.py` (edit)
 
 ### Open items recorded
-- Verification: pull 5 days BTC-USDT, re-run same command (dedup test), run main.py in demo mode
+- Verification: pull 5 days BTC-USDT, re-run for dedup test, run main.py in demo mode
 
 ### Notes
-- Context: Telegram already connected. `data_fetcher.py` only maintains 200-bar in-memory buffers — no persistence before this plan.
+Context note: Telegram already connected and working. `data_fetcher.py` only maintained 200-bar in-memory buffers before this plan (no persistence).
 
 ---
 
 ## giggly-nibbling-sunset.md
-**Date:** Not stated
-**Type:** Planning — Dashboard promotion
+**Date:** Not explicitly stated
+**Type:** Planning
 
 ### What happened
-Plan to validate and promote Dashboard v3.9.3 to production. Investigation revealed the `PRODUCT-BACKLOG.md` P0.3 entry ("IndentationError at line 1972") was STALE — `py_compile` passes clean on the current v3.9.3 file. The indentation fix was completed at some point after the backlog entry was written.
+Plan to validate and promote dashboard v3.9.3 to production. Investigation revealed the Product Backlog P0.3 entry ("IndentationError at line 1972") was STALE — `py_compile` passes clean on the current v3.9.3 file. The indentation fix was completed at some point after the backlog entry was written.
 
-**v3.9.3 changes vs v3.9.2:**
-1. Stale cache fix: `_pd = None` when sidebar settings change, portfolio rendering guarded by `if _pd is not None`
-2. Sweep symbol persistence across rerenders
-3. Selectbox key fix (`sweep_drill_select`)
-4. PDF download button (in-browser download after generation)
+v3.9.3 changes vs v3.9.2: (1) stale cache fix (`_pd = None` when settings change), (2) sweep symbol persistence across rerenders, (3) selectbox key fix (`sweep_drill_select`), (4) PDF download button (in-browser download).
 
-**Plan steps:**
-1. Runtime validation (user runs `streamlit run dashboard_v393.py`, 7-item checklist)
-2. Update docs: PRODUCT-BACKLOG.md, LIVE-SYSTEM-STATUS.md, DASHBOARD-FILES.md, PROJECT-OVERVIEW.md
-3. Add trailing newline to v3.9.3 (missing)
-4. Clean up dead fix scripts (ask user first)
+Steps: (1) runtime validation — user runs streamlit, 7-item test checklist, (2) update 4 doc files if runtime passes (PRODUCT-BACKLOG.md, LIVE-SYSTEM-STATUS.md, DASHBOARD-FILES.md, PROJECT-OVERVIEW.md), (3) add trailing newline to v3.9.3 (missing), (4) ask user before deleting 3 dead fix scripts.
 
 ### Decisions recorded
-- The v3.9.3 indentation bug was already fixed — backlog entry was stale
-- Documentation updates deferred until runtime validation passes
+- Backlog entry was stale — not actually blocked
+- Do NOT auto-delete old fix scripts — ask user first
+- Doc updates deferred until runtime validation passes
 
 ### State changes
 - v3.9.3 file: 2383 lines, py_compile PASS
-- v3.9.2: 2371 lines, current production at time of writing
+- v3.9.2: 2371 lines (current production at time of writing)
 
 ### Open items recorded
-- 7-item runtime checklist must pass before doc updates
-- Ask user about deleting 3 dead fix scripts
+- User must run 7-item runtime checklist
+- 4 doc files to update after runtime passes
 
 ### Notes
-- None.
+None.
 
 ---
 
 ## goofy-dancing-summit.md
-**Date:** Not stated
-**Type:** Build specification — large file (83.8KB)
+**Date:** Not explicitly stated (large file, 83.8KB — could not be read in full)
+**Type:** Build specification
 
 ### What happened
-Comprehensive self-contained build specification for `bingx-live-dashboard-v1-1.py` — a Plotly Dash web app replacing the Streamlit read-only dashboard. Full spec for a 5-tab interactive dashboard with position management capabilities. This is the spec referenced by `fluttering-kindling-creek.md` (batch 18 file #8).
+Complete self-contained build specification for `bingx-live-dashboard-v1-1.py` — a Plotly Dash web app replacing the Streamlit read-only dashboard. This is the spec referenced by `fluttering-kindling-creek.md`. File is 83.8KB and was too large to read in full; findings based on preview and cross-references.
 
-**Core architecture (from first 200 lines read):**
-- Dash 4.0.0, dash-ag-grid, port 8051
-- Single-file app, no multi-page routing
-- Single data load point: `dcc.Interval` (60s) → reads state.json, trades.csv, config.yaml → writes to dcc.Store → all tab callbacks read from stores only
+**Core architecture (from preview):**
+- Dash 4.0.0, dash-ag-grid 33.3.3, Plotly, port 8051, single-file app
+- Single data load point: `dcc.Interval` (60s) → reads state.json, trades.csv, config.yaml → dcc.Store → tab callbacks read from stores only
 - 5 tabs: Operational, History, Analytics, Coin Summary, Bot Controls
-- BingX API client replicated in dashboard (not imported from bot internals); live API only
-- Color constants module-level (`COLORS` dict with bg/panel/text/muted/green/red/blue/orange/grid)
+- BingX API client replicated in dashboard (not imported from bot)
+- `COLORS` dict module-level for dark theme
 - `server = app.server` at module level for gunicorn
-- VPS deployment: gunicorn on port 8051 with BasicAuth recommended before deployment
+- Data sources: state.json (open positions with symbol/direction/grade/entry/sl/tp/qty/notional/order_id/atr_at_entry/be_raised), trades.csv (closed trades with exit reasons), config.yaml (editable sections)
+- VPS: gunicorn on port 8051
 
-**Data sources:**
-- `state.json`: open_positions dict with symbol, direction, grade, entry/sl/tp prices, quantity, notional, order_id, atr_at_entry, be_raised
-- `trades.csv`: closed trade log with exit_reason values SL_HIT/TP_HIT/EXIT_UNKNOWN/SL_HIT_ASSUMED
-- `config.yaml`: editable sections (connector, four_pillars, risk, position)
-
-**Note:** Only first 200 lines of 83.8KB file read via persisted output. Full spec covers all 14 callbacks, tab layouts, position action logic, config editor, halt/resume.
+Full spec covers all 14 callbacks, tab layouts, position action logic (Raise BE, Move SL), config editor, halt/resume.
 
 ### Decisions recorded
-- Dash over Streamlit: Streamlit reruns on every click, wiping form state; Dash reactive callbacks preserve state
-- Pattern-matching callbacks (MATCH selector) required for per-row Raise BE / Move SL buttons
-- `suppress_callback_exceptions=True` because tab IDs don't exist at startup
+- Dash over Streamlit: Streamlit reruns on every click, wipes form state; Dash reactive callbacks preserve state
+- Pattern-matching callbacks (MATCH selector) for per-row actions
+- `suppress_callback_exceptions=True`
+- Self-contained API signing in dashboard
 
 ### State changes
-- Build spec only — no code written yet (code written in subsequent session)
+- Build spec created (83.8KB, 1795 lines per fluttering-kindling-creek.md reference)
 
 ### Open items recorded
-- Full spec to be executed; referenced build plan in `fluttering-kindling-creek.md`
+- Build execution (per fluttering-kindling-creek.md)
 
 ### Notes
-- File is 83.8KB — the largest plan file in the batch. Full content not read (preview only due to size).
+File is 83.8KB — largest plan file in this batch. Could not be read fully (output truncated at 2KB preview). Full spec details inferred from cross-references.
 
 ---
 
@@ -10271,46 +10332,37 @@ Comprehensive self-contained build specification for `bingx-live-dashboard-v1-1.
 **Type:** Research / Analysis
 
 ### What happened
-Research document analyzing trailing take-profit (TTP) options for the live BingX bot. Context: live account ($110, $5 margin × 10x) had 47 trades with 0 TP_HIT exits (46 SL_HIT, 1 EXIT_UNKNOWN). Root cause: `tp_atr_mult: null` set in config with no trailing TP replacement built.
+Research document comparing all TTP (Trailing Take Profit) approaches for the BingX bot. Context: live account ($110, $5 margin × 10x) had 47 trades with 0 TP_HIT exits (46 SL_HIT, 1 EXIT_UNKNOWN). Root cause: `tp_atr_mult: null` set with no trailing TP replacement built. BE raise working but is a floor, not a profit-locker.
 
-**6 TTP examples catalogued (E1-E6):**
-- E1: Fixed ATR TP (already tried in demo, 4/47 = 8.5% TP rate)
-- E2: ATR Trailing with HTF ATR activation (2026-02-02 build spec)
-- E3: AVWAP 3-Stage Trailing (v3.8.2 Pine Script)
-- E4: AVWAP 2σ + 10-Candle Counter (confirmed design)
-- E5: BingX Native Trailing immediate
-- E6: BingX Native Trailing with activation
+**6 TTP examples catalogued (E1-E6):** Fixed ATR TP, ATR Trailing (HTF), AVWAP 3-Stage, AVWAP 2σ + 10-Candle Counter, BingX Native Immediate, BingX Native with Activation.
 
-**5 approaches compared:**
-- A: Fixed TP — trivial (1 config line), deterministic, leaves money on table
-- B: Trailing immediate — ~20 lines, premature exit risk on small caps
-- C: Trailing + activation (2×ATR) — ~25 lines, exchange-managed after activation, recommended
-- D: AVWAP 2σ + 10-candle + TRAILING_STOP_MARKET — ~150 lines, highest complexity, correct long-term
-- E: Periodic SL ratchet — ~40 lines, 60s polling gap, good complement
+**5 implementation approaches compared (A-E):**
+- A: Fixed TP — 1 config line, 4/47 demo TP rate, misses runners
+- B: Native Immediate — ~20 lines, premature exit on noise
+- C: Native + Activation at 2×ATR — ~25 lines, exchange-managed after trigger, recommended
+- D: AVWAP 2σ + 10-Candle + trailing — ~150 lines, highest risk, correct long-term
+- E: Periodic SL Ratchet — ~40 lines, 60s polling gap, good complement
+
+Recommendation: Approach C immediately (activation at 2×ATR, 2% callback), Approach D as future phase.
 
 ### Decisions recorded
-- Recommendation: phased — Approach C immediately, Approach D later
-- Why not A: wrong exit model, misses runners
-- Why not B: activates on noise, premature exits on small-cap coins
-- Why not D now: highest risk for live bot, 150 lines + AVWAP recalculation per position per bar
-- Why not E alone: 60s polling gap unreliable as primary exit
-
-**Implementation plan (Approach C):**
-- Modify `executor.py` — add trailing order after SL order placement
-- Modify `config.yaml` — add `trailing_activation_atr_mult: 2.0`, `trailing_rate: 0.02`
-- Add test in `tests/test_executor.py`
+- Approach C chosen: `TRAILING_STOP_MARKET` with `activationPrice = entry ± atr × 2`, `priceRate = 0.02`
+- Fixed TP (A) rejected: wrong exit model, misses trend continuation
+- Immediate trailing (B) rejected: fires on noise for small-cap coins
+- AVWAP 2σ (D) deferred: 150 lines + AVWAP recalculation = highest risk for live bot
+- E (ratchet) as complement, not primary
 
 ### State changes
-- Research document only — no code written yet
-- Session log to create: `06-CLAUDE-LOGS/2026-02-28-bingx-ttp-research.md`
-- INDEX.md update required
+- Research document only — no code written
+- Session log planned: `06-CLAUDE-LOGS/2026-02-28-bingx-ttp-research.md`
+- INDEX.md update noted as required
 
 ### Open items recorded
 - Implementation of Approach C pending user decision
 - Approach D deferred to future phase
 
 ### Notes
-- This document predates the three-stage TTP engine that was eventually built (be_act → ttp_act → ttp_dist). The recommended "Approach C" appears to be the precursor to that design.
+This document precedes the three-stage TTP architecture (be_act → ttp_act → ttp_dist) that was eventually built. Approach C is the conceptual precursor to that design.
 
 ---
 
@@ -10319,196 +10371,160 @@ Research document analyzing trailing take-profit (TTP) options for the live Bing
 **Type:** Corrective plan / Project restructuring
 
 ### What happened
-Plan to separate Vince and Vicky projects after discovering that the "Vince ML Build" was actually Vicky's architecture (XGBoost classifier, trade filtering) mislabeled as Vince.
+Plan to separate Vince and Vicky projects after discovering the "Vince ML Build" was actually Vicky's architecture (XGBoost classifier, TAKE/SKIP filtering) mislabeled as Vince.
 
-**Part 1: Create Vicky project folder (`PROJECTS/vicky/`):**
-- 11 files to MOVE from four-pillars-backtester to vicky/ (renamed where needed: train_vince.py → train_vicky.py, vince_model.py → vicky_model.py, etc.)
-- 16 files stay in four-pillars-backtester as shared infrastructure (backtester, signals, data, ML utilities)
+**Part 1 — Create Vicky project folder `PROJECTS/vicky/`:** Move 11 files from four-pillars-backtester (with renames: `train_vince.py` → `train_vicky.py`, `vince_model.py` → `vicky_model.py`). 16 shared infrastructure files stay in four-pillars-backtester.
 
-**Part 2: Vince correct scope — Parameter Optimizer:**
-- Vince = parameter sweep engine wrapping existing backtester as inner loop
-- Optimizes: stochastics (k1-k4 lengths, d_smooth, cross_level, zone_level), clouds (all 3 EMAs), AVWAP, SL/TP/BE, entry types
-- Objective: `net_pnl = gross_pnl - total_commission + total_rebate`
-- Sweep modes: grid search, Bayesian (Optuna), per-coin, per-tier
-- Output: `optimal_params.json` per coin with metrics (net_pnl, trade_count, win_rate, max_drawdown, rebate_earned, sharpe)
-- Vince stays in `four-pillars-backtester/`: `scripts/optimize_vince.py` + `ml/parameter_optimizer.py`
+**Part 2 — Vince correct scope — parameter optimizer:** Vince = parameter sweep engine wrapping existing backtester. Optimizes stochastics (k1-k4, d_smooth, cross/zone levels), EMA clouds (all 3 pairs), AVWAP, SL/TP/BE, entry types. Objective: `net_pnl = gross_pnl - total_commission + total_rebate`. Sweep modes: grid search, Bayesian (Optuna), per-coin, per-tier. Output: `optimal_params.json` per coin. Vince stays in four-pillars-backtester: `scripts/optimize_vince.py` + `ml/parameter_optimizer.py`.
 
-**Part 3: MEMORY.md updates** — add persona definitions, correct "VINCE ML Build" to "VICKY ML Build (mislabeled)"
+**Part 3 — MEMORY.md updates:** Add persona definitions, correct mislabeled sections.
 
-**Part 4: cloud3_allows_long/short** — pre-existing in engine, not introduced by this build; users entering below cloud 3 is potential backtester fix (separate scope)
+**Part 4 — cloud3_allows_long/short:** Pre-existing, not introduced by this build; users entering below Cloud 3 flagged as potential backtester fix.
 
 ### Decisions recorded
-- Vicky = trade classifier/filter, separate project folder
+- Vicky = trade classifier/filter, separate PROJECTS/vicky/
 - Vince = parameter optimizer, stays in four-pillars-backtester
 - No Python execution — all file moves + edits
 - Vicky scripts import from four-pillars-backtester via sys.path
 
 ### State changes
-- `PROJECTS/vicky/` folder created with 11 files moved
-- `models/four_pillars/` dir removed from backtester
-- `train_vince.py` removed from backtester/scripts
-- MEMORY.md updated with persona definitions
+- `PROJECTS/vicky/` folder structure planned with 11 files moved
+- `models/four_pillars/` dir to be removed from backtester
+- MEMORY.md update with persona definitions
 
 ### Open items recorded
-- Session log to append to `06-CLAUDE-LOGS/2026-02-18-vince-ml-build.md`
-- cloud3_allows_long fix deferred to separate scope
+- Execute 7 execution steps (create folder, move files, update imports, rename references, update MEMORY.md, append session log, remove empty dir)
 
 ### Notes
-- This corrective plan (Session 3 of 2026-02-18) represents the architectural pivot from Vicky to properly separating the two personas. Vince's scope was reset from ML classifier to parameter optimizer.
-- However, `functional-orbiting-rabbit.md` (also 2026-02-18) redefines Vince AGAIN as a "relationship research engine" — suggesting further scope evolution within the same day or later that day.
+This is the Session 3 architectural correction (2026-02-18). `functional-orbiting-rabbit.md` (also 2026-02-18) redefines Vince again as a "relationship research engine" — scope evolved further within the same day. The parameter optimizer definition here and the relationship engine definition there are distinct — likely Session 3 happened before the handoff that became functional-orbiting-rabbit.md.
 
 ---
 
 ## harmonic-greeting-lemon.md
-**Date:** Not stated
-**Type:** Planning — Dashboard build
+**Date:** Not explicitly stated (after 2026-02-28 v1-1 user testing)
+**Type:** Planning
 
 ### What happened
-Build plan for `bingx-live-dashboard-v1-2.py`. User tested v1-1 live on 2026-02-28 and filed 8 issues. Plan implements all 8 fixes via a build script that produces 3 files.
+Plan to build BingX Live Dashboard v1-2, addressing 8 issues filed by user after testing v1-1.
 
 **8 issues and fixes:**
-- FIX-1: White form inputs → dark CSS rules for all input types, radio, checklist, Select components, DateRangePicker
+- FIX-1: White form inputs → CSS rules for 12 input/select/datepicker element types with dark bg/text/border
 - FIX-2: White ag-grid backgrounds → dark CSS for `.ag-root-wrapper`, `.ag-overlay-no-rows-wrapper`, `.ag-header`
-- FIX-3: No date range picker → replace `dcc.Checklist(today-filter)` with `dcc.DatePickerRange` on History + Analytics tabs; update CB-8 and CB-9 signatures
+- FIX-3: No date range picker → replace `dcc.Checklist(today-filter)` with `dcc.DatePickerRange` on History + Analytics; update CB-8 and CB-9
 - FIX-4: Slow tab switching → render all 5 tabs at startup, toggle visibility via `app.clientside_callback()` (pure JS, zero server round-trip)
-- FIX-5: No timing diagnostics → `time.time()` markers around each data loader in CB-1
-- ANALYTICS-1: Professional metrics → expand from 7 to 13 cards, add sharpe/maxDD%/W-L ratio/SL%/TP%/BE hits/LSG%
-- ANALYTICS-3: Chart cleanup → `config={'displayModeBar': False}` on all 4 graphs, add xaxis_title where missing
+- FIX-5: No timing diagnostics → `time.time()` markers around each data loader call in CB-1
+- ANALYTICS-1: Expand from 7 to 13 metric cards — add net_pnl, Sharpe, maxDD%, avg W/L ratio, SL%/TP%/BE hits/LSG%
+- ANALYTICS-3: Remove plotly toolbar (`displayModeBar: False`) + add axis labels
 
-**Section-by-section delta provided** mapping v1-1 line ranges to action (verbatim/rewrite/delete).
+One build script `build_dashboard_v1_2.py` creates 3 files: `assets/dashboard.css` (overwrite, ~95 lines), `bingx-live-dashboard-v1-2.py` (new, ~1750 lines), `scripts/test_dashboard.py` (overwrite). Section-by-section delta table maps v1-1 line ranges to actions.
 
 ### Decisions recorded
-- `suppress_callback_exceptions=True` kept — CB-5 still creates dynamic IDs
-- `hist-today-filter` component removed — only CB-8 references it
-- Date pickers default to None = "no filter" = show all trades
-- `gross_pnl` kept as alias for `net_pnl` in compute_metrics() — grade comparison uses this key
+- FIX-4: clientside callback for tab toggling (pure JS, not server-side)
+- `suppress_callback_exceptions=True` kept (CB-5 still creates dynamic IDs)
+- Date pickers default to None = no filter = show all trades
+- `gross_pnl` kept as alias in `compute_metrics()` for backward compatibility
 - Build script uses `.format()` not f-strings (escaped quote rule)
-- `math.sqrt(365)` for Sharpe annualization — add `import math`
+- Sharpe annualized using `math.sqrt(365)`, add `import math`
 
 ### State changes
-- 3 output files: `assets/dashboard.css` (overwrite, 28→~95 lines), `bingx-live-dashboard-v1-2.py` (new, ~1750 lines), `scripts/test_dashboard.py` (overwrite with v1-2 references + new tests)
-- CB-2 (`render_tab` server callback) → deleted and replaced with clientside callback
+- 3 output files planned
+- CB-2 `render_tab` server callback deleted, replaced with clientside callback
 
 ### Open items recorded
-- Verification: run build, run tests, run dashboard, 4 visual checks listed
+- Build execution + 4 visual verification checks
 
 ### Notes
-- `be_raised` / `saw_green` columns noted as "not yet in bot" at the time — `BE Hits` and `LSG%` metrics return "N/A" until bot adds those columns.
+BE and LSG metrics (ANALYTICS-1) return "N/A" until bot adds `be_raised`/`saw_green` columns to trades.csv — those columns not yet in bot at plan time.
 
 ---
 
 ## hidden-frolicking-bunny.md
-**Date:** References 2026-02-25 in content; no explicit date stated
-**Type:** Planning — Bot logging fixes
+**Date:** References 2026-02-25 in content (log path dated)
+**Type:** Planning
 
 ### What happened
-Plan to fix two outstanding issues before bot restart: M2 (bot.log relative path writing to wrong locations) and UTC+4 logging preference. Context: bot is STOPPED, all 67/67 tests passing, all code fixes (E1/A1/M1/SB1/SB2) applied and verified.
+Plan to fix two outstanding issues before bot restart: M2 (bot.log writing to wrong relative path locations) and UTC+4 logging preference. Context: bot STOPPED, all 67/67 tests passing, all code bugs fixed (E1/A1/M1/SB1/SB2). One signal had fired (GUN-USDT LONG B) but order failed due to E1 (now fixed).
 
-**Problem M2:** `logging.FileHandler("bot.log")` uses cwd, so log appeared in `C:\Users\User\bot.log` AND a stale copy in the project dir. Run 2 log was unfindable.
+**Fix 1 — M2:** `logging.FileHandler("bot.log")` used cwd — log appeared in `C:\Users\User\bot.log` AND a stale copy in project dir; Run 2 log was unfindable. New `setup_logging()` function: log at `Path(__file__).resolve().parent / "logs" / f"{today}-bot.log"`, creates `logs/` directory at startup.
 
-**Fix:** New `setup_logging()` function in `main.py` with:
-- Absolute path: `Path(__file__).resolve().parent / "logs"`
-- Dated filename: `logs/YYYY-MM-DD-bot.log`
-- `logs/` directory created at startup
-- Custom `UTC4Formatter` class with `formatTime()` method outputting UTC+4 timestamps
-- Dual handler (file + console StreamHandler)
+**Fix 2 — UTC+4:** Custom `UTC4Formatter` class with `formatTime()` outputting `datetime.fromtimestamp(record.created, tz=utc4)`. Extend datetime import with `timedelta, date`.
 
-**Fix 2:** Extend datetime import to include `timedelta, date` (needed for UTC+4 offset and dated filename).
+Both fixes in `main.py` lines 14 (import) and 32-42 (logging setup).
+
+Step 1 Checklist state: E1/A1/M1/SB1/SB2/SB3 checked, 67/67 tests passing, Telegram working, signal pipeline proven. Still pending: M2 fix, UTC+4, bot running continuously, first trade, Telegram entry alert, demo position visible in BingX VST.
 
 ### Decisions recorded
-- Log file always in project dir regardless of cwd
-- Timestamps in UTC+4 for user's timezone
-- Follows MEMORY.md LOGGING STANDARD: dated file, `logs/` dir, dual handler
+- Log file: absolute path to project dir `logs/` subdirectory, dated filename
+- Timestamps: UTC+4 via custom Formatter class
+- Follows MEMORY.md LOGGING STANDARD: dated file, logs/ dir, dual handler
 
 ### State changes
-- `main.py` lines 14 (import) and 32-42 (logging setup) modified
-- Log path: `C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector\logs\2026-02-25-bot.log`
+- Plan for 2-line changes to main.py (import extension + setup_logging replacement)
 
 ### Open items recorded
-- After applying fixes: restart bot, confirm log at correct path, confirm UTC+4 timestamps, confirm startup checks pass, wait for first trade to confirm E1 fix end-to-end
-- Step 1 Checklist: M2 fix, UTC+4 logging, bot running continuously, first trade, Telegram alert, demo position visible — all pending at time of writing
+- Apply fixes, restart bot, confirm log at correct path with UTC+4 timestamps
+- Wait for first trade to complete with E1 fix active
 
 ### Notes
-- Step 1 Checklist shows GUN-USDT LONG B signal fired in Run 1 but failed due to E1 (json.dumps spaces) — E1 now fixed.
+M2 was item #8 in the overall Step 1 checklist. GUN-USDT LONG B signal fired in Run 1 but failed due to E1 (json.dumps spaces in order data) — E1 fix was the root cause of order failure.
 
 ---
 
 ## humble-sauteeing-pelican.md
-**Date:** Not stated
-**Type:** Planning — New feature build
+**Date:** Not explicitly stated
+**Type:** Planning
 
 ### What happened
-Plan for WEEX Futures Screener v1 — a live signal state screener for WEEX perpetual futures. Motivation: TradingView Premium CEX screener uses absolute ATR (not normalized), making cross-coin comparison meaningless. This screener uses normalized ATR (ATR/price) and strategy-derived thresholds.
+Plan for WEEX Futures Screener v1. Context: TradingView Premium CEX screener uses absolute ATR making cross-coin comparison meaningless (BTC at $63k vs RIVER at $0.01 can't share same ATR threshold). This screener uses live WEEX data with normalized ATR and strategy-derived thresholds.
 
-**What it does:** Fetch WEEX symbol list + 300 bars OHLCV per symbol, run `compute_signals_v383`, extract live signal state, display ranked table with filters.
+Function: fetch all WEEX perpetual futures symbols, get 300 bars OHLCV per symbol, run `compute_signals_v383`, extract live signal state, display ranked table, sidebar filters, optional auto-refresh.
 
-**WEEX API (public, no auth):**
-- All futures symbols: `GET https://api-contract.weex.com/capi/v2/market/contracts`
-- OHLCV: `GET https://api-spot.weex.com/api/v2/market/candles?symbol=BTCUSDT_SPBL&period=5m&limit=300`
-- All tickers: `GET https://api-spot.weex.com/api/v2/market/tickers`
-- Rate limit: 500 req/10s; use 50 req/s (0.02s sleep)
+WEEX API (public, no auth): contracts endpoint, OHLCV candles (`BTCUSDT_SPBL` format), all tickers. Rate limit 500 req/10s; use 0.02s sleep. Symbol format: contract list uses `cmt_btcusdt`, OHLCV uses `BTCUSDT_SPBL`.
 
-**ATR ratio threshold derived from commission math:** `min_atr_ratio = (0.001 * 2) / 2.0 * 3 = 0.003`
+ATR ratio threshold from commission math: `(0.001 × 2) / 2.0 × 3 = 0.003` — shown as formula in sidebar.
 
-**Screener columns:** atr_ratio, stoch_60, stoch_9, cloud3_dir, price_pos, signal_now, 24h_change_pct, 24h_vol_usd, vol_change_pct
+Screener columns: atr_ratio (normalized, cross-coin comparable), stoch_60, stoch_9, cloud3_dir, price_pos, signal_now, 24h_change_pct, 24h_vol_usd, vol_change_pct.
 
-**4 files to build:**
-1. `utils/weex_fetcher.py` — API client with symbol format conversion (cmt_btcusdt ↔ BTCUSDT_SPBL)
-2. `utils/weex_screener_engine.py` — `screen_symbol()` + `run_weex_screener()`
-3. `scripts/weex_screener_v1.py` — Streamlit app with incremental per-symbol processing
-4. `tests/test_weex_fetcher.py`
+4 files to build: `utils/weex_fetcher.py`, `utils/weex_screener_engine.py`, `scripts/weex_screener_v1.py` (Streamlit, incremental loop), `tests/test_weex_fetcher.py`.
+
+Reuses `compute_signals_v383` and `DEFAULT_SIGNAL_PARAMS` from existing screener_v1.py. Minimum 69 bars for signal validity.
 
 ### Decisions recorded
-- Reuse `compute_signals_v383` and `DEFAULT_SIGNAL_PARAMS` from existing screener_v1.py
-- Minimum 69 bars for signal validity; default fetch 300 bars
-- Autorefresh option (off/1m/5m/15m)
-- No export needed (watch tool, not connector feed)
+- Streamlit (not Dash) for screener
+- Live signal state only — no backtest
+- ATR ratio threshold formula shown in sidebar (not arbitrary number)
+- WEEX taker rate defaults to 0.10% — verify actual tier at build time
 
 ### State changes
 - 4 new files planned (no existing files modified)
-- Open question: WEEX taker rate for user's account tier (defaults to 0.10%)
 
 ### Open items recorded
 - Verify futures OHLCV endpoint (spot candles vs separate contract candles)
-- Verify WEEX taker rate at build time
+- Verify WEEX taker rate for user's account
 - Verify WHITEWHALE and RIVER appear in results
 
 ### Notes
-- This screener is for WEEX exchange, separate from the BingX connector. The existing `screener_v1.py` uses local Bybit parquets for backtested eligibility; this uses live WEEX API for live signal state.
+Different from existing `screener_v1.py` (uses local Bybit parquets for backtested eligibility). This screener uses live WEEX API for live signal state detection.
 
 ---
 
 ## imperative-tumbling-bentley.md
-**Date:** Not stated
-**Type:** Planning — Analysis script
+**Date:** Not explicitly stated (v3.8.2 context = ~2026-02-11)
+**Type:** Planning
 
 ### What happened
-Plan for a capital utilization analyzer script for v3.8.2 multi-coin backtests. User ran v3.8.2 on BERA (746 trades) and RIVER (881 trades) separately. Plan computes how much capital sits idle, how many coins could run in parallel on $10K account, and combined P&L with 50% commission rebate.
+Plan for a capital utilization analyzer for v3.8.2 multi-coin backtests. User ran v3.8.2 on BERA (746 trades, -$94 net) and RIVER (881 trades, -$3.48 net) at $250 notional. User wants to know: idle capital, how many coins could run in parallel on $10K, combined P&L with 50% rebate.
 
-**Script:** `PROJECTS/four-pillars-backtester/scripts/capital_utilization.py`
-**Inputs:** Two specific CSV files from Downloads folder
+One file: `PROJECTS/four-pillars-backtester/scripts/capital_utilization.py`. Inputs: two CSV files from Downloads folder.
 
-**Per-coin computations:**
-- Build 5-min bar timeline, count open positions (0-4) per bar
-- Max/avg concurrent, % time flat, % time at each level
-- Margin deployed per bar = open_positions × $250
-- Peak margin, average margin, idle margin ($10,000 - in-use)
-- Average hold time in hours
-- Gross P&L scaled to $5000 notional
-- Commission: trades × $16/RT; Rebate: 50% of commission
-- Net P&L = gross - commission + rebate
+Per-coin: build 5-min timeline, count open positions (0-4) per bar, compute max/avg concurrent, % time at each level, margin per bar ($250 × open_positions), peak/avg/idle margin, avg hold time, gross P&L scaled to $5000 notional, commission ($16/RT), rebate (50%), net P&L.
 
-**Combined (BERA + RIVER):**
-- Overlay timelines, combined margin per bar
-- How many more coins could fit: `floor(idle_capital / max_margin_per_coin)`
-
-**Output:** Formatted table with BERA / RIVER / COMBINED columns.
+Combined: overlay BERA + RIVER timelines, combined margin per bar, idle capital = $10,000 - peak_combined_margin, max coins = `floor(idle_capital / max_margin_per_coin)`. Output: formatted table with BERA / RIVER / COMBINED columns.
 
 ### Decisions recorded
 - $5000 notional per position ($250 margin at 20x)
-- Commission: $16/RT (round-trip)
+- Commission: $16/RT
 - Rebate: 50%
-- 1 file to create, no permissions needed beyond that
 
 ### State changes
 - 1 new script planned
@@ -10517,79 +10533,32 @@ Plan for a capital utilization analyzer script for v3.8.2 multi-coin backtests. 
 - User runs: `python scripts/capital_utilization.py`
 
 ### Notes
-- $16/RT commission figure used here. MEMORY.md shows actual taker rate 0.0008 (0.08%); at $5000 notional: $5000 × 0.0016 = $8.00/RT for a 70% rebate account, $8.00 for 50% account. The $16/RT figure in this plan appears to be 0.16% × $10,000 (per notional at 2x the margin notional) or may use an older commission estimate. This should be noted as potentially inconsistent with MEMORY.md commission constants.
-
----
-
-## jazzy-whistling-boot.md
-**Date:** Not stated (in 06-CLAUDE-LOGS/plans directory, references events around 2026-03-05)
-**Type:** Planning — Bug fix
-
-### What happened
-Plan to fix BingX error 109400 ("timestamp is invalid"). The bot and dashboard use raw `time.time() * 1000` with zero server time synchronization. BingX rejects requests where timestamp drifts >5 seconds from their server clock. This caused the user to lose 17% — when timestamps go invalid, position reconciliation, SL moves, TTP closes, and balance queries all fail silently.
-
-**Two timestamp generation points identified:**
-1. Bot: `bingx_auth.py` line 43 — `params["timestamp"] = str(int(time.time() * 1000))`
-2. Dashboard: `bingx-live-dashboard-v1-4.py` line 193 — `params['timestamp'] = int(time.time() * 1000)`
-
-**Fix: New `time_sync.py` module:**
-- `TimeSync` class: fetches server time (`GET /openApi/swap/v2/server/time`), calculates offset with RTT midpoint compensation, thread-safe
-- `now_ms()` → `int(time.time() * 1000) + offset`
-- `start_periodic()` → daemon Timer, re-syncs every 30s
-- `force_resync()` → immediate sync on 109400 error
-- `get_time_sync(base_url)` → module-level singleton factory
-- Supports both live and demo base URLs
-- Falls back to raw `time.time()` if server endpoint unreachable
-
-**Changes to 5 files:**
-- `bingx_auth.py`: 3-line change to use `synced_timestamp_ms()`
-- `main.py`: startup init + periodic sync + stop on shutdown
-- `bingx-live-dashboard-v1-4.py`: init singleton, replace timestamp generation
-- `position_monitor.py`: 109400 retry logic in `_fetch_positions()`
-- `executor.py`: 109400 retry logic in `execute()` (retry once with fresh timestamp)
-
-**Build script:** `scripts/build_time_sync.py` — 13 steps with backup, write, py_compile, summary.
-
-### Decisions recorded
-- Failure mode: if server time endpoint unreachable, offset stays 0 = same as current behavior, no regression
-- `ws_listener.py`, `signal_engine.py`, `state_manager.py`, `risk_gate.py`, `data_fetcher.py`: no modifications needed
-
-### State changes
-- 1 new file: `time_sync.py`
-- 5 files modified with `.bak` backups
-
-### Open items recorded
-- After build: restart bot and dashboard, verify `TimeSync: offset=+Xms` in logs, verify 30s periodic sync, verify 109400 errors stop
-- `time_sync.py` already exists in repo (confirmed in git status as untracked `?? PROJECTS/bingx-connector/time_sync.py`) — plan was implemented
-
-### Notes
-- The `time_sync.py` file exists as an untracked file in the current git status, suggesting this plan was executed. The user reportedly lost 17% due to this timestamp issue.
+$16/RT commission figure used here. MEMORY.md shows taker rate 0.0008; at $5000 notional: $5000 × 0.0016 = $8.00/RT gross. The $16/RT figure appears inconsistent with current MEMORY.md commission constants — may reflect an older or different commission estimate from early in the project.
 
 ---
 
 ## CODE VERIFICATION
 
-### jazzy-whistling-boot.md
-Referenced `time_sync.py` as key deliverable.
-- Git status shows `?? PROJECTS/bingx-connector/time_sync.py` — file exists as untracked
-- Plan references `scripts/build_time_sync.py` — git status shows `?? PROJECTS/bingx-connector/scripts/build_time_sync.py` — build script also exists
-
 ### elegant-weaving-sutherland.md
 Referenced `scripts/build_native_trailing.py` as key deliverable.
-- Git status shows `?? PROJECTS/bingx-connector/scripts/build_native_trailing.py` — exists
+- Git status shows `?? PROJECTS/bingx-connector/scripts/build_native_trailing.py` — file exists (untracked = newly created, not yet committed)
+
+### enumerated-dazzling-squirrel.md
+Referenced commit `"Vault update: BingX v1.5 (time sync, TTP, config tuning), backtester v391, session logs 2026-03-03 to 2026-03-05"`.
+- Commit `e85b370` in current git log matches this message exactly — plan was executed.
 
 ### fluffy-singing-mango.md
-Referenced `ws_listener.py` as new file to create.
-- Git status shows `M PROJECTS/bingx-connector/ws_listener.py` (modified) — file exists and has been modified since last commit, confirming the plan was implemented.
+Referenced `ws_listener.py` as new file to build.
+- Git status shows `M PROJECTS/bingx-connector/ws_listener.py` (modified) — file exists and was modified. Plan was implemented.
 
 ### foamy-soaring-snowflake.md
 Referenced `scripts/build_dashboard_v1_5_patch_runtime.py` as new build script.
 - Git status shows `?? PROJECTS/bingx-connector/scripts/build_dashboard_v1_5_patch_runtime.py` — exists.
 
 ### eventual-tickling-stardust.md
-Referenced `scripts/build_audit_fixes.py` for both four-pillars-backtester and bingx-connector.
-- Git status shows `?? PROJECTS/four-pillars-backtester/scripts/build_audit_fixes.py` — exists
-- Git status shows `?? PROJECTS/bingx-connector/scripts/build_audit_fixes.py` — exists
+Referenced `scripts/build_audit_fixes.py` for backtester and bingx-connector.
+- Git status shows `?? PROJECTS/four-pillars-backtester/scripts/build_audit_fixes.py` — exists.
+- Git status shows `?? PROJECTS/bingx-connector/scripts/build_audit_fixes.py` — exists.
 
 
 # Batch 19 Findings — Auto-Plans Research
@@ -12002,3 +11971,251 @@ Plan to create a single cross-project master overview file (`PROJECT-OVERVIEW.md
 - This plan's diagram shows BingX API Docs as "SCRAPED 2026-02-27" — the scraper plan (zany-foraging-blum.md) was also from 2026-02-27, suggesting they were from the same session day.
 - CODE VERIFICATION: Not applicable — this plan produces a markdown file, not Python.
 
+
+
+---
+
+# RESEARCH SYNTHESIS — Four Pillars Trading System
+
+Generated: 2026-03-06
+Source: `C:\Users\User\Documents\Obsidian Vault\06-CLAUDE-LOGS\RESEARCH-FINDINGS.md` (21 research batches, 140+ session logs, ~8600 lines)
+
+---
+
+## 1. What is the project goal?
+
+Build a complete algorithmic trading system around the **Four Pillars** strategy — from Pine Script indicators on TradingView, through a Python backtester for multi-coin parameter optimization, to a live trading bot on BingX, supported by an ML research engine (Vince) and comprehensive dashboards.
+
+The strategy combines four signal components:
+- **Ripster EMA Clouds** (Cloud 2: 5/12, Cloud 3: 34/50, Cloud 4: 72/89, Cloud 5: 180/200)
+- **AVWAP** (Anchored VWAP, Brian Shannon methodology)
+- **Quad Rotation Stochastics** (Kurisko Raw K: 9-3 entry, 14-3 confirm, 40-3 divergence, 60-10 macro)
+- **BBWP** (Bollinger Band Width Percentile — volatility filter)
+
+Signal grading: **A** = Quad (4/4 stochs aligned), **B** = Rotation (3/4 stochs), **C** = ADD (engine label for position additions, not a standalone signal type).
+
+The end-state vision: backtest across 399 crypto coins, identify optimal parameters per coin, deploy live via BingX with automated entries/exits, and use ML to surface trade-quality patterns that humans miss.
+
+---
+
+## 2. Current state of each major component
+
+### Four Pillars Backtester
+
+- **Current version**: v3.8.4 (stable production). Codebase: 142,935 lines across the project.
+- **Location**: `C:\Users\User\Documents\Obsidian Vault\PROJECTS\four-pillars-backtester\`
+- **Capabilities**: Multi-coin batch backtesting, 399 coins supported, CSV data pipeline, PostgreSQL storage (vince database, port 5433), commission modeling (0.08%/side taker on notional).
+- **Dashboard versions**: v3.9.0 through v3.9.4 were Streamlit-based dashboards built on top of v3.8.4 engine. v3.9.4 added CUDA GPU sweep (Numba @cuda.jit on RTX 3060) for parameter optimization. These are dashboard/UI layers — the core engine remains v3.8.4.
+- **Data**: 5-minute OHLCV CSVs for 399 coins stored locally. 1-minute data also available but backtests confirmed 5m > 1m for all low-price coins.
+- **Key findings from backtests**: LSG (Losing-but-Scored-Good) rate 85-92% — most losers were profitable at some point, making TP/ML filtering the key lever. Tight TP (< 2.0 ATR) destroys value on most coins. Always backtest, never trust MFE alone.
+
+### BingX Live Bot
+
+- **Location**: `C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector\`
+- **Status**: LIVE on real account ($110 margin). Running on VPS Jacky (76.13.20.191).
+- **Version**: v1.5 (as of 2026-03-05).
+- **Architecture**: HMAC-SHA256 authentication, hedge mode perpetual futures, WebSocket listener for real-time data, REST API for order management.
+- **Features built**: TTP engine (Trailing Take Profit), breakeven raise logic, position sizing from config, multi-coin support, time-sync fix (server timestamp delta), dashboard (Plotly Dash).
+- **Bugs fixed during live deployment**:
+  - `reduceOnly` parameter error on close orders (Feb 26-27)
+  - Timestamp sync drift causing 401 auth failures (fixed with server time delta)
+  - Breakeven price calculation error (was using entry instead of accounting for commission)
+  - Buffer stuck at 200/201 — trim logic was cutting buffer back to 200 after every fetch, signals could never fire (cost 2+ hours to diagnose)
+  - Position side mismatch in hedge mode
+- **Config**: Coins, margin, leverage all configurable. Commission: 0.08% taker, 70% rebate account = $4.80/RT net.
+- **Dashboard**: BingX dashboard built on Plotly Dash, shows positions, PnL, trade history. Separate from backtester dashboard.
+
+### Vince ML Pipeline (B1-B6)
+
+- **Concept**: Vince v2 is a **Trade Research Engine** (NOT a classifier). It surfaces patterns in trade data that humans can then use to refine strategy rules.
+- **Status**: Concept APPROVED 2026-02-27. B2 (API layer) built. B1 (Phase 0 strategy alignment) BLOCKED. B3-B6 blocked on B1.
+- **Build phases defined**:
+  - **B1**: Phase 0 — Strategy alignment, feature engineering, data pipeline from backtester to ML
+  - **B2**: API layer — FastAPI endpoints for serving model predictions (BUILT)
+  - **B3**: Feature enrichment — Technical indicator features beyond raw OHLCV
+  - **B4**: Model training pipeline — PyTorch on CUDA (RTX 3060, 12GB VRAM)
+  - **B5**: Evaluation framework — Walk-forward validation, out-of-sample testing
+  - **B6**: Dashboard integration — Plotly Dash 4.0 multi-page app, 8-panel research UI
+  - **B7-B10**: Defined but distant (optimizer, constellation builder, production serving, monitoring)
+- **B1 blocker**: Phase 0 requires deciding exactly which features to extract and how to align backtester output with ML input. This is a strategy decision, not a code decision — needs user input on what trade attributes matter most.
+- **Tech stack decided**: Plotly Dash 4.0 (NOT Streamlit), PyTorch (NOT sklearn for production), PostgreSQL for storage, Ollama (qwen3:8b) for local LLM features.
+- **Screener v1**: WEEX screener scoped as part of Vince ecosystem. Separate from main ML pipeline.
+
+### Pine Script Indicators
+
+- **Versions built**: v3.4 through v3.8, all Pine Script v6 on TradingView.
+- **v3.4**: Initial Four Pillars indicator with Ripster Clouds + AVWAP + basic stochastics.
+- **v3.5**: Added quad stochastic rotation. **Regression found**: stochastic smoothing was accidentally changed from Raw K (smooth=1) to smoothed, which altered signal behavior. Fixed in later version.
+- **v3.6**: Commission-aware strategy with `strategy.commission.cash_per_order` (value=8). Fixed the `commission.percent` ambiguity with leverage.
+- **v3.7**: **Commission bug discovered** — was double-counting or miscalculating commission in certain flip scenarios. `strategy.close_all()` causes phantom double-commission trades. Rule established: never use `strategy.close_all()` for flips.
+- **v3.8**: Stable indicator version with all fixes applied. Used as reference for Python backtester parity checks.
+- **Key lesson**: Pine Script and Python backtester must produce identical signals for the same data. Any divergence means one has a bug. Pine v3.5 stochastic regression was caught by comparing Pine vs Python outputs.
+
+### Infrastructure
+
+- **VPS Jacky**: 76.13.20.191. Runs BingX bot. VST (Visual Studio Tunnel) blocked — cannot use for remote dev.
+- **GitHub**: S23Web3/ni9htw4lker (identity: S23Web3, malik@shortcut23.com). Also S23Web3/Vault for the Obsidian vault.
+- **PostgreSQL**: PG16, port 5433, user=postgres, pw=admin. Database: vince. Tables: backtest_runs, backtest_trades, equity_snapshots, live_trades, commission_settlements.
+- **Ollama**: Local LLM server at port 11434. Model: qwen3:8b (4.9GB, fits entirely in 12GB VRAM on RTX 3060).
+- **Hardware**: NVIDIA RTX 3060 12GB VRAM, 32GB RAM, AMD Ryzen 7 5800X. CUDA-capable for Numba GPU sweeps and PyTorch training.
+- **Python environment**: Local Windows 11 Pro. Bash shell available (Git Bash). Dependencies managed per-project.
+
+---
+
+## 3. What is the primary blocker right now?
+
+**Vince B1 (Phase 0 — Strategy Alignment)** is the critical-path blocker for the ML pipeline. Everything from B3 through B10 depends on B1 defining the feature set and data alignment. B2 (API layer) was built ahead of B1 as infrastructure prep, but the ML pipeline cannot produce meaningful results until B1 is resolved.
+
+For the BingX bot, the primary blocker is **signal quality verification** — the bot is live but needs more runtime data to confirm that the Python-generated signals match expected behavior on live markets. The buffer-stuck-at-200 bug demonstrated that subtle data pipeline issues can silently prevent signals from ever firing.
+
+For the backtester, there is no blocker — v3.8.4 is stable and functional. The CUDA GPU sweep (v3.9.4) works but is a dashboard/optimization layer, not a core engine change.
+
+---
+
+## 4. What decisions are locked?
+
+| Decision | Status | Date Locked | Context |
+|----------|--------|-------------|---------|
+| Commission rate: 0.08% (0.0008) taker per side on notional | LOCKED | 2026-02 | Derived from exchange fee schedule. Never hardcode dollar amounts. |
+| Commission Pine Script: `strategy.commission.cash_per_order` value=8 | LOCKED | 2026-02 | `commission.percent` is ambiguous with leverage. Cash per order is unambiguous. |
+| Never use `strategy.close_all()` for flips | LOCKED | 2026-02 | Causes phantom double-commission trades. |
+| Stochastic settings (Kurisko Raw K): 9-3, 14-3, 40-3, 60-10, all smooth=1 | LOCKED | 2026-01 | John Kurisko methodology. Raw K (smooth=1) is non-negotiable. |
+| Ripster Cloud numbering: C2=5/12, C3=34/50, C4=72/89, C5=180/200 | LOCKED | 2026-01 | Standard Ripster EMA Cloud settings. |
+| 5m timeframe > 1m for all low-price coins | LOCKED | 2026-02 | Backtested across all 399 coins. Every low-price coin profitable on 5m, most negative on 1m. |
+| Tight TP (< 2.0 ATR) destroys value | LOCKED | 2026-02 | Backtested. Always backtest TP levels, never trust MFE alone. |
+| Vince v2 = Trade Research Engine, NOT classifier | LOCKED | 2026-02-27 | Concept approved by user. Surfaces patterns, does not make binary predictions. |
+| Vince UI = Plotly Dash 4.0 (NOT Streamlit) | LOCKED | 2026-02 | Streamlit dashboard versions (v3.9.x) were transitional. Production UI is Dash. |
+| Signal grading: A=Quad(4/4), B=Rotation(3/4), C=ADD(engine label) | LOCKED | 2026-02 | C is not a signal type — it's a position addition label. |
+| PostgreSQL port 5433, database=vince | LOCKED | 2026-02 | PG16 installation uses non-default port. |
+| BingX hedge mode for perpetual futures | LOCKED | 2026-02 | Required for simultaneous long/short capability. |
+| Rebate: 70% account=$4.80/RT net, 50% account=$8.00/RT net | LOCKED | 2026-02 | Settle daily 5pm UTC. |
+| Python backtester stable at v3.8.4 | LOCKED | 2026-02 | v3.9.x versions are dashboard layers on top of v3.8.4 engine. |
+| Logging standard: dated files, dual handler, TimedRotatingFileHandler | LOCKED | 2026-02 | Non-negotiable for all projects. If it's not logged, it didn't happen. |
+
+---
+
+## 5. What decisions are still open?
+
+| Decision | Status | Context |
+|----------|--------|---------|
+| Vince B1 feature set — which trade attributes to extract | OPEN | Needs user input. Strategy decision, not code decision. Determines entire ML pipeline direction. |
+| Walk-forward validation window sizes for ML | OPEN | Part of B5 evaluation framework. Depends on B1 feature decisions. |
+| Which coins to run live on BingX beyond initial test set | OPEN | Bot is live but coin selection for scaling up not finalized. |
+| TTP (Trailing Take Profit) optimal parameters per coin | OPEN | TTP engine built in bot, but optimal trailing distances need more live data. |
+| Whether to use Ollama/qwen3:8b for feature extraction or just for analysis | OPEN | Model available locally, but its role in the ML pipeline not yet defined. |
+| CUDA GPU sweep — production use vs experimental | OPEN | v3.9.4 built it, works on RTX 3060, but unclear if it's the standard optimization path or one-off. |
+| VPS scaling — single Jacky instance vs multi-VPS | OPEN | Currently single VPS. Scaling plan not defined. |
+| BBW Simulator integration with live trading signals | OPEN | Pipeline complete (layers 1-5), but whether/how it feeds into live bot decisions not decided. |
+| Screener architecture — standalone vs Vince-integrated | OPEN | WEEX screener scoped but implementation path relative to Vince not locked. |
+| Position sizing model for live trading | OPEN | Bot uses config-based sizing. Dynamic sizing based on signal grade/volatility not yet designed. |
+
+---
+
+## 6. What has been confirmed working?
+
+### Four Pillars Backtester
+- v3.8.4 engine: runs full backtests across 399 coins on 5m data
+- CSV data pipeline: loads, validates, and processes 5m OHLCV data
+- Commission modeling: 0.08%/side on notional, correctly calculated
+- PostgreSQL integration: backtest_runs, backtest_trades, equity_snapshots all populate correctly
+- Batch mode: can run all 399 coins sequentially
+- Signal generation: A/B grading produces expected entries matching Pine Script v3.8
+
+### BingX Bot
+- HMAC-SHA256 authentication with server time delta sync
+- Order placement (market orders, limit orders) in hedge mode
+- Position opening and closing with correct side handling
+- TTP engine (trailing take profit) — logic implemented and running
+- Breakeven raise — triggers correctly after threshold
+- WebSocket connection for real-time data feed
+- Dashboard (Plotly Dash) showing positions and PnL
+- Runs stable on VPS Jacky for multi-day periods
+- Logging with timestamps, dated log files, dual handler
+
+### BBW Simulator Pipeline
+- Layer 1: BBWP calculation from raw Bollinger Band Width
+- Layer 2: Sequence detection (consecutive bars above/below thresholds)
+- Layer 3: Forward return calculation after sequence events
+- Layer 4: Simulator engine combining BBWP sequences with returns
+- Layer 5: Monte Carlo simulation for confidence intervals
+- V2 corrections applied (specific calculation fixes)
+- Declared COMPLETE 2026-02-17
+
+### Pine Script
+- v3.8 indicator: Ripster Clouds + AVWAP + Quad Stochastics + BBWP overlay
+- Commission via `cash_per_order` method (unambiguous with leverage)
+- Signal parity with Python backtester confirmed at v3.8 level
+
+### Infrastructure
+- PostgreSQL PG16 on port 5433: stable, all tables created and populated
+- Ollama qwen3:8b: loads fully into GPU VRAM, responds at port 11434
+- GitHub repos: S23Web3/ni9htw4lker and S23Web3/Vault both active
+- RTX 3060 CUDA: Numba GPU kernels execute correctly for parameter sweeps
+
+---
+
+## 7. What has been built but is unverified or untested?
+
+### Four Pillars Backtester
+- **v3.9.4 CUDA GPU sweep**: Built and runs, but not validated against CPU results for numerical parity. Unknown if GPU sweep produces identical optimal parameters to CPU brute force.
+- **Streamlit dashboard versions (v3.9.0-v3.9.3)**: Built as UI layers, but superseded by Dash plans. Unclear if any are still runnable or if dependencies drifted.
+
+### BingX Bot
+- **Multi-coin simultaneous live trading**: Bot supports multiple coins in config, but most live testing has been single-coin or limited sets. Concurrent position management across many coins not stress-tested.
+- **Rebate settlement tracking**: Commission settlements table exists in PostgreSQL, but automated reconciliation of daily 5pm UTC rebate deposits not verified against actual exchange settlements.
+- **Error recovery after VPS restart**: Bot restarts and reconnects, but whether it correctly detects and resumes open positions after unexpected crash/restart not formally tested.
+
+### Vince ML Pipeline
+- **B2 API layer (FastAPI)**: Built but has no upstream data (B1 not done) and no downstream consumer. Endpoints exist but serve no trained model.
+
+### BBW Simulator
+- **Layer 6 (Report generation)**: Referenced in pipeline design but completion status ambiguous — layers 1-5 confirmed complete, layer 6 (report/visualization) may be partial.
+- **Integration with backtester**: BBW pipeline runs standalone. Whether its output correctly feeds back into backtester signal filtering not tested end-to-end.
+
+### Pine Script
+- **v3.6 and v3.7 intermediate versions**: Built and iterated on, but with known bugs (commission issues in v3.7, smoothing regression in v3.5). These versions exist in TradingView but should not be used — only v3.8 is validated.
+
+---
+
+## 8. What has been planned but never executed?
+
+### Four Pillars Backtester
+- **Dynamic position sizing based on signal grade**: Discussed (A trades get more margin than B trades) but never implemented. Current system uses fixed sizing.
+- **Walk-forward optimization**: Mentioned as necessary for preventing overfitting but no implementation exists.
+- **Multi-timeframe backtesting**: 5m is the standard, 1m was tested and rejected, but 15m/1h timeframes never backtested.
+
+### BingX Bot
+- **Automated coin rotation**: Concept of dynamically switching which coins the bot trades based on backtester rankings — discussed but no implementation.
+- **Risk management circuit breaker**: Auto-stop trading after N consecutive losses or X% daily drawdown — mentioned but not built.
+- **Multi-exchange support**: BingX is the only exchange. No work toward Bybit, OKX, or other exchange connectors.
+
+### Vince ML Pipeline
+- **B3 (Feature enrichment)**: Defined in build plan, depends on B1, never started.
+- **B4 (Model training pipeline)**: PyTorch on CUDA, defined but never started.
+- **B5 (Evaluation framework)**: Walk-forward validation, defined but never started.
+- **B6 (Dashboard integration)**: 8-panel Dash UI, extensively scoped and designed (panel taxonomy defined, page structure planned), but no code written.
+- **B7-B10**: Optimizer, constellation builder, production serving, monitoring — defined at concept level only.
+- **Phase 0 strategy alignment (B1)**: The most critical planned-but-unexecuted item. Everything downstream depends on it.
+
+### Pine Script
+- **v3.9+ indicator versions**: No Pine Script development beyond v3.8. All development effort shifted to Python backtester and bot.
+- **Alert-to-bot webhook pipeline**: TradingView alerts triggering BingX bot via n8n webhook — discussed conceptually but never built. Bot uses its own signal generation instead of Pine Script alerts.
+
+### Infrastructure
+- **Multi-VPS deployment**: Only VPS Jacky exists. No scaling or redundancy plan executed.
+- **Automated backup/restore**: PostgreSQL backups not automated. No disaster recovery tested.
+- **CI/CD pipeline**: No automated testing, deployment, or integration pipeline. All deployments are manual.
+- **n8n workflow automation**: n8n mentioned for TradingView-to-bot webhooks but no workflows built or deployed.
+- **Monitoring/alerting**: No system health monitoring beyond manual log review. No PagerDuty, no Slack alerts, no automated health checks.
+
+---
+
+## Summary
+
+The Four Pillars system has a **working backtester** (v3.8.4), a **live bot** (BingX v1.5 on real money), and a **complete volatility pipeline** (BBW layers 1-5). Pine Script indicators are stable at v3.8. Infrastructure (PostgreSQL, Ollama, CUDA, VPS) is operational.
+
+The critical gap is the **ML pipeline** — Vince B1 (strategy alignment / feature engineering) remains unstarted, blocking all downstream ML work (B3-B10). B2 (API layer) was built proactively but serves nothing until B1 defines what data flows through it.
+
+Secondary gaps: no automated risk management in the live bot, no walk-forward validation in the backtester, no CI/CD or monitoring infrastructure.
+
+The system is in a state where **manual trading with backtester-informed parameters works**, but the vision of **ML-enhanced automated trading with dynamic optimization** requires completing the Vince pipeline starting with the B1 blocker.

@@ -1,5 +1,5 @@
 # Live System Status
-**Last Updated:** 2026-03-04
+**Last Updated:** 2026-03-07
 
 ---
 
@@ -10,8 +10,9 @@
 | Backtester Engine | v3.8.4 | PRODUCTION | `C:\Users\User\Documents\Obsidian Vault\PROJECTS\four-pillars-backtester\` | (via dashboard) |
 | Dashboard | v3.9.4 (CUDA) | BUILT | `C:\Users\User\Documents\Obsidian Vault\PROJECTS\four-pillars-backtester\scripts\dashboard_v394.py` | `streamlit run "C:\Users\User\Documents\Obsidian Vault\PROJECTS\four-pillars-backtester\scripts\dashboard_v394.py"` (requires .venv312) |
 | Dashboard (prior) | v3.9.3 | PRIOR STABLE | `C:\Users\User\Documents\Obsidian Vault\PROJECTS\four-pillars-backtester\scripts\dashboard_v393.py` | `streamlit run "C:\Users\User\Documents\Obsidian Vault\PROJECTS\four-pillars-backtester\scripts\dashboard_v393.py"` |
-| BingX Connector | v1.1 (patched) | LIVE ($110) | `C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector\` | `python "C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector\main.py"` |
-| BingX Dashboard | v1.5 | BUILT | `C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector\bingx-live-dashboard-v1-5.py` | `python "C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector\bingx-live-dashboard-v1-5.py"` |
+| BingX Connector | v1.1 (patched) | STOPPED | `C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector\` | `python "C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector\main.py"` |
+| BingX Connector v2 | v2.0 (native trail) | **LIVE** (since 2026-03-06 19:49 UTC+4) | `C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector-v2\` | `python "C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector-v2\main.py"` |
+| BingX Dashboard | v1.5 | RUNNING (be_raised bug) | `C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector-v2\bingx-live-dashboard-v1-5.py` | `python "C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector-v2\bingx-live-dashboard-v1-5.py"` |
 | BingX Beta Bot | v384/20x | BUILT (not running) | `C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector\main_beta.py` | `python "C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector\main_beta.py"` |
 | BingX Docs Scraper | v1 | COMPLETE | `C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector\docs\BINGX-API-V3-COMPLETE-REFERENCE.md` | `python scrape_bingx_docs.py --debug` |
 | BingX Live Screener | v1 | BUILT | `C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector\screener\bingx_screener.py` | `python "C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector\screener\bingx_screener.py"` |
@@ -29,6 +30,19 @@
 | PostgreSQL | RUNNING | PG16, port 5433, database=vince, user=postgres |
 | Ollama | INSTALLED | qwen3:8b (4.9 GB), port 11434, full GPU inference on RTX 3060 |
 | Jacky VPS | PROVISIONED | n8n + nginx. Migration scripts ready: `C:\Users\User\Documents\Obsidian Vault\scripts\migrate_pc.ps1`, `setup_vps.sh`, `deploy.ps1`. Bot deployment pending user execution. |
+
+## BingX Connector v2 Detail (as of 2026-03-07)
+
+- **Mode**: LIVE — real account, futures wallet
+- **Config**: 47 coins, $5 margin, 10x leverage ($50 notional), `ttp_mode: native`, 5m timeframe
+- **Started**: 2026-03-06 19:49 UTC+4
+- **Stats (38 trades, ~20h)**: 65.8% WR, R:R=0.28, -$2.70/day
+- **Native trailing**: 18.4% trailing exits (up from 4.8% in v1)
+- **max_atr_ratio**: 0.015 — blocking ultra-volatile coins (RIVER-USDT confirmed)
+- **Dashboard bug**: be_raised/saw_green Analytics tab fails — fix in `build_analyzer_capital_patch_v2.py`
+- **Pending**: Run `build_analyzer_capital_patch_v2.py` to fix dashboard + add capital analysis
+
+---
 
 ## BingX Connector Detail (as of 2026-03-04)
 

@@ -102,10 +102,23 @@ class WSListener(threading.Thread):
         symbol = order.get("s", "")
         avg_price = float(order.get("ap", 0) or 0)
         order_type = order.get("o", "")
+        side = order.get("S", "")
+        pos_side = order.get("ps", "")
         if "TAKE_PROFIT" in order_type:
             reason = "TP_HIT"
-        elif "STOP" in order_type:
+        elif "STOP" in order_type and "TRAILING" not in order_type:
             reason = "SL_HIT"
+        elif "TRAILING" in order_type:
+            reason = "TRAILING_EXIT"
+        elif order_type == "MARKET":
+            # MARKET fill: could be entry or TTP close
+            # If side is opposite to positionSide, it is a close
+            is_close = ((pos_side == "LONG" and side == "SELL")
+                        or (pos_side == "SHORT" and side == "BUY"))
+            if is_close:
+                reason = "TTP_EXIT"
+            else:
+                return None  # entry fill, not relevant
         else:
             return None
         if avg_price <= 0 or not symbol:

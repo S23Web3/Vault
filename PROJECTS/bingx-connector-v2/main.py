@@ -125,7 +125,7 @@ def fetch_commission_rate(auth):
         logger.warning("Commission rate API error %s — using default", data.get("code"))
     except Exception as e:
         logger.warning("Commission rate fetch failed: %s — using default", e)
-    return 0.001  # fallback: 0.05% x 2 sides (BingX taker rate)
+    return 0.0016  # fallback: 0.08% taker x 2 sides (BingX standard rate)
 
 
 def market_loop(feed, adapter, shutdown_event, poll_interval):
