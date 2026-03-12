@@ -1,10 +1,17 @@
 # Session Log Index
-**Last Updated:** 2026-03-11
-**Total:** 150 markdown files, 2 JSON manifests, 1 Python script
+**Last Updated:** 2026-03-12
+**Total:** 153 markdown files, 2 JSON manifests, 1 Python script
 
 ---
 
 ## By Date (newest first)
+
+### 2026-03-12
+| File | Summary |
+|------|---------|
+| `2026-03-12-weex-connector-planning.md` | WEEX connector planning session. Probe script confirmed WEEX has NO historical OHLCV API (all params silently ignored, latest ~1000 candles only). DNS check: only api-contract.weex.com + api-spot.weex.com alive. Decision: Bybit as backtesting proxy, BingX data for non-Bybit coins. 8-phase architecture plan approved. Handoff prompt written for new chat. WEEX API doc entry: weex.com/api-doc/contract/Market_API/GetBookTicker. |
+| `2026-03-12-v4-strategy-planning-session.md` | V4 strategy planning. Full project status review. Confirmed R:R=0.28 root cause (v3.8.4 pile-in). Chart-driven V4 design workflow planned: understanding first, no code until user approves. Trade chart report tool (748 lines) confirmed surviving reboot, py_compile PASS, not yet runtime-tested. |
+| `2026-03-12-trade-chart-report-status.md` | Trade chart report tool recovery log. Script survived reboot that killed the building chat. 748 lines, py_compile PASS. 3-panel Plotly HTML: candles+EMA55/89+AVWAP, all 4 stochastics overlaid, volume. Four Pillars signal detection overlay. Comment boxes with localStorage. CLI: --date, --from-time, --symbol, --no-api. Not yet runtime-tested. |
 
 ### 2026-03-11
 | File | Summary |
