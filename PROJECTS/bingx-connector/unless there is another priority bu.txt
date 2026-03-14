@@ -1,0 +1,29 @@
+unless there is another priority build, i want to know that. 
+
+All outstanding builds step by step must be built. 
+
+it is also time to build the proper machine learning for vince, 
+
+this means currently on xgboost but the perspective and if possible, 
+the build for the pytorch, what should be in it, what is currently done and what is pending. 
+
+pytorch is ready and installed under python 3.13
+
+the perspective is to have it proper machine learning trying to understand thoroughly the trades that are taken
+
+i dont care that it is overkill. there are too many parameters to compare
+
+i adjusted the code while you said it took too many trades
+
+"C:\Users\User\Pictures\Screenshots\Screenshot 2026-02-12 190416.png"
+
+this shows 9 million net profit while every coin should have 10k assigned i beat the market on all asspects 
+
+so do not try to demotivate me, this is still with the perspective of trades to be fixed on the lsg level. 
+
+and that can only be done with proper analysis. 
+
+i want proper skills of using pytorch and usage in directional trading researched and looked into in order to have a proper build to get a base that can be run
+
+also i want to know vince is not trained, 
+what is pending for him to get trained?

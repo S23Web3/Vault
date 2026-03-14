@@ -1,0 +1,23 @@
+Load technical analysis skills, if you dont have them then build them and then load it for the rest of the chat. 
+
+
+
+
+
+VWAP Anchored Indicator Build, I have one book in the books folder in the obsidian, it is also attached 
+
+
+
+Windows filesystem for processing might not be active, find the best way to convert the text into a format that you can analyze the content with. If it is json, python or c# or some other way, i dont care, it needs to be the most advanced available method. I dont care how long it takes. 
+
+
+
+Thoroughly analyze the book and put the findings in the new md file anchored vwap in the strategy section, you need to make the file. 
+
+
+
+Then research online about anchored vwap from trusted source, summarize that information that is found  and merge it below the findings of the anchored vwap.md file that you made.
+
+
+
+Then list additional sources that you can analyze in that regards, give me that  output and your findings to read through

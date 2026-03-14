@@ -9,6 +9,7 @@
 ### 2026-03-14
 | File | Summary |
 |------|---------|
+| `2026-03-14-e-drive-migration-guardian.md` | E: drive migration (39,357 files 56GB 0 failures), pip export (64 packages), dead man's switch (PCGuardian + PCGuardianListener tasks), BingX bot startup removed, milestone_push.py built. |
 | `2026-03-14-quickpaste-overnight-build.md` | Overnight QuickPaste build execution log. Build started at ~17:00 UTC via countdown timer, failed at Phase 0 (scaffold). Root cause unknown — phase error not logged. Journal shows "BUILD STOPPED at phase 0". Next: debug Phase 0 with --dry-run or retry --phase 0. |
 | `2026-03-14-trade-chart-report-v3-build.md` | Trade Chart Report v3 build complete. Surgical TDI swap: copied v2 → v3, injected sys.path + `from signals.tdi import compute_tdi` (line 64–71), replaced 24-line inline TDI block (lines 299–323) with module call via `compute_tdi(..., {"tdi_preset": "cw_trades"})` (14 lines), updated 3 "TDI 14" → "TDI 13" (subplot_titles, panel comment, toggle label). Py_compile PASS. Runtime test: 25 trades processed, HTML 5.2MB generated (2026-03-11 date), confirmed "TDI 13" in title. |
 
