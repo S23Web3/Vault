@@ -19,3 +19,5 @@ Both files should have identical content.
 ## Skill Loading Rules
 
 - **DASH SKILL MANDATORY** — Before writing ANY Dash code (vince/app.py, vince/layout.py, vince/pages/*.py), ALWAYS load the Dash skill first. No exceptions. Triggers: any file in vince/ directory, `dash.Dash`, `@app.callback`, "Vince dashboard", "B6", `register_page`, `dcc.Store`, `dag.AgGrid`.
+- **WEEX SKILL MANDATORY** — Before writing ANY WEEX connector code, ALWAYS load the WEEX skill first. No exceptions. Triggers: any file in `PROJECTS/weex-connector/` directory, `weex_auth`, `api-contract.weex.com`, "WEEX connector", "WEEX API".
+- **RUST SKILL MANDATORY** — Before writing ANY Rust code, ALWAYS load the Rust skill first. No exceptions. Triggers: any file in `PROJECTS/quickpaste/` directory, `Cargo.toml`, `.rs` files, `windows` crate, `egui`, `eframe`, `tray-icon`, `SendInput`, "QuickPaste", "Rust".

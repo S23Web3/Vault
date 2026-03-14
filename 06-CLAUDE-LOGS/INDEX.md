@@ -1,17 +1,39 @@
 # Session Log Index
-**Last Updated:** 2026-03-12
-**Total:** 153 markdown files, 2 JSON manifests, 1 Python script
+**Last Updated:** 2026-03-14
+**Total:** 156 markdown files, 2 JSON manifests, 1 Python script
 
 ---
 
 ## By Date (newest first)
 
+### 2026-03-14
+| File | Summary |
+|------|---------|
+| `2026-03-14-quickpaste-overnight-build.md` | Overnight QuickPaste build execution log. Build started at ~17:00 UTC via countdown timer, failed at Phase 0 (scaffold). Root cause unknown — phase error not logged. Journal shows "BUILD STOPPED at phase 0". Next: debug Phase 0 with --dry-run or retry --phase 0. |
+| `2026-03-14-trade-chart-report-v3-build.md` | Trade Chart Report v3 build complete. Surgical TDI swap: copied v2 → v3, injected sys.path + `from signals.tdi import compute_tdi` (line 64–71), replaced 24-line inline TDI block (lines 299–323) with module call via `compute_tdi(..., {"tdi_preset": "cw_trades"})` (14 lines), updated 3 "TDI 14" → "TDI 13" (subplot_titles, panel comment, toggle label). Py_compile PASS. Runtime test: 25 trades processed, HTML 5.2MB generated (2026-03-11 date), confirmed "TDI 13" in title. |
+
+### 2026-03-13
+| File | Summary |
+|------|---------|
+| `2026-03-13-trade-chart-report-v2-build.md` | Trade Chart Report v2 full build (~1850 lines). 10 build prompt changes + 11 user additions: 6-panel layout (separate stoch 9/14), TDI 14, AVWAP Hi/Lo + SD bands + separate toggles, zone fills (25/75 and 30/70), measure tool with visual lines, pin tool with indicator readings, legend with line styles, notes auto-save to disk via HTTP server (port 9234), auto-open Brave. |
+| `2026-03-13-rust-skill-creation.md` | Rust genius skill created for Claude Code. Two files: SKILL.md (~310 lines, 10 hard rules, 18-crate matrix, SendInput/tray/hook/egui patterns, 13-pitfall table) + rust-windows-development.md (~650 lines, full API reference, Espanso architecture lessons, build.rs/manifest/icon, thread model, debugging). Research: Espanso (13.4K stars), windows crate replaces winapi, willhook/win-hotkeys for hooks, egui best for utilities. CLAUDE.md Rust trigger rule added. Context loss x2 logged. |
+| `2026-03-13-quickpaste-scoping.md` | QuickPaste open-source text expander scoping. TypeItIn replacement. Rust + SendInput (zero clipboard), egui UI, tray icon. Research: 5 tech approaches compared, privacy analysis, Espanso precedent. Prerequisites: Rust not installed, Rust skill needed, CLAUDE.md rule needed. Plan approved for autonomous night build (6 phases). |
+| `2026-03-13-weex-phase0-phase1.md` | WEEX connector Phase 0 + Phase 1. Phase 0: WEEX skill scaffold, .gitignore, api_utils.py, CLAUDE.md WEEX trigger rule. Phase 1: Full V3 API docs scraped via Playwright. 12 critical findings: V3 not V2, symbol format mismatch (REST=BTCUSDT / WS=cmt_btcusdt), passphrase required, no trailing stop, SL via algoOrder, SEPARATED position mode, leverage dual-setting, exchangeInfo has quantityPrecision, response format inconsistency, cancel uses orderId not clientAlgoId, closePositions endpoint, commission rate endpoint. Output: WEEX-API-COMPLETE-REFERENCE.md + WEEX skill fully populated. |
+| `2026-03-13-weex-phase2-3-audit.md` | WEEX Phase 2/3 Opus audit complete. 10 fixes verified across FUNCTION-CONTRACTS.md, SKILL.md. Ping/pong direction fix, atr_at_entry, all 4 stoch periods, commission rate caching, SMA note. Phase 2 run success: 700 coins indexed, 532 have backtest data. Phase 2+3 ARTIFACT EXISTS, Phase 4 blocked on API keys. |
+| `2026-03-13-tdi-python-module.md` | TDI (Traders Dynamic Index) standalone Python module built. `signals/tdi.py` (~300 lines): 24 base columns (RSI, fast_ma, signal, BB lines, zone/color delta-based, cloud_bull/bear, long/short/best_setup/scalp_bias, 4 divergence types reg+hidden, 6 RSI cross signals). `compute_tdi_core()` adds 8 graded columns (long/short A/B/C/Rev matching Four Pillars convention). Two presets: cw_trades (RSI 13, BB 34/1.6185) and classic (RSI 14, BB 34/2.0, Dean Malone). Zone colors by RSI-vs-signal delta (not raw RSI). Divergence: RSI-pivot-only, range-checked 5-60 bars, regular+hidden both sides. Buy/sell logic from Pine source: fast MA cross + signal position + 50 filter. 48 tests in `scripts/test_tdi.py` with file output to `logs/`. py_compile + ast.parse PASS. Not yet runtime-tested on real data. |
+
 ### 2026-03-12
 | File | Summary |
 |------|---------|
+| `2026-03-12-weex-build-prompt-audit-v2.md` | WEEX build prompt audit round 2. 12 additional issues found (3 CRITICAL, 4 HIGH, 5 MEDIUM). Fixes: kline schema confirmation, plugin version to "latest at build time" + standalone reimplementation, 19/17 phrasing fix, session budget note, CHECKPOINT gates at all phases, WS reconnection reqs, LICENSE deferred to Phase 8, api_utils.py to Phase 0, graceful shutdown, testnet fallback, config validation, rate limiter. Build prompt ready for execution. |
+| `2026-03-12-weex-build-prompt-review.md` | WEEX build prompt review + refinement (round 1). 13 edits applied: Bitget reframed as secondary ref, open-source intent section added, all "copy from v3" replaced with "write original", v2 as architecture ref, v3 as separate project. User corrections: keep Playwright scraper, v2 is reference, connector = original code for GitHub submission. Checkpoints added between phases. |
 | `2026-03-12-weex-connector-planning.md` | WEEX connector planning session. Probe script confirmed WEEX has NO historical OHLCV API (all params silently ignored, latest ~1000 candles only). DNS check: only api-contract.weex.com + api-spot.weex.com alive. Decision: Bybit as backtesting proxy, BingX data for non-Bybit coins. 8-phase architecture plan approved. Handoff prompt written for new chat. WEEX API doc entry: weex.com/api-doc/contract/Market_API/GetBookTicker. |
+| `2026-03-12-bingx-v3-bug-fixes.md` | BingX v2 full bug audit (19 bugs: 4 CRITICAL, 5 HIGH, 7 MEDIUM, 3 LOW). Built bingx-connector-v3 with all fixes. Key: race condition double PnL, TTP fallback to SL, shallow copy thread unsafety, no positionSide filter, no step_size cache. WEEX build prompt updated to use v3 as template. Critical finding: WEEX = Bitget white-label (API patterns match exactly). |
 | `2026-03-12-v4-strategy-planning-session.md` | V4 strategy planning. Full project status review. Confirmed R:R=0.28 root cause (v3.8.4 pile-in). Chart-driven V4 design workflow planned: understanding first, no code until user approves. Trade chart report tool (748 lines) confirmed surviving reboot, py_compile PASS, not yet runtime-tested. |
 | `2026-03-12-trade-chart-report-status.md` | Trade chart report tool recovery log. Script survived reboot that killed the building chat. 748 lines, py_compile PASS. 3-panel Plotly HTML: candles+EMA55/89+AVWAP, all 4 stochastics overlaid, volume. Four Pillars signal detection overlay. Comment boxes with localStorage. CLI: --date, --from-time, --symbol, --no-api. Not yet runtime-tested. |
+| `2026-03-13-vince-markov-scoping.md` | Markov chains confirmed as Vince addition. Build timing: B4b (after B4 verified). Two decisions pending at session end: M1 = which indicators build state space, M2 = where output appears in Vince. BUILD-VINCE-B4b-MARKOV.md not yet written. |
+| `plans/2026-03-12-vince-b1-b4-build-handoff.md` | Claude Code autonomous build handoff for Vince B1→B4. Covers FourPillarsPlugin rewrite, diskcache enricher, PnL Reversal panel. Includes all permissions gates, phase-by-phase build order, verification tests, failure handling, and deliverable checklist. Paste into Claude Code to start build. |
+| `2026-03-12-vince-strategy-independence.md` | Vince redesigned as fully strategy-independent. B1 unblocked — no longer waits for V4. Runs on trades_all.csv (193 live trades) immediately. Four Pillars is one example plugin. Multi-strategy plugin architecture locked. Primary intelligence: (1) exit timing — hold vs cut, (2) entry quality — constellations, (3) TP optimisation per strategy per coin. PROJECT-STATUS.md, PROJECT-OVERVIEW.md, PRODUCT-BACKLOG.md all rewritten. |
 
 ### 2026-03-11
 | File | Summary |

@@ -48,7 +48,7 @@ the same Four Pillars signals — compute_signals_v383 is exchange-agnostic).
 | MonitorLoop | `position_monitor.py` | 30s check, SL/BE/TTP management |
 | WSListener | `ws_listener.py` | Fill detection via WebSocket (if WEEX supports it) |
 
-### Core Files (one-to-one port from BingX)
+### Core Files (write original, following v2 component structure)
 
 | BingX file | WEEX equivalent | Changes |
 |------------|-----------------|---------|
@@ -63,7 +63,7 @@ the same Four Pillars signals — compute_signals_v383 is exchange-agnostic).
 | `ws_listener.py` | `ws_listener.py` | Different WS endpoint + message schema |
 | `time_sync.py` | `time_sync.py` | Different server time endpoint |
 | `ttp_engine.py` | `ttp_engine.py` | **No changes** — price-level logic |
-| `plugins/four_pillars_v384.py` | `plugins/four_pillars_v384.py` | **Copy unchanged** |
+| `plugins/four_pillars.py` | `plugins/four_pillars.py` | **Write original** — reimplement latest signal version from scratch (standalone, no backtester import) |
 | `config.yaml` | `config.yaml` | Exchange-specific fields replaced |
 
 ### Key Differences from BingX (anticipated)
@@ -148,17 +148,17 @@ notification:
 
 - `executor.py` — order placement, SL, cancel
 - `position_monitor.py` — position queries, BE raise, TTP tighten
-- `state_manager.py` — copy with minor adaptations
-- `risk_gate.py` — copy unchanged
+- `state_manager.py` — write original (apply deep-copy + reconcile patterns from bug audit)
+- `risk_gate.py` — write original, exchange-agnostic
 - Test: lifecycle test (open + close + verify state)
 
 ### Step 5 — Signal + monitoring
 
-- `signal_engine.py` — copy unchanged
+- `signal_engine.py` — write original strategy adapter
 - `ws_listener.py` — WEEX WS fills (if supported)
-- `notifier.py` — copy unchanged
-- `ttp_engine.py` — copy unchanged
-- `plugins/` — copy unchanged
+- `notifier.py` — write original Telegram notifier
+- `ttp_engine.py` — write original TTP engine
+- `plugins/` — write original (same Four Pillars strategy logic)
 
 ### Step 6 — main.py + tests
 
@@ -194,7 +194,7 @@ notification:
 | `config.yaml` | Runtime config |
 | `.env.example` | Key template |
 | `requirements.txt` | Dependencies |
-| `plugins/four_pillars_v384.py` | Strategy plugin (copy) |
+| `plugins/four_pillars.py` | Strategy plugin (standalone reimplementation of latest signal version) |
 | `tests/` | Full test suite |
 | `scripts/test_connection.py` | Quick API health check |
 | `scripts/test_api_lifecycle.py` | Full trade lifecycle test |
@@ -206,12 +206,12 @@ notification:
 **Everything blocks on Step 1 (API research).** Cannot write `weex_auth.py`, `executor.py`,
 `position_monitor.py`, or `data_fetcher.py` without confirmed endpoint + auth scheme.
 
-## Reuse from BingX connector
+## Relationship to BingX Connector
 
-- `C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector\` — all files are reference/template
-- `signal_engine.py`, `risk_gate.py`, `notifier.py`, `ttp_engine.py`, `plugins/` — direct copy
-- `state_manager.py` — copy with minor field adaptations if WEEX order schema differs
-- `main.py` — copy, replace BingX-specific startup calls (leverage/margin setup, commission fetch)
+- `C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector-v2\` — ARCHITECTURAL reference only (component structure, thread model). Do NOT copy code.
+- `signal_engine.py`, `risk_gate.py`, `notifier.py`, `ttp_engine.py`, `plugins/` — write original, following same component structure as v2
+- `state_manager.py` — write original, apply deep-copy and reconcile patterns from bug audit
+- `main.py` — write original, WEEX-specific startup calls
 
 ## Verification
 
@@ -219,3 +219,7 @@ notification:
 2. `python scripts/test_api_lifecycle.py` — opens 1 test position, verifies state, closes it
 3. 24h demo run — Telegram alerts flow, no crashes, exits correctly classified
 4. `python -m pytest tests/ -v` — all tests pass
+
+## Open-Source Requirement
+
+This connector will be submitted to a public GitHub repository. All code must be original — no copy-paste from BingX connector v2, v3, or any other source. The bug audit prevention rules apply as engineering principles, not as code to copy.

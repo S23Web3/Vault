@@ -37,3 +37,39 @@ Research + planning. No code written.
 
 ## Plan File
 - `C:\Users\User\.claude\plans\peaceful-sleeping-lerdorf.md`
+
+---
+
+## Addendum: Trade CSV Merge + Project Status Updates
+
+### Trade CSV Merge
+- v1 connector (`bingx-connector/trades.csv`): 351 trades total, 155 from 2026-03-03+
+- v2 connector (`bingx-connector-v2/trades.csv`): 38 trades, 2026-03-06 to 2026-03-07
+- 0 duplicate order_ids between v1 and v2
+- Combined into `C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector-v2\trades_all.csv`: 193 trades, 2026-03-03 to 2026-03-11, 20-column v2 format, sorted by entry_time
+- Updated `run_trade_chart_report.py` to read `trades_all.csv` instead of `trades.csv`. py_compile PASS.
+
+### Trade counts per day (combined)
+- 2026-03-03: 20
+- 2026-03-04: 26
+- 2026-03-05: 67
+- 2026-03-06: 35 (17 v1 + 18 v2)
+- 2026-03-07: 20 (v2 only)
+- 2026-03-11: 25 (v1 only)
+
+### Project Status Files Updated
+- `C:\Users\User\Documents\Obsidian Vault\06-CLAUDE-LOGS\PROJECT-STATUS.md` — full rewrite with critical findings, V4 status table, new locked decisions
+- `C:\Users\User\Documents\Obsidian Vault\PROJECT-OVERVIEW.md` — full rewrite with updated Mermaid diagram, all status tables current, WEEX connector added
+- `C:\Users\User\Documents\Obsidian Vault\PRODUCT-BACKLOG.md` — full rewrite with V4 as P0.7, WEEX as P0.9, 15 new completed items (C.30-C.44)
+- `C:\Users\User\Documents\Obsidian Vault\06-CLAUDE-LOGS\INDEX.md` — 2 new entries added for 2026-03-12
+
+### Files Created
+- `C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector-v2\trades_all.csv` (NEW)
+- `C:\Users\User\Documents\Obsidian Vault\06-CLAUDE-LOGS\2026-03-12-trade-chart-report-status.md` (NEW)
+
+### Files Modified
+- `C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector-v2\scripts\run_trade_chart_report.py` (TRADES_CSV path change)
+- `C:\Users\User\Documents\Obsidian Vault\06-CLAUDE-LOGS\PROJECT-STATUS.md` (rewrite)
+- `C:\Users\User\Documents\Obsidian Vault\PROJECT-OVERVIEW.md` (rewrite)
+- `C:\Users\User\Documents\Obsidian Vault\PRODUCT-BACKLOG.md` (rewrite)
+- `C:\Users\User\Documents\Obsidian Vault\06-CLAUDE-LOGS\INDEX.md` (append)

@@ -72,3 +72,15 @@ Open a new chat. Paste the contents of:
 `C:\Users\User\Documents\Obsidian Vault\06-CLAUDE-LOGS\plans\2026-03-12-weex-connector-build-prompt.md`
 
 as the first message.
+
+---
+
+## Addendum (same day, later session)
+
+**BingX v2 Bug Audit + v3 Build completed.**
+- 19 bugs identified in v2 connector infrastructure
+- Full bug-fixed v3 built at: `C:\Users\User\Documents\Obsidian Vault\PROJECTS\bingx-connector-v3\`
+- Bug audit report: `C:\Users\User\Documents\Obsidian Vault\PROJECTS\weex-connector\docs\BINGX-V2-BUG-AUDIT.md`
+- Build prompt updated to reference v3 as template (not v2)
+- Critical finding: WEEX = Bitget white-label (API URL patterns match exactly)
+- Session log: `C:\Users\User\Documents\Obsidian Vault\06-CLAUDE-LOGS\2026-03-12-bingx-v3-bug-fixes.md`

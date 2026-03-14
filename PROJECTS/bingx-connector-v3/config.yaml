@@ -1,0 +1,90 @@
+connector:
+  poll_interval_sec: 45
+  position_check_sec: 30
+  timeframe: 5m
+  ohlcv_buffer_bars: 201
+  demo_mode: false
+coins:
+- SKR-USDT
+- TRUTH-USDT
+- RIVER-USDT
+- STBL-USDT
+- ZKP-USDT
+- LYN-USDT
+- BEAT-USDT
+- GIGGLE-USDT
+- PIPPIN-USDT
+- FOLKS-USDT
+- NAORIS-USDT
+- Q-USDT
+- ELSA-USDT
+- UB-USDT
+- THETA-USDT
+- SAHARA-USDT
+- TIA-USDT
+- APT-USDT
+- AIXBT-USDT
+- GALA-USDT
+- LDO-USDT
+- SUSHI-USDT
+- VET-USDT
+- WAL-USDT
+- WIF-USDT
+- WOO-USDT
+- ATOM-USDT
+- BOME-USDT
+- DYDX-USDT
+- VIRTUAL-USDT
+- BREV-USDT
+- CYBER-USDT
+- EIGEN-USDT
+- MUBARAK-USDT
+- 1000PEPE-USDT
+- DEEP-USDT
+- ETHFI-USDT
+- RENDER-USDT
+- BB-USDT
+- F-USDT
+- GUN-USDT
+- KAITO-USDT
+- MEME-USDT
+- PENDLE-USDT
+- SCRT-USDT
+- SQD-USDT
+- STX-USDT
+strategy:
+  plugin: four_pillars_v384
+four_pillars:
+  allow_a: true
+  allow_b: true
+  allow_c: false
+  sl_atr_mult: 2.0
+  tp_atr_mult: null
+  require_stage2: true
+  rot_level: 80
+risk:
+  max_positions: 25
+  max_daily_trades: 200
+  daily_loss_limit_usd: 15.0
+  min_atr_ratio: 0.003
+  max_atr_ratio: 0.015
+  cooldown_bars: 3
+  bar_duration_sec: 300
+position:
+  margin_usd: 5.0
+  leverage: 10
+  margin_mode: ISOLATED
+  sl_working_type: MARK_PRICE
+  tp_working_type: MARK_PRICE
+  trailing_activation_atr_mult: null
+  trailing_rate: null
+  ttp_enabled: true
+  ttp_mode: native
+  sl_trail_pct_post_ttp: 0.003
+  be_act: 0.004
+  ttp_act: 0.008
+  ttp_dist: 0.003
+  be_buffer: 0.002
+  be_auto: true
+notification:
+  daily_summary_utc_hour: 17

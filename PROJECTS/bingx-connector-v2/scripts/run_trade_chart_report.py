@@ -33,7 +33,7 @@ except ImportError:
 # ---------------------------------------------------------------------------
 
 ROOT = Path(__file__).resolve().parent.parent
-TRADES_CSV = ROOT / "trades.csv"
+TRADES_CSV = ROOT / "trades_all.csv"
 CONFIG_PATH = ROOT / "config.yaml"
 LOG_DIR = ROOT / "logs"
 KLINE_PATH = "/openApi/swap/v2/quote/klines"
